@@ -271,6 +271,35 @@
   .pf-btn-back:hover {
     background: linear-gradient(135deg, rgba(100,116,139,0.32), rgba(91,108,255,0.24));
   }
+  .pf-btn-teal {
+    background: linear-gradient(135deg, rgba(47,198,180,0.40), rgba(47,198,180,0.25));
+  }
+  .pf-btn-teal:hover {
+    background: linear-gradient(135deg, rgba(47,198,180,0.55), rgba(47,198,180,0.35));
+  }
+  .pf-btn-blue {
+    background: linear-gradient(135deg, rgba(91,183,255,0.35), rgba(91,108,255,0.22));
+  }
+  .pf-btn-blue:hover {
+    background: linear-gradient(135deg, rgba(91,183,255,0.50), rgba(91,108,255,0.32));
+  }
+  .pf-btn-lavender {
+    background: linear-gradient(135deg, rgba(124,108,246,0.30), rgba(163,148,255,0.20));
+  }
+  .pf-btn-lavender:hover {
+    background: linear-gradient(135deg, rgba(124,108,246,0.45), rgba(163,148,255,0.30));
+  }
+  .pf-btn-slate {
+    background: linear-gradient(135deg, rgba(100,116,139,0.28), rgba(71,85,105,0.18));
+  }
+  .pf-btn-slate:hover {
+    background: linear-gradient(135deg, rgba(100,116,139,0.40), rgba(71,85,105,0.28));
+  }
+
+  /* ── Selected card highlight ── */
+  .pf-card-selected {
+    box-shadow: 0 0 0 2px rgba(47,198,180,0.50), 0 16px 34px rgba(17,24,39,0.12);
+  }
 
   /* Legacy bucket containers */
   .bucket-bg-focus { background: rgba(124,108,246,0.18); border: 1px solid rgba(124,108,246,0.28); border-radius: 18px; }

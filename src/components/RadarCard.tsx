@@ -8,6 +8,8 @@ interface RadarCardProps {
   referral: Referral;
   bucket: RadarBucket;
   basePath: string;
+  isSelected?: boolean;
+  onSelect?: (id: string) => void;
 }
 
 const bucketConfig: Record<RadarBucket, { label: string; cardClass: string; icon: React.ReactNode }> = {
@@ -37,15 +39,23 @@ const statusLabels: Record<string, string> = {
   INTAKE_READY: 'Intake Ready',
 };
 
-const RadarCard: React.FC<RadarCardProps> = ({ referral, bucket, basePath }) => {
+const RadarCard: React.FC<RadarCardProps> = ({ referral, bucket, basePath, isSelected, onSelect }) => {
   const navigate = useNavigate();
   const config = bucketConfig[bucket];
   const assignee = MOCK_USERS.find(u => u.id === referral.assigned_to_profile_id);
 
+  const handleClick = () => {
+    if (onSelect) {
+      onSelect(referral.id);
+    } else {
+      navigate(`${basePath}/${referral.id}`);
+    }
+  };
+
   return (
     <button
-      onClick={() => navigate(`${basePath}/${referral.id}`)}
-      className={`w-full text-left ${config.cardClass} group`}
+      onClick={handleClick}
+      className={`w-full text-left ${config.cardClass} group ${isSelected ? 'pf-card-selected' : ''}`}
     >
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-2">
