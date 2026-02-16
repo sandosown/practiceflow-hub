@@ -17,6 +17,14 @@ const TransferPortal: React.FC = () => {
   const navigate = useNavigate();
   const referrals = MOCK_REFERRALS.filter(r => r.workspace_id === 'w1');
 
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+      return;
+    }
+    navigate('/hub');
+  };
+
   return (
     <AppLayout
       title="Referral Portal"
@@ -29,10 +37,10 @@ const TransferPortal: React.FC = () => {
       <div className="mt-4 flex items-center justify-between mb-6">
         <button
           type="button"
-          onClick={() => navigate('/practice/radar')}
+          onClick={handleBack}
           className="pf-btn pf-btn-back"
         >
-          ← Back to Group Practice
+          ← Back
         </button>
       </div>
 

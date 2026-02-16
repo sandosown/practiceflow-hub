@@ -23,6 +23,14 @@ const StaffDirectory: React.FC = () => {
     return p?.role === 'INTERN';
   });
 
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+      return;
+    }
+    navigate('/hub');
+  };
+
   return (
     <AppLayout
       title="Staff Directory"
@@ -35,10 +43,10 @@ const StaffDirectory: React.FC = () => {
       <div className="mt-4 flex items-center justify-between mb-6">
         <button
           type="button"
-          onClick={() => navigate('/practice/radar')}
+          onClick={handleBack}
           className="pf-btn pf-btn-back"
         >
-          ← Back to Group Practice
+          ← Back
         </button>
       </div>
 
