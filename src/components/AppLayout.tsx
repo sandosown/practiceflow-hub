@@ -68,9 +68,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, title, breadcrumbs }) =
       {/* Breadcrumbs */}
       {breadcrumbs && breadcrumbs.length > 0 && (
         <div className="px-6 py-2 flex items-center gap-1 text-sm text-muted-foreground bg-white/30 backdrop-blur-sm border-b border-white/20">
-          <Link to={homePath} className="hover:text-primary transition-colors">
+          <button type="button" onClick={() => navigate(homePath)} className="hover:text-primary transition-colors">
             <Home className="w-3.5 h-3.5" />
-          </Link>
+          </button>
           {normalizedBreadcrumbs.map((bc, i) => (
             <React.Fragment key={i}>
               <ChevronRight className="w-3.5 h-3.5" />

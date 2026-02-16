@@ -69,7 +69,7 @@ const GroupPracticeRadar: React.FC = () => {
       ]}
     >
       <div className="flex items-center justify-between mb-6 mt-2">
-        <div className="pf-tabbar">
+        <div className="pf-controlbar">
           <button onClick={() => navigate('/practice/transfers')} className="pf-tab pf-tab-transfer">Referral Portal</button>
           <button onClick={() => navigate('/practice/staff')} className="pf-tab pf-tab-staff">Staff Directory</button>
         </div>
