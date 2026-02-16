@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/AppLayout';
 import { MOCK_USERS } from '@/data/mockData';
 import { Mail, Phone } from 'lucide-react';
@@ -12,6 +13,7 @@ const roleAccent: Record<string, string> = {
 type StaffTab = 'EMPLOYEES' | 'INTERNS';
 
 const StaffDirectory: React.FC = () => {
+  const navigate = useNavigate();
   const staff = MOCK_USERS.filter(u => u.status === 'active');
   const [activeTab, setActiveTab] = React.useState<StaffTab>('EMPLOYEES');
 
@@ -30,13 +32,17 @@ const StaffDirectory: React.FC = () => {
         { label: 'Staff Directory' },
       ]}
     >
-      <div className="flex gap-3 mb-6 mt-2">
-        <a href="/practice/radar" className="pf-tab pf-tab-radar">Radar</a>
-        <a href="/practice/transfers" className="pf-tab pf-tab-transfer">Transfer Portal</a>
-        <button className="pf-tab pf-tab-staff pf-tab-active">Staff Directory</button>
+      <div className="mt-4 flex items-center justify-between mb-6">
+        <button
+          type="button"
+          onClick={() => navigate('/practice/radar')}
+          className="px-4 py-2 rounded-lg pf-glass hover:opacity-100 opacity-90 transition"
+        >
+          ← Back to Group Practice
+        </button>
       </div>
 
-      <div className="mt-4 flex gap-2 mb-6">
+      <div className="flex gap-2 mb-6">
         <button
           type="button"
           onClick={() => setActiveTab('EMPLOYEES')}
