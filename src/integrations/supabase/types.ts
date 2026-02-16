@@ -14,7 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      operating_profiles: {
+        Row: {
+          created_at: string
+          domains: Json
+          has_interns: boolean
+          has_staff: boolean
+          id: string
+          notification_style: string
+          owner_profile_id: string
+          practice_mode: string
+          updated_at: string
+          uses_referrals: boolean
+        }
+        Insert: {
+          created_at?: string
+          domains?: Json
+          has_interns?: boolean
+          has_staff?: boolean
+          id?: string
+          notification_style?: string
+          owner_profile_id: string
+          practice_mode?: string
+          updated_at?: string
+          uses_referrals?: boolean
+        }
+        Update: {
+          created_at?: string
+          domains?: Json
+          has_interns?: boolean
+          has_staff?: boolean
+          id?: string
+          notification_style?: string
+          owner_profile_id?: string
+          practice_mode?: string
+          updated_at?: string
+          uses_referrals?: boolean
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
