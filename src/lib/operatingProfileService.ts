@@ -1,34 +1,79 @@
 import { supabase } from '@/integrations/supabase/client';
 import { OperatingProfile } from '@/types/operatingProfile';
 
-const DEFAULT_PROFILE = {
-  domains: { practice: true, coaching: true, home: true },
-  practice_mode: 'group',
+const DEFAULT_DOMAINS = { practice: true, coaching: true, home: true };
+
+const DEFAULT_VALUES = {
+  domains: DEFAULT_DOMAINS,
+  practice_mode: 'group' as const,
   uses_referrals: true,
   has_staff: true,
   has_interns: true,
-  notification_style: 'realtime',
-} as const;
+  notification_style: 'realtime' as const,
+};
 
-async function createDefaultProfile(ownerId: string): Promise<OperatingProfile | null> {
+// --- Session check ---
+
+async function hasSupabaseSession(): Promise<boolean> {
+  const { data } = await supabase.auth.getSession();
+  return !!data?.session?.user?.id;
+}
+
+// --- localStorage helpers ---
+
+const LS_KEY = (ownerId: string) => `pf_operating_profile_${ownerId}`;
+
+function readLocalProfile(ownerId: string): OperatingProfile | null {
+  try {
+    const raw = localStorage.getItem(LS_KEY(ownerId));
+    if (!raw) return null;
+    return JSON.parse(raw) as OperatingProfile;
+  } catch {
+    return null;
+  }
+}
+
+function writeLocalProfile(ownerId: string, profile: OperatingProfile): void {
+  localStorage.setItem(LS_KEY(ownerId), JSON.stringify(profile));
+}
+
+function buildDefaultProfile(ownerId: string): OperatingProfile {
+  const now = new Date().toISOString();
+  return {
+    id: crypto.randomUUID(),
+    owner_profile_id: ownerId,
+    ...DEFAULT_VALUES,
+    created_at: now,
+    updated_at: now,
+  };
+}
+
+// --- Supabase DB helpers ---
+
+async function createDefaultProfileInDb(ownerId: string): Promise<OperatingProfile | null> {
   const { data, error } = await supabase
     .from('operating_profiles')
-    .insert({
-      owner_profile_id: ownerId,
-      ...DEFAULT_PROFILE,
-    })
+    .insert({ owner_profile_id: ownerId, ...DEFAULT_VALUES })
     .select()
     .single();
-
   if (error) {
     console.error('Failed to create default operating profile:', error);
     return null;
   }
-
   return data as unknown as OperatingProfile;
 }
 
+// --- Public API ---
+
 export async function getOperatingProfile(ownerId: string): Promise<OperatingProfile | null> {
+  if (!(await hasSupabaseSession())) {
+    const local = readLocalProfile(ownerId);
+    if (local) return local;
+    const def = buildDefaultProfile(ownerId);
+    writeLocalProfile(ownerId, def);
+    return def;
+  }
+
   const { data, error } = await supabase
     .from('operating_profiles')
     .select('*')
@@ -39,10 +84,51 @@ export async function getOperatingProfile(ownerId: string): Promise<OperatingPro
     console.error('Failed to fetch operating profile:', error);
     return null;
   }
+  if (data) return data as unknown as OperatingProfile;
+  return createDefaultProfileInDb(ownerId);
+}
 
-  if (data) {
-    return data as unknown as OperatingProfile;
+export async function saveOperatingProfile(
+  ownerId: string,
+  updates: Partial<OperatingProfile>,
+): Promise<OperatingProfile | null> {
+  if (!(await hasSupabaseSession())) {
+    let profile = readLocalProfile(ownerId);
+    if (!profile) profile = buildDefaultProfile(ownerId);
+    const merged = { ...profile, ...updates, updated_at: new Date().toISOString() };
+    writeLocalProfile(ownerId, merged);
+    return merged;
   }
 
-  return createDefaultProfile(ownerId);
+  // DB path: fetch existing or create, then update
+  let { data, error } = await supabase
+    .from('operating_profiles')
+    .select('*')
+    .eq('owner_profile_id', ownerId)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Failed to fetch operating profile for save:', error);
+    return null;
+  }
+
+  if (!data) {
+    data = (await createDefaultProfileInDb(ownerId)) as any;
+    if (!data) return null;
+  }
+
+  const { owner_profile_id: _o, id: _i, created_at: _c, updated_at: _u, ...safeUpdates } = updates as any;
+
+  const { data: updated, error: updateErr } = await supabase
+    .from('operating_profiles')
+    .update(safeUpdates)
+    .eq('owner_profile_id', ownerId)
+    .select()
+    .single();
+
+  if (updateErr) {
+    console.error('Failed to update operating profile:', updateErr);
+    return null;
+  }
+  return updated as unknown as OperatingProfile;
 }
