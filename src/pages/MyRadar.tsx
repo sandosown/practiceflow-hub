@@ -45,7 +45,7 @@ const MyRadar: React.FC = () => {
     >
       <div className="flex gap-3 mb-6 mt-2">
         <button className="pf-tab pf-tab-myradar pf-tab-active">My Radar</button>
-        <a href="/practice/my-transfers" className="pf-tab pf-tab-mytransfer">My Transfers</a>
+        <a href="/practice/my-transfers" className="pf-tab pf-tab-mytransfer">My Referrals</a>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
