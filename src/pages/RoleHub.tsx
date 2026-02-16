@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useOperatingProfile } from '@/context/OperatingProfileContext';
 import AppLayout from '@/components/AppLayout';
 import OwnerOnboarding from '@/pages/OwnerOnboarding';
-import { Briefcase, GraduationCap, Home, Sparkles } from 'lucide-react';
+import { Briefcase, GraduationCap, Home, Sparkles, Settings } from 'lucide-react';
 
 const BUILTIN_TILES = [
   {
@@ -44,6 +44,7 @@ const RoleHub: React.FC = () => {
   const { profile, loading, save } = useOperatingProfile();
   const navigate = useNavigate();
   const isOwner = user?.role === 'OWNER';
+  const [editingProfile, setEditingProfile] = useState(false);
 
   if (!isOwner) return <Navigate to="/practice/my-radar" replace />;
 
@@ -66,6 +67,17 @@ const RoleHub: React.FC = () => {
     );
   }
 
+  if (editingProfile) {
+    return (
+      <OwnerOnboarding
+        onComplete={async (data) => {
+          await save(data);
+          setEditingProfile(false);
+        }}
+      />
+    );
+  }
+
   const enabledDomains = profile?.domains ?? ['GROUP_PRACTICE'];
   const builtinVisible = BUILTIN_TILES.filter(t => enabledDomains.includes(t.type));
 
@@ -74,7 +86,16 @@ const RoleHub: React.FC = () => {
 
   return (
     <AppLayout title={`Welcome back, ${user?.full_name?.split(' ')[0]}`}>
-      <p className="text-muted-foreground mb-8 text-lg">Select a role to get started.</p>
+      <div className="flex items-center justify-between mb-8">
+        <p className="text-muted-foreground text-lg">Select a role to get started.</p>
+        <button
+          onClick={() => setEditingProfile(true)}
+          className="pf-btn pf-btn-slate flex items-center gap-2 text-sm"
+        >
+          <Settings className="w-4 h-4" />
+          Operating Profile
+        </button>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl">
         {builtinVisible.map(tile => {
           const Icon = tile.icon;

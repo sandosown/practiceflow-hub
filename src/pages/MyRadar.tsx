@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import AppLayout from '@/components/AppLayout';
 import RadarCard from '@/components/RadarCard';
 import { MOCK_REFERRALS } from '@/data/mockData';
 import { useAuth } from '@/context/AuthContext';
 import { Referral, RadarBucket } from '@/types/models';
 import { Circle, Pause, CalendarClock } from 'lucide-react';
+import { resolveOperatingProfile } from '@/lib/profile/resolveOperatingProfile';
+import { interpretRadarItems } from '@/lib/radar/interpretRadarItems';
 
 function classifyBucket(r: Referral): RadarBucket {
   const today = new Date().toISOString().split('T')[0];
@@ -28,12 +30,25 @@ const bucketMeta: { key: RadarBucket; label: string; icon: React.ReactNode; buck
 
 const MyRadar: React.FC = () => {
   const { user } = useAuth();
+  const operatingProfile = useMemo(() => resolveOperatingProfile(), []);
+
   const referrals = MOCK_REFERRALS.filter(r => r.workspace_id === 'w1' && r.assigned_to_profile_id === user?.id);
 
-  const buckets = bucketMeta.map(bm => ({
-    ...bm,
-    items: referrals.filter(r => classifyBucket(r) === bm.key),
-  }));
+  const buckets = useMemo(() => {
+    return bucketMeta.map(bm => {
+      const bucketItems = referrals.filter(r => classifyBucket(r) === bm.key);
+      const interpreted = interpretRadarItems({
+        items: bucketItems,
+        viewerId: user?.id ?? '',
+        viewerRole: 'staff',
+        operatingProfile,
+      });
+      return {
+        ...bm,
+        items: interpreted.map(i => i.original),
+      };
+    });
+  }, [referrals, user?.id, operatingProfile]);
 
   return (
     <AppLayout

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/AppLayout';
 import RadarCard from '@/components/RadarCard';
@@ -9,6 +9,8 @@ import { MOCK_REFERRALS, MOCK_USERS } from '@/data/mockData';
 import { Referral, RadarBucket } from '@/types/models';
 import { Circle, Pause, CalendarClock, PanelRightOpen } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { resolveOperatingProfile } from '@/lib/profile/resolveOperatingProfile';
+import { interpretRadarItems, recordView, incrementDrift } from '@/lib/radar/interpretRadarItems';
 
 function classifyBucket(r: Referral): RadarBucket {
   const today = new Date().toISOString().split('T')[0];
@@ -36,6 +38,9 @@ const GroupPracticeRadar: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const isOwner = user?.role === 'OWNER';
+  const viewerRole = isOwner ? 'owner' : 'staff';
+
+  const operatingProfile = useMemo(() => resolveOperatingProfile(), []);
 
   const [referrals, setReferrals] = useState(() =>
     MOCK_REFERRALS.filter(r => r.workspace_id === 'w1')
@@ -53,12 +58,29 @@ const GroupPracticeRadar: React.FC = () => {
 
   const handleSelect = (id: string) => {
     setSelectedId(prev => prev === id ? null : id);
+    // Owner view-relief + drift tracking
+    if (isOwner && user) {
+      recordView(user.id, id);
+      incrementDrift(user.id, id);
+    }
   };
 
-  const buckets = bucketMeta.map(bm => ({
-    ...bm,
-    items: referrals.filter(r => classifyBucket(r) === bm.key),
-  }));
+  // Interpret items within each bucket, sorted by display_weight DESC
+  const buckets = useMemo(() => {
+    return bucketMeta.map(bm => {
+      const bucketItems = referrals.filter(r => classifyBucket(r) === bm.key);
+      const interpreted = interpretRadarItems({
+        items: bucketItems,
+        viewerId: user?.id ?? '',
+        viewerRole,
+        operatingProfile,
+      });
+      return {
+        ...bm,
+        items: interpreted.map(i => i.original),
+      };
+    });
+  }, [referrals, user?.id, viewerRole, operatingProfile]);
 
   return (
     <AppLayout
