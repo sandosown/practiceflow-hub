@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { LogOut, Home, ChevronRight, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MOCK_USERS } from '@/data/mockData';
@@ -68,9 +68,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, title, breadcrumbs }) =
       {/* Breadcrumbs */}
       {breadcrumbs && breadcrumbs.length > 0 && (
         <div className="px-6 py-2 flex items-center gap-1 text-sm text-muted-foreground bg-white/30 backdrop-blur-sm border-b border-white/20">
-          <button onClick={() => navigate(homePath)} className="hover:text-primary transition-colors">
+          <Link to={homePath} className="hover:text-primary transition-colors">
             <Home className="w-3.5 h-3.5" />
-          </button>
+          </Link>
           {normalizedBreadcrumbs.map((bc, i) => (
             <React.Fragment key={i}>
               <ChevronRight className="w-3.5 h-3.5" />

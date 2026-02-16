@@ -42,18 +42,18 @@ const StaffDirectory: React.FC = () => {
         </button>
       </div>
 
-      <div className="flex gap-2 mb-6">
+      <div className="pf-tabbar mb-6">
         <button
           type="button"
           onClick={() => setActiveTab('EMPLOYEES')}
-          className={`px-4 py-2 rounded-lg pf-glass font-medium transition-all ${activeTab === 'EMPLOYEES' ? 'bg-[hsl(var(--pf-sky)/0.25)] border border-[hsl(var(--pf-sky)/0.4)]' : 'opacity-80 hover:opacity-100'}`}
+          className={`pf-tab ${activeTab === 'EMPLOYEES' ? 'pf-tab-active' : ''}`}
         >
           Employees
         </button>
         <button
           type="button"
           onClick={() => setActiveTab('INTERNS')}
-          className={`px-4 py-2 rounded-lg pf-glass font-medium transition-all ${activeTab === 'INTERNS' ? 'bg-[hsl(var(--pf-mint)/0.25)] border border-[hsl(var(--pf-mint)/0.4)]' : 'opacity-80 hover:opacity-100'}`}
+          className={`pf-tab ${activeTab === 'INTERNS' ? 'pf-tab-active' : ''}`}
         >
           Interns
         </button>
