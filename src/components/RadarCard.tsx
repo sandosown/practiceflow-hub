@@ -10,23 +10,20 @@ interface RadarCardProps {
   basePath: string;
 }
 
-const bucketConfig: Record<RadarBucket, { label: string; borderClass: string; icon: React.ReactNode; bgClass: string }> = {
+const bucketConfig: Record<RadarBucket, { label: string; cardClass: string; icon: React.ReactNode }> = {
   do_now: {
     label: 'Do Now',
-    borderClass: 'border-l-4 border-l-pf-focus',
-    bgClass: 'bg-pf-focus/[0.16]',
+    cardClass: 'pf-card pf-card-now',
     icon: <Circle className="w-4 h-4 text-pf-focus" />,
   },
   waiting: {
     label: 'Waiting',
-    borderClass: 'border-l-4 border-l-pf-waiting',
-    bgClass: 'bg-pf-waiting/[0.18]',
+    cardClass: 'pf-card pf-card-wait',
     icon: <Pause className="w-4 h-4 text-pf-waiting" />,
   },
   coming_up: {
     label: 'Coming Up',
-    borderClass: 'border-l-4 border-l-pf-upcoming',
-    bgClass: 'bg-pf-upcoming/[0.18]',
+    cardClass: 'pf-card pf-card-up',
     icon: <CalendarClock className="w-4 h-4 text-pf-upcoming" />,
   },
 };
@@ -48,7 +45,7 @@ const RadarCard: React.FC<RadarCardProps> = ({ referral, bucket, basePath }) => 
   return (
     <button
       onClick={() => navigate(`${basePath}/${referral.id}`)}
-      className={`w-full text-left rounded-lg card-shadow-md p-4 ${config.borderClass} ${config.bgClass} backdrop-blur-sm hover:shadow-lg transition-all duration-200 group`}
+      className={`w-full text-left ${config.cardClass} group`}
     >
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-2">

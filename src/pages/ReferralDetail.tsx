@@ -78,7 +78,7 @@ const ReferralDetail: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
         {/* Main info */}
         <div className="lg:col-span-2 space-y-4">
-          <div className="glass-panel rounded-xl card-shadow-md p-6">
+          <div className="pf-glass p-6">
             <h2 className="font-semibold text-foreground text-lg mb-4">Client Information</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex items-center gap-3">
@@ -110,7 +110,7 @@ const ReferralDetail: React.FC = () => {
           </div>
 
           {/* Status tracker */}
-          <div className="glass-panel rounded-xl card-shadow-md p-6">
+          <div className="pf-glass p-6">
             <h2 className="font-semibold text-foreground text-lg mb-4">Referral Progress</h2>
             <div className="flex items-center gap-1 overflow-x-auto pb-2">
               {statusFlow.map((s, i) => {
@@ -131,7 +131,7 @@ const ReferralDetail: React.FC = () => {
 
           {/* Contact outcome */}
           {(status === 'ACKNOWLEDGED' || status === 'CONTACT_IN_PROGRESS') && (
-            <div className="glass-panel rounded-xl card-shadow-md p-6">
+            <div className="pf-glass p-6">
               <h2 className="font-semibold text-foreground text-lg mb-4">Contact Outcome</h2>
               <div className="flex gap-3 flex-wrap">
                 {(['SCHEDULED', 'PENDING', 'NO_CONTACT'] as const).map(outcome => (

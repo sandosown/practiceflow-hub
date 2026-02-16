@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/AppLayout';
-import { MOCK_REFERRALS, MOCK_USERS } from '@/data/mockData';
+import { MOCK_REFERRALS } from '@/data/mockData';
 import { useAuth } from '@/context/AuthContext';
 import { ChevronRight } from 'lucide-react';
 
@@ -28,15 +28,15 @@ const MyTransferPortal: React.FC = () => {
       ]}
     >
       <div className="flex gap-3 mb-6 mt-2">
-        <a href="/practice/my-radar" className="text-sm px-4 py-2 rounded-lg glass-panel text-foreground font-medium card-shadow hover:bg-white/70 transition-colors">My Radar</a>
-        <button className="text-sm px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium">My Transfers</button>
+        <a href="/practice/my-radar" className="pf-tab pf-tab-myradar">My Radar</a>
+        <button className="pf-tab pf-tab-mytransfer pf-tab-active">My Transfers</button>
       </div>
 
-      <div className="glass-panel rounded-xl card-shadow-md overflow-hidden">
+      <div className="pf-glass pf-table-wrap">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-white/20 bg-white/30">
+              <tr className="border-b border-white/20" style={{ background: 'rgba(17,24,39,0.03)' }}>
                 <th className="text-left p-4 text-sm font-medium text-muted-foreground">Client</th>
                 <th className="text-left p-4 text-sm font-medium text-muted-foreground">Status</th>
                 <th className="text-left p-4 text-sm font-medium text-muted-foreground">Contact By</th>
@@ -48,7 +48,7 @@ const MyTransferPortal: React.FC = () => {
                 <tr
                   key={r.id}
                   onClick={() => navigate(`/practice/transfers/${r.id}`)}
-                  className="border-b border-white/20 hover:bg-white/30 cursor-pointer transition-colors"
+                  className="pf-row border-b border-white/20 cursor-pointer transition-colors"
                 >
                   <td className="p-4">
                     <div className="font-medium text-foreground">{r.client_name}</div>

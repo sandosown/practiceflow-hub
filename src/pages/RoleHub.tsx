@@ -12,6 +12,8 @@ const tiles = [
     icon: Briefcase,
     path: '/practice/radar',
     ownerOnly: false,
+    gradient: 'linear-gradient(135deg, rgba(47,198,180,0.30) 0%, rgba(91,183,255,0.25) 100%)',
+    border: 'rgba(47,198,180,0.40)',
   },
   {
     type: 'COACHING' as const,
@@ -20,6 +22,8 @@ const tiles = [
     icon: GraduationCap,
     path: '/coaching',
     ownerOnly: true,
+    gradient: 'linear-gradient(135deg, rgba(124,108,246,0.25) 0%, rgba(91,183,255,0.22) 100%)',
+    border: 'rgba(124,108,246,0.35)',
   },
   {
     type: 'HOME' as const,
@@ -28,6 +32,8 @@ const tiles = [
     icon: Home,
     path: '/home',
     ownerOnly: true,
+    gradient: 'linear-gradient(135deg, rgba(167,243,208,0.35) 0%, rgba(47,198,180,0.25) 100%)',
+    border: 'rgba(47,198,180,0.35)',
   },
 ];
 
@@ -54,12 +60,17 @@ const RoleHub: React.FC = () => {
                   navigate(tile.path);
                 }
               }}
-              className={`text-left rounded-xl card-shadow-md p-6 transition-all duration-200 group ${
-                available ? 'glass-panel hover:shadow-lg hover:-translate-y-1 cursor-pointer' : 'glass-panel opacity-40 cursor-not-allowed'
+              className={`text-left rounded-2xl p-6 transition-all duration-200 group backdrop-blur-sm ${
+                available ? 'hover:shadow-lg hover:-translate-y-1 cursor-pointer' : 'opacity-40 cursor-not-allowed'
               }`}
+              style={{
+                background: tile.gradient,
+                border: `1px solid ${tile.border}`,
+                boxShadow: '0 12px 30px rgba(17,24,39,0.08)',
+              }}
             >
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                <Icon className="w-6 h-6 text-primary" />
+              <div className="w-12 h-12 rounded-xl bg-white/40 flex items-center justify-center mb-4 group-hover:bg-white/60 transition-colors">
+                <Icon className="w-6 h-6 text-foreground" />
               </div>
               <h2 className="text-xl font-semibold text-foreground mb-1">{tile.label}</h2>
               <p className="text-sm text-muted-foreground">{tile.description}</p>
