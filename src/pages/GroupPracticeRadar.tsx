@@ -45,13 +45,13 @@ const GroupPracticeRadar: React.FC = () => {
     >
       <div className="flex gap-3 mb-6 mt-2">
         <button onClick={() => {}} className="text-sm px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium">Radar</button>
-        <a href="/practice/transfers" className="text-sm px-4 py-2 rounded-lg bg-card text-foreground font-medium card-shadow hover:bg-accent transition-colors">Transfer Portal</a>
-        <a href="/practice/staff" className="text-sm px-4 py-2 rounded-lg bg-card text-foreground font-medium card-shadow hover:bg-accent transition-colors">Staff Directory</a>
+        <a href="/practice/transfers" className="text-sm px-4 py-2 rounded-lg glass-panel text-foreground font-medium card-shadow hover:bg-white/70 transition-colors">Transfer Portal</a>
+        <a href="/practice/staff" className="text-sm px-4 py-2 rounded-lg glass-panel text-foreground font-medium card-shadow hover:bg-white/70 transition-colors">Staff Directory</a>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {buckets.map(bucket => (
-          <div key={bucket.key}>
+          <div key={bucket.key} className={`rounded-xl p-4 ${bucket.key === 'do_now' ? 'bucket-bg-focus' : bucket.key === 'waiting' ? 'bucket-bg-waiting' : 'bucket-bg-upcoming'}`}>
             <div className="flex items-center gap-2 mb-4">
               {bucket.icon}
               <h2 className="font-semibold text-foreground text-lg">{bucket.label}</h2>
@@ -59,7 +59,7 @@ const GroupPracticeRadar: React.FC = () => {
             </div>
             <div className="space-y-3">
               {bucket.items.length === 0 && (
-                <p className="text-sm text-muted-foreground italic p-4 bg-card rounded-lg card-shadow">No items</p>
+                <p className="text-sm text-muted-foreground italic p-4 glass-panel rounded-lg card-shadow">No items</p>
               )}
               {bucket.items.map(r => (
                 <RadarCard key={r.id} referral={r} bucket={bucket.key} basePath="/practice/transfers" />

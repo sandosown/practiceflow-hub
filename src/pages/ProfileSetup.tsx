@@ -21,14 +21,14 @@ const ProfileSetup: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className="min-h-screen pf-gradient-bg flex items-center justify-center p-4">
       <div className="w-full max-w-lg animate-fade-in">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-foreground">Complete Your Profile</h1>
           <p className="text-muted-foreground mt-2">Let's get you set up, {user?.full_name?.split(' ')[0]}</p>
         </div>
 
-        <div className="bg-card rounded-xl card-shadow-md p-8">
+        <div className="glass-panel rounded-xl card-shadow-md p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <Label>Full Name</Label>

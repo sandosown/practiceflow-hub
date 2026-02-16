@@ -48,7 +48,7 @@ const RadarCard: React.FC<RadarCardProps> = ({ referral, bucket, basePath }) => 
   return (
     <button
       onClick={() => navigate(`${basePath}/${referral.id}`)}
-      className={`w-full text-left rounded-lg card-shadow-md p-4 ${config.borderClass} ${config.bgClass} hover:shadow-lg transition-all duration-200 group`}
+      className={`w-full text-left rounded-lg card-shadow-md p-4 ${config.borderClass} ${config.bgClass} backdrop-blur-sm hover:shadow-lg transition-all duration-200 group`}
     >
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-2">
