@@ -23,19 +23,19 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-navy flex items-center justify-center p-4">
+    <div className="min-h-screen pf-app-bg flex items-center justify-center p-4">
       <div className="w-full max-w-md animate-fade-in">
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center mx-auto mb-4">
             <span className="text-primary-foreground font-bold text-2xl">PF</span>
           </div>
-          <h1 className="text-3xl font-bold text-card">PracticeFlow</h1>
-          <p className="text-card/60 mt-2">Your Life-Role Operating System</p>
+          <h1 className="text-3xl font-bold text-foreground">PracticeFlow</h1>
+          <p className="text-muted-foreground mt-2">Your Life-Role Operating System</p>
         </div>
 
         {/* Login card */}
-        <div className="glass-panel rounded-xl card-shadow-md p-8">
+        <div className="pf-glass p-8">
           <h2 className="text-xl font-semibold text-foreground mb-6">Sign in to your account</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -60,7 +60,7 @@ const Login: React.FC = () => {
                 className="mt-1"
               />
             </div>
-            {error && <p className="text-sm text-destructive">{error}</p>}
+            {error && <p className="text-sm text-pf-blocked">{error}</p>}
             <Button type="submit" className="w-full">Sign In</Button>
           </form>
 

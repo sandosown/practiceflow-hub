@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import AppLayout from '@/components/AppLayout';
 import RadarCard from '@/components/RadarCard';
 import { MOCK_REFERRALS } from '@/data/mockData';
@@ -21,10 +21,10 @@ function classifyBucket(r: Referral): RadarBucket {
   return 'coming_up';
 }
 
-const bucketMeta: { key: RadarBucket; label: string; icon: React.ReactNode }[] = [
-  { key: 'do_now', label: 'Do Now', icon: <Circle className="w-5 h-5 text-pf-focus" /> },
-  { key: 'waiting', label: 'Waiting', icon: <Pause className="w-5 h-5 text-pf-waiting" /> },
-  { key: 'coming_up', label: 'Coming Up', icon: <CalendarClock className="w-5 h-5 text-pf-upcoming" /> },
+const bucketMeta: { key: RadarBucket; label: string; icon: React.ReactNode; bucketClass: string }[] = [
+  { key: 'do_now', label: 'Do Now', icon: <Circle className="w-5 h-5 text-pf-focus" />, bucketClass: 'pf-bucket pf-bucket-now' },
+  { key: 'waiting', label: 'Waiting', icon: <Pause className="w-5 h-5 text-pf-waiting" />, bucketClass: 'pf-bucket pf-bucket-wait' },
+  { key: 'coming_up', label: 'Coming Up', icon: <CalendarClock className="w-5 h-5 text-pf-upcoming" />, bucketClass: 'pf-bucket pf-bucket-up' },
 ];
 
 const GroupPracticeRadar: React.FC = () => {
@@ -44,14 +44,14 @@ const GroupPracticeRadar: React.FC = () => {
       ]}
     >
       <div className="flex gap-3 mb-6 mt-2">
-        <button onClick={() => {}} className="text-sm px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium">Radar</button>
-        <a href="/practice/transfers" className="text-sm px-4 py-2 rounded-lg glass-panel text-foreground font-medium card-shadow hover:bg-white/70 transition-colors">Transfer Portal</a>
-        <a href="/practice/staff" className="text-sm px-4 py-2 rounded-lg glass-panel text-foreground font-medium card-shadow hover:bg-white/70 transition-colors">Staff Directory</a>
+        <button className="pf-tab pf-tab-radar pf-tab-active">Radar</button>
+        <a href="/practice/transfers" className="pf-tab pf-tab-transfer">Transfer Portal</a>
+        <a href="/practice/staff" className="pf-tab pf-tab-staff">Staff Directory</a>
       </div>
 
-       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {buckets.map(bucket => (
-          <div key={bucket.key} className={`rounded-xl p-4 ${bucket.key === 'do_now' ? 'bucket-bg-focus' : bucket.key === 'waiting' ? 'bucket-bg-waiting' : 'bucket-bg-upcoming'}`}>
+          <div key={bucket.key} className={bucket.bucketClass}>
             <div className="flex items-center gap-2 mb-4">
               {bucket.icon}
               <h2 className="font-semibold text-foreground text-lg">{bucket.label}</h2>
@@ -59,7 +59,7 @@ const GroupPracticeRadar: React.FC = () => {
             </div>
             <div className="space-y-3">
               {bucket.items.length === 0 && (
-                <p className="text-sm text-muted-foreground italic p-4 glass-panel rounded-lg card-shadow">No items</p>
+                <p className="text-sm text-muted-foreground italic p-4 pf-glass rounded-lg">No items</p>
               )}
               {bucket.items.map(r => (
                 <RadarCard key={r.id} referral={r} bucket={bucket.key} basePath="/practice/transfers" />

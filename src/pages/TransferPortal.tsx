@@ -27,16 +27,16 @@ const TransferPortal: React.FC = () => {
       ]}
     >
       <div className="flex gap-3 mb-6 mt-2">
-        <a href="/practice/radar" className="text-sm px-4 py-2 rounded-lg glass-panel text-foreground font-medium card-shadow hover:bg-white/70 transition-colors">Radar</a>
-        <button className="text-sm px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium">Transfer Portal</button>
-        <a href="/practice/staff" className="text-sm px-4 py-2 rounded-lg glass-panel text-foreground font-medium card-shadow hover:bg-white/70 transition-colors">Staff Directory</a>
+        <a href="/practice/radar" className="pf-tab pf-tab-radar">Radar</a>
+        <button className="pf-tab pf-tab-transfer pf-tab-active">Transfer Portal</button>
+        <a href="/practice/staff" className="pf-tab pf-tab-staff">Staff Directory</a>
       </div>
 
-      <div className="glass-panel rounded-xl card-shadow-md overflow-hidden">
+      <div className="pf-glass pf-table-wrap">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-white/20 bg-white/30">
+              <tr className="border-b border-white/20" style={{ background: 'rgba(17,24,39,0.03)' }}>
                 <th className="text-left p-4 text-sm font-medium text-muted-foreground">Client</th>
                 <th className="text-left p-4 text-sm font-medium text-muted-foreground">Assigned To</th>
                 <th className="text-left p-4 text-sm font-medium text-muted-foreground">Status</th>
@@ -51,7 +51,7 @@ const TransferPortal: React.FC = () => {
                   <tr
                     key={r.id}
                     onClick={() => navigate(`/practice/transfers/${r.id}`)}
-                    className="border-b border-white/20 hover:bg-white/30 cursor-pointer transition-colors"
+                    className="pf-row border-b border-white/20 cursor-pointer transition-colors"
                   >
                     <td className="p-4">
                       <div className="font-medium text-foreground">{r.client_name}</div>

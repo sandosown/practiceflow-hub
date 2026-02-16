@@ -17,9 +17,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, title, breadcrumbs }) =
   const location = useLocation();
 
   return (
-    <div className="min-h-screen pf-gradient-bg">
+    <div className="min-h-screen pf-app-bg">
       {/* Top bar */}
-      <header className="glass-panel border-b border-white/20 px-6 py-3 flex items-center justify-between card-shadow">
+      <header className="glass-panel border-b border-white/20 px-6 py-3 flex items-center justify-between card-shadow" style={{ borderRadius: 0 }}>
         <div className="flex items-center gap-3">
           <button onClick={() => navigate('/hub')} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
@@ -30,7 +30,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, title, breadcrumbs }) =
         </div>
 
         <div className="flex items-center gap-3">
-          {/* Quick user switcher for demo */}
           <div className="flex items-center gap-1 mr-2">
             <Users className="w-4 h-4 text-muted-foreground" />
             <select
