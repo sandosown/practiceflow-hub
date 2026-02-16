@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/AppLayout';
+import { useAuth } from '@/context/AuthContext';
 import { MOCK_USERS } from '@/data/mockData';
 import { Mail, Phone } from 'lucide-react';
 
@@ -14,8 +15,11 @@ type StaffTab = 'EMPLOYEES' | 'INTERNS';
 
 const StaffDirectory: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const staff = MOCK_USERS.filter(u => u.status === 'active');
   const [activeTab, setActiveTab] = React.useState<StaffTab>('EMPLOYEES');
+  const isStaff = user?.role === 'THERAPIST' || user?.role === 'INTERN';
+  const homeFallback = isStaff ? '/practice/my-radar' : '/hub';
 
   const nonOwnerStaff = (staff ?? []).filter((p) => p?.role !== 'OWNER');
   const visibleStaff = nonOwnerStaff.filter((p) => {
@@ -28,7 +32,7 @@ const StaffDirectory: React.FC = () => {
       navigate(-1);
       return;
     }
-    navigate('/hub');
+    navigate(homeFallback);
   };
 
   return (

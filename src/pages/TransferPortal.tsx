@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/AppLayout';
+import { useAuth } from '@/context/AuthContext';
 import { MOCK_REFERRALS, MOCK_USERS } from '@/data/mockData';
 import { ChevronRight, UserPlus } from 'lucide-react';
 
@@ -15,14 +16,17 @@ const statusColors: Record<string, string> = {
 
 const TransferPortal: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const referrals = MOCK_REFERRALS.filter(r => r.workspace_id === 'w1');
+  const isStaff = user?.role === 'THERAPIST' || user?.role === 'INTERN';
+  const homeFallback = isStaff ? '/practice/my-radar' : '/hub';
 
   const handleBack = () => {
     if (window.history.length > 1) {
       navigate(-1);
       return;
     }
-    navigate('/hub');
+    navigate(homeFallback);
   };
 
   return (
