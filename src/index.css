@@ -4,15 +4,15 @@
 
 @layer base {
   :root {
-    /* PracticeFlow Brand System — Calm Therapeutic Palette */
+    /* PracticeFlow Brand System — Warm Therapeutic Palette */
     --background: 220 14% 96%;
-    --foreground: 222 47% 11%;
+    --foreground: 215 25% 17%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 215 25% 17%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 215 25% 17%;
 
     --primary: 171 62% 48%;
     --primary-foreground: 0 0% 100%;
@@ -21,10 +21,10 @@
     --secondary-foreground: 0 0% 100%;
 
     --muted: 220 14% 96%;
-    --muted-foreground: 217 19% 45%;
+    --muted-foreground: 215 16% 43%;
 
     --accent: 171 62% 95%;
-    --accent-foreground: 222 47% 11%;
+    --accent-foreground: 215 25% 17%;
 
     --destructive: 259 40% 50%;
     --destructive-foreground: 0 0% 100%;
@@ -43,16 +43,16 @@
     --pf-upcoming: 171 62% 48%;
     --pf-upcoming-foreground: 0 0% 100%;
     --pf-complete: 150 42% 64%;
-    --pf-complete-foreground: 222 47% 11%;
+    --pf-complete-foreground: 215 25% 17%;
     --pf-info: 263 86% 76%;
-    --pf-info-foreground: 222 47% 11%;
+    --pf-info-foreground: 215 25% 17%;
     --pf-blocked: 270 15% 51%;
     --pf-blocked-foreground: 0 0% 100%;
 
     --warning: 233 100% 68%;
     --warning-foreground: 0 0% 100%;
     --success: 150 42% 64%;
-    --success-foreground: 222 47% 11%;
+    --success-foreground: 215 25% 17%;
     --navy: 222 47% 11%;
     --slate: 217 33% 17%;
 
@@ -73,16 +73,58 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply antialiased;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: #1f2a37;
   }
 }
 
 @layer utilities {
   .card-shadow {
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04);
   }
   .card-shadow-md {
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.03);
   }
+
+  /* Global gradient atmosphere */
+  .pf-gradient-bg {
+    background: linear-gradient(
+      135deg,
+      #dff6f3 0%,
+      #e7f0ff 25%,
+      #efe9ff 50%,
+      #f4fbff 75%,
+      #dff6f3 100%
+    );
+    position: relative;
+  }
+  .pf-gradient-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.25;
+    background:
+      radial-gradient(circle at 20% 30%, #ffffff 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, #ffffff 0%, transparent 35%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .pf-gradient-bg > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Glass panel surface */
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+  }
+
+  /* Bucket container tints */
+  .bucket-bg-focus { background: rgba(91, 108, 255, 0.10); }
+  .bucket-bg-waiting { background: rgba(138, 148, 166, 0.12); }
+  .bucket-bg-upcoming { background: rgba(47, 198, 180, 0.12); }
 }

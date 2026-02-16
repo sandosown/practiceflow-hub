@@ -54,8 +54,8 @@ const RoleHub: React.FC = () => {
                   navigate(tile.path);
                 }
               }}
-              className={`text-left bg-card rounded-xl card-shadow-md p-6 transition-all duration-200 group ${
-                available ? 'hover:shadow-lg hover:-translate-y-1 cursor-pointer' : 'opacity-40 cursor-not-allowed'
+              className={`text-left rounded-xl card-shadow-md p-6 transition-all duration-200 group ${
+                available ? 'glass-panel hover:shadow-lg hover:-translate-y-1 cursor-pointer' : 'glass-panel opacity-40 cursor-not-allowed'
               }`}
             >
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">

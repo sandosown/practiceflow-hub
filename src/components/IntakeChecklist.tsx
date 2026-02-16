@@ -20,7 +20,7 @@ const CheckItem: React.FC<{ label: string; checked: boolean; missing?: boolean; 
 
 const IntakeChecklist: React.FC<IntakeChecklistProps> = ({ checklist, onUpdate }) => {
   return (
-    <div className="bg-card rounded-lg card-shadow p-4">
+    <div className="glass-panel rounded-lg card-shadow p-4">
       <h3 className="font-semibold text-foreground mb-3">Intake Checklist</h3>
       <div className="space-y-1">
         <CheckItem

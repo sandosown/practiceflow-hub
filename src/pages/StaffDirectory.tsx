@@ -16,14 +16,14 @@ const StaffDirectory: React.FC = () => {
       ]}
     >
       <div className="flex gap-3 mb-6 mt-2">
-        <a href="/practice/radar" className="text-sm px-4 py-2 rounded-lg bg-card text-foreground font-medium card-shadow hover:bg-accent transition-colors">Radar</a>
-        <a href="/practice/transfers" className="text-sm px-4 py-2 rounded-lg bg-card text-foreground font-medium card-shadow hover:bg-accent transition-colors">Transfer Portal</a>
+        <a href="/practice/radar" className="text-sm px-4 py-2 rounded-lg glass-panel text-foreground font-medium card-shadow hover:bg-white/70 transition-colors">Radar</a>
+        <a href="/practice/transfers" className="text-sm px-4 py-2 rounded-lg glass-panel text-foreground font-medium card-shadow hover:bg-white/70 transition-colors">Transfer Portal</a>
         <button className="text-sm px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium">Staff Directory</button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {staff.map(member => (
-          <div key={member.id} className="bg-card rounded-xl card-shadow-md p-6">
+          <div key={member.id} className="glass-panel rounded-xl card-shadow-md p-6">
             <div className="flex items-center gap-4 mb-4">
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                 <span className="text-primary font-semibold text-lg">{member.full_name.split(' ').map(n => n[0]).join('')}</span>

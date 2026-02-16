@@ -17,7 +17,7 @@ const bucketStyles: Record<RadarBucket, { border: string; bg: string; icon: Reac
 const StubRadarCard: React.FC<StubRadarCardProps> = ({ title, detail, bucket }) => {
   const style = bucketStyles[bucket];
   return (
-    <div className={`rounded-lg card-shadow-md p-4 ${style.border} ${style.bg}`}>
+    <div className={`rounded-lg card-shadow-md p-4 ${style.border} ${style.bg} backdrop-blur-sm`}>
       <div className="flex items-center gap-2 mb-2">{style.icon}<span className="text-xs uppercase font-medium text-muted-foreground tracking-wide">{bucket.replace('_', ' ')}</span></div>
       <h3 className="font-semibold text-foreground text-lg">{title}</h3>
       <p className="text-sm text-muted-foreground mt-1">{detail}</p>

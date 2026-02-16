@@ -35,7 +35,7 @@ const Login: React.FC = () => {
         </div>
 
         {/* Login card */}
-        <div className="bg-card rounded-xl card-shadow-md p-8">
+        <div className="glass-panel rounded-xl card-shadow-md p-8">
           <h2 className="text-xl font-semibold text-foreground mb-6">Sign in to your account</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
