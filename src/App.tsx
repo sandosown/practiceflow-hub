@@ -19,17 +19,21 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+const isStaffRole = (role?: string) => role === 'THERAPIST' || role === 'INTERN';
+
+const getDefaultRoute = (role?: string) => isStaffRole(role) ? '/practice/my-radar' : '/hub';
+
 const ProtectedRoute: React.FC<{ children: React.ReactNode; ownerOnly?: boolean }> = ({ children, ownerOnly }) => {
   const { isAuthenticated, isProfileComplete, user } = useAuth();
   if (!isAuthenticated) return <Navigate to="/" replace />;
   if (!isProfileComplete) return <Navigate to="/profile-setup" replace />;
-  if (ownerOnly && user?.role !== 'OWNER') return <Navigate to="/hub" replace />;
+  if (ownerOnly && user?.role !== 'OWNER') return <Navigate to={getDefaultRoute(user?.role)} replace />;
   return <>{children}</>;
 };
 
 const AuthRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, isProfileComplete } = useAuth();
-  if (isAuthenticated && isProfileComplete) return <Navigate to="/hub" replace />;
+  const { isAuthenticated, isProfileComplete, user } = useAuth();
+  if (isAuthenticated && isProfileComplete) return <Navigate to={getDefaultRoute(user?.role)} replace />;
   if (isAuthenticated && !isProfileComplete) return <Navigate to="/profile-setup" replace />;
   return <>{children}</>;
 };
