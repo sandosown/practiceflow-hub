@@ -1,6 +1,6 @@
 import React from 'react';
 import { ReferralChecklist as ChecklistType } from '@/types/models';
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle2, CircleDot } from 'lucide-react';
 
 interface IntakeChecklistProps {
   checklist: ChecklistType;
@@ -10,11 +10,11 @@ interface IntakeChecklistProps {
 const CheckItem: React.FC<{ label: string; checked: boolean; missing?: boolean; onToggle: () => void }> = ({ label, checked, missing, onToggle }) => (
   <button onClick={onToggle} className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-accent/50 transition-colors text-left">
     {checked && !missing ? (
-      <CheckCircle2 className="w-5 h-5 text-success flex-shrink-0" />
+      <CheckCircle2 className="w-5 h-5 text-pf-complete flex-shrink-0" />
     ) : (
-      <XCircle className="w-5 h-5 text-destructive flex-shrink-0" />
+      <CircleDot className="w-5 h-5 text-pf-blocked flex-shrink-0" />
     )}
-    <span className={`text-sm ${checked && !missing ? 'text-foreground' : 'text-destructive font-medium'}`}>{label}</span>
+    <span className={`text-sm ${checked && !missing ? 'text-foreground' : 'text-pf-blocked font-medium'}`}>{label}</span>
   </button>
 );
 
@@ -53,8 +53,8 @@ const IntakeChecklist: React.FC<IntakeChecklistProps> = ({ checklist, onUpdate }
         />
       </div>
       {(checklist.intake_missing_payment_auth || checklist.intake_missing_consent || checklist.intake_missing_privacy || !checklist.intake_ack_signed_in_ehr) && (
-        <div className="mt-3 p-3 rounded-lg bg-destructive/10 text-destructive text-sm font-medium">
-          ⚠ Intake blocked — missing items must be resolved before first session.
+        <div className="mt-3 p-3 rounded-lg bg-pf-blocked/[0.18] text-pf-blocked text-sm font-medium">
+          Intake paused — missing items need attention before first session.
         </div>
       )}
     </div>

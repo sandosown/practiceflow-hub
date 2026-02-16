@@ -6,12 +6,12 @@ import { useAuth } from '@/context/AuthContext';
 import { ChevronRight } from 'lucide-react';
 
 const statusColors: Record<string, string> = {
-  NEW: 'bg-primary/10 text-primary',
-  ACKNOWLEDGED: 'bg-success/10 text-success',
-  CONTACT_IN_PROGRESS: 'bg-warning/10 text-warning',
-  APPT_SCHEDULED: 'bg-primary/10 text-primary',
-  INTAKE_BLOCKED: 'bg-destructive/10 text-destructive',
-  INTAKE_READY: 'bg-success/10 text-success',
+  NEW: 'bg-pf-focus/[0.16] text-pf-focus',
+  ACKNOWLEDGED: 'bg-pf-complete/[0.18] text-pf-complete',
+  CONTACT_IN_PROGRESS: 'bg-pf-waiting/[0.18] text-pf-waiting',
+  APPT_SCHEDULED: 'bg-pf-upcoming/[0.18] text-pf-upcoming',
+  INTAKE_BLOCKED: 'bg-pf-blocked/[0.18] text-pf-blocked',
+  INTAKE_READY: 'bg-pf-complete/[0.18] text-pf-complete',
 };
 
 const MyTransferPortal: React.FC = () => {

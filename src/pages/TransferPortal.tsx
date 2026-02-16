@@ -5,12 +5,12 @@ import { MOCK_REFERRALS, MOCK_USERS } from '@/data/mockData';
 import { ChevronRight, UserPlus } from 'lucide-react';
 
 const statusColors: Record<string, string> = {
-  NEW: 'bg-primary/10 text-primary',
-  ACKNOWLEDGED: 'bg-success/10 text-success',
-  CONTACT_IN_PROGRESS: 'bg-warning/10 text-warning',
-  APPT_SCHEDULED: 'bg-primary/10 text-primary',
-  INTAKE_BLOCKED: 'bg-destructive/10 text-destructive',
-  INTAKE_READY: 'bg-success/10 text-success',
+  NEW: 'bg-pf-focus/[0.16] text-pf-focus',
+  ACKNOWLEDGED: 'bg-pf-complete/[0.18] text-pf-complete',
+  CONTACT_IN_PROGRESS: 'bg-pf-waiting/[0.18] text-pf-waiting',
+  APPT_SCHEDULED: 'bg-pf-upcoming/[0.18] text-pf-upcoming',
+  INTAKE_BLOCKED: 'bg-pf-blocked/[0.18] text-pf-blocked',
+  INTAKE_READY: 'bg-pf-complete/[0.18] text-pf-complete',
 };
 
 const TransferPortal: React.FC = () => {
@@ -61,7 +61,7 @@ const TransferPortal: React.FC = () => {
                       {assignee ? (
                         <span className="text-sm text-foreground">{assignee.full_name}</span>
                       ) : (
-                        <span className="flex items-center gap-1 text-sm text-warning"><UserPlus className="w-3.5 h-3.5" /> Unassigned</span>
+                        <span className="flex items-center gap-1 text-sm text-pf-blocked"><UserPlus className="w-3.5 h-3.5" /> Unassigned</span>
                       )}
                     </td>
                     <td className="p-4">

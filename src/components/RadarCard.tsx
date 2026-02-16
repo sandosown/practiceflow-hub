@@ -1,6 +1,6 @@
 import React from 'react';
 import { Referral, RadarBucket } from '@/types/models';
-import { Clock, AlertTriangle, CalendarClock, User, ChevronRight } from 'lucide-react';
+import { Circle, Pause, CalendarClock, User, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { MOCK_USERS } from '@/data/mockData';
 
@@ -13,21 +13,21 @@ interface RadarCardProps {
 const bucketConfig: Record<RadarBucket, { label: string; borderClass: string; icon: React.ReactNode; bgClass: string }> = {
   do_now: {
     label: 'Do Now',
-    borderClass: 'border-l-4 border-l-destructive',
-    bgClass: 'bg-destructive/5',
-    icon: <AlertTriangle className="w-4 h-4 text-destructive" />,
+    borderClass: 'border-l-4 border-l-pf-focus',
+    bgClass: 'bg-pf-focus/[0.16]',
+    icon: <Circle className="w-4 h-4 text-pf-focus" />,
   },
   waiting: {
     label: 'Waiting',
-    borderClass: 'border-l-4 border-l-warning',
-    bgClass: 'bg-warning/5',
-    icon: <Clock className="w-4 h-4 text-warning" />,
+    borderClass: 'border-l-4 border-l-pf-waiting',
+    bgClass: 'bg-pf-waiting/[0.18]',
+    icon: <Pause className="w-4 h-4 text-pf-waiting" />,
   },
   coming_up: {
     label: 'Coming Up',
-    borderClass: 'border-l-4 border-l-primary',
-    bgClass: 'bg-primary/5',
-    icon: <CalendarClock className="w-4 h-4 text-primary" />,
+    borderClass: 'border-l-4 border-l-pf-upcoming',
+    bgClass: 'bg-pf-upcoming/[0.18]',
+    icon: <CalendarClock className="w-4 h-4 text-pf-upcoming" />,
   },
 };
 
@@ -48,7 +48,7 @@ const RadarCard: React.FC<RadarCardProps> = ({ referral, bucket, basePath }) => 
   return (
     <button
       onClick={() => navigate(`${basePath}/${referral.id}`)}
-      className={`w-full text-left bg-card rounded-lg card-shadow-md p-4 ${config.borderClass} hover:shadow-lg transition-all duration-200 group`}
+      className={`w-full text-left rounded-lg card-shadow-md p-4 ${config.borderClass} ${config.bgClass} hover:shadow-lg transition-all duration-200 group`}
     >
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-2">
@@ -65,7 +65,7 @@ const RadarCard: React.FC<RadarCardProps> = ({ referral, bucket, basePath }) => 
         </div>
       )}
       {!assignee && (
-        <span className="text-sm text-warning font-medium">Unassigned</span>
+        <span className="text-sm text-pf-blocked font-medium">Unassigned</span>
       )}
       <div className="mt-2 text-xs text-muted-foreground">
         Contact by: {referral.contact_by}
