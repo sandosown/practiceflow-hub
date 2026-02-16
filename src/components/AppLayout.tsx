@@ -11,10 +11,25 @@ interface AppLayoutProps {
   breadcrumbs?: { label: string; path?: string }[];
 }
 
+const isStaffRole = (role?: string) => role === 'THERAPIST' || role === 'INTERN';
+
 const AppLayout: React.FC<AppLayoutProps> = ({ children, title, breadcrumbs }) => {
   const { user, logout, switchUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const homePath = isStaffRole(user?.role) ? '/practice/my-radar' : '/hub';
+
+  const normalizedBreadcrumbs = React.useMemo(() => {
+    const crumbs = breadcrumbs ?? [];
+    if (!isStaffRole(user?.role)) return crumbs;
+    return crumbs.map((c) => {
+      if (c.label === 'Role Hub' || c.path === '/hub') {
+        return { label: 'Group Practice', path: '/practice/my-radar' };
+      }
+      return c;
+    });
+  }, [breadcrumbs, user?.role]);
 
   return (
     <div className="min-h-screen pf-app-bg">
@@ -53,10 +68,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, title, breadcrumbs }) =
       {/* Breadcrumbs */}
       {breadcrumbs && breadcrumbs.length > 0 && (
         <div className="px-6 py-2 flex items-center gap-1 text-sm text-muted-foreground bg-white/30 backdrop-blur-sm border-b border-white/20">
-          <button onClick={() => navigate('/hub')} className="hover:text-primary transition-colors">
+          <button onClick={() => navigate(homePath)} className="hover:text-primary transition-colors">
             <Home className="w-3.5 h-3.5" />
           </button>
-          {breadcrumbs.map((bc, i) => (
+          {normalizedBreadcrumbs.map((bc, i) => (
             <React.Fragment key={i}>
               <ChevronRight className="w-3.5 h-3.5" />
               {bc.path ? (
