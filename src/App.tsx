@@ -16,6 +16,7 @@ import MyTransferPortal from "./pages/MyTransferPortal";
 import CoachingRadar from "./pages/CoachingRadar";
 import HomeRadar from "./pages/HomeRadar";
 import NotFound from "./pages/NotFound";
+import { OperatingProfileProvider } from "@/context/OperatingProfileContext";
 
 const queryClient = new QueryClient();
 
@@ -69,7 +70,9 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <AppRoutes />
+          <OperatingProfileProvider>
+            <AppRoutes />
+          </OperatingProfileProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
