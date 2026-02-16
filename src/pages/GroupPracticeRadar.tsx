@@ -3,7 +3,7 @@ import AppLayout from '@/components/AppLayout';
 import RadarCard from '@/components/RadarCard';
 import { MOCK_REFERRALS } from '@/data/mockData';
 import { Referral, RadarBucket } from '@/types/models';
-import { AlertTriangle, Clock, CalendarClock } from 'lucide-react';
+import { Circle, Pause, CalendarClock } from 'lucide-react';
 
 function classifyBucket(r: Referral): RadarBucket {
   const today = new Date().toISOString().split('T')[0];
@@ -22,9 +22,9 @@ function classifyBucket(r: Referral): RadarBucket {
 }
 
 const bucketMeta: { key: RadarBucket; label: string; icon: React.ReactNode }[] = [
-  { key: 'do_now', label: 'Do Now', icon: <AlertTriangle className="w-5 h-5 text-destructive" /> },
-  { key: 'waiting', label: 'Waiting', icon: <Clock className="w-5 h-5 text-warning" /> },
-  { key: 'coming_up', label: 'Coming Up', icon: <CalendarClock className="w-5 h-5 text-primary" /> },
+  { key: 'do_now', label: 'Do Now', icon: <Circle className="w-5 h-5 text-pf-focus" /> },
+  { key: 'waiting', label: 'Waiting', icon: <Pause className="w-5 h-5 text-pf-waiting" /> },
+  { key: 'coming_up', label: 'Coming Up', icon: <CalendarClock className="w-5 h-5 text-pf-upcoming" /> },
 ];
 
 const GroupPracticeRadar: React.FC = () => {

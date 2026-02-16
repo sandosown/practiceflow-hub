@@ -70,7 +70,7 @@ const ReferralDetail: React.FC = () => {
       ]}
     >
       {notification && (
-        <div className="mb-4 p-3 rounded-lg bg-success/10 text-success text-sm font-medium animate-fade-in">
+        <div className="mb-4 p-3 rounded-lg bg-pf-complete/[0.18] text-pf-complete text-sm font-medium animate-fade-in">
           {notification}
         </div>
       )}

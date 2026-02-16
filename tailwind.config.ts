@@ -55,6 +55,30 @@ export default {
           DEFAULT: "hsl(var(--success))",
           foreground: "hsl(var(--success-foreground))",
         },
+        "pf-focus": {
+          DEFAULT: "hsl(var(--pf-focus))",
+          foreground: "hsl(var(--pf-focus-foreground))",
+        },
+        "pf-waiting": {
+          DEFAULT: "hsl(var(--pf-waiting))",
+          foreground: "hsl(var(--pf-waiting-foreground))",
+        },
+        "pf-upcoming": {
+          DEFAULT: "hsl(var(--pf-upcoming))",
+          foreground: "hsl(var(--pf-upcoming-foreground))",
+        },
+        "pf-complete": {
+          DEFAULT: "hsl(var(--pf-complete))",
+          foreground: "hsl(var(--pf-complete-foreground))",
+        },
+        "pf-info": {
+          DEFAULT: "hsl(var(--pf-info))",
+          foreground: "hsl(var(--pf-info-foreground))",
+        },
+        "pf-blocked": {
+          DEFAULT: "hsl(var(--pf-blocked))",
+          foreground: "hsl(var(--pf-blocked-foreground))",
+        },
         navy: "hsl(var(--navy))",
         slate: "hsl(var(--slate))",
         sidebar: {

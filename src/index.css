@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    /* PracticeFlow Brand System */
+    /* PracticeFlow Brand System — Calm Therapeutic Palette */
     --background: 220 14% 96%;
     --foreground: 222 47% 11%;
 
@@ -26,7 +26,7 @@
     --accent: 171 62% 95%;
     --accent-foreground: 222 47% 11%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 259 40% 50%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 220 13% 91%;
@@ -35,11 +35,24 @@
 
     --radius: 0.75rem;
 
-    /* Extended palette */
-    --warning: 38 92% 50%;
+    /* PracticeFlow Semantic Colors */
+    --pf-focus: 233 100% 68%;
+    --pf-focus-foreground: 0 0% 100%;
+    --pf-waiting: 218 11% 60%;
+    --pf-waiting-foreground: 0 0% 100%;
+    --pf-upcoming: 171 62% 48%;
+    --pf-upcoming-foreground: 0 0% 100%;
+    --pf-complete: 150 42% 64%;
+    --pf-complete-foreground: 222 47% 11%;
+    --pf-info: 263 86% 76%;
+    --pf-info-foreground: 222 47% 11%;
+    --pf-blocked: 270 15% 51%;
+    --pf-blocked-foreground: 0 0% 100%;
+
+    --warning: 233 100% 68%;
     --warning-foreground: 0 0% 100%;
-    --success: 160 84% 39%;
-    --success-foreground: 0 0% 100%;
+    --success: 150 42% 64%;
+    --success-foreground: 222 47% 11%;
     --navy: 222 47% 11%;
     --slate: 217 33% 17%;
 
