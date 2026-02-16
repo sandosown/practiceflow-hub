@@ -14,10 +14,13 @@ const ProfileSetup: React.FC = () => {
     notifications: true,
   });
 
+  const isStaff = user?.role === 'THERAPIST' || user?.role === 'INTERN';
+  const continueLabel = isStaff ? 'Continue to Group Practice' : 'Continue to Role Hub';
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     completeProfile();
-    navigate('/hub');
+    navigate(isStaff ? '/practice/my-radar' : '/hub');
   };
 
   return (
@@ -51,7 +54,7 @@ const ProfileSetup: React.FC = () => {
               />
               <Label>Enable in-app notifications</Label>
             </div>
-            <Button type="submit" className="w-full">Continue to Role Hub</Button>
+            <Button type="submit" className="w-full">{continueLabel}</Button>
           </form>
         </div>
       </div>
