@@ -1,9 +1,8 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import AppLayout from '@/components/AppLayout';
 import { Briefcase, GraduationCap, Home } from 'lucide-react';
-
 const tiles = [
   {
     type: 'PRACTICE' as const,
@@ -41,6 +40,9 @@ const RoleHub: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const isOwner = user?.role === 'OWNER';
+
+  // Staff should never see Role Hub — redirect to their Group Practice landing
+  if (!isOwner) return <Navigate to="/practice/my-radar" replace />;
 
   return (
     <AppLayout title={`Welcome back, ${user?.full_name?.split(' ')[0]}`}>
