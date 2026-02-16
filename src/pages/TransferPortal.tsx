@@ -26,10 +26,14 @@ const TransferPortal: React.FC = () => {
         { label: 'Transfer Portal' },
       ]}
     >
-      <div className="flex gap-3 mb-6 mt-2">
-        <a href="/practice/radar" className="pf-tab pf-tab-radar">Radar</a>
-        <button className="pf-tab pf-tab-transfer pf-tab-active">Transfer Portal</button>
-        <a href="/practice/staff" className="pf-tab pf-tab-staff">Staff Directory</a>
+      <div className="mt-4 flex items-center justify-between mb-6">
+        <button
+          type="button"
+          onClick={() => navigate('/practice/radar')}
+          className="px-4 py-2 rounded-lg pf-glass hover:opacity-100 opacity-90 transition"
+        >
+          ← Back to Group Practice
+        </button>
       </div>
 
       <div className="pf-glass pf-table-wrap">

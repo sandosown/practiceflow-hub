@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/AppLayout';
 import RadarCard from '@/components/RadarCard';
 import { MOCK_REFERRALS } from '@/data/mockData';
@@ -28,6 +29,7 @@ const bucketMeta: { key: RadarBucket; label: string; icon: React.ReactNode; buck
 ];
 
 const GroupPracticeRadar: React.FC = () => {
+  const navigate = useNavigate();
   const referrals = MOCK_REFERRALS.filter(r => r.workspace_id === 'w1');
 
   const buckets = bucketMeta.map(bm => ({
@@ -43,10 +45,9 @@ const GroupPracticeRadar: React.FC = () => {
         { label: 'Group Practice Radar' },
       ]}
     >
-      <div className="flex gap-3 mb-6 mt-2">
-        <button className="pf-tab pf-tab-radar pf-tab-active">Radar</button>
-        <a href="/practice/transfers" className="pf-tab pf-tab-transfer">Transfer Portal</a>
-        <a href="/practice/staff" className="pf-tab pf-tab-staff">Staff Directory</a>
+      <div className="pf-tabbar mb-6 mt-2">
+        <button onClick={() => navigate('/practice/transfers')} className="pf-tab pf-tab-transfer">Transfer Portal</button>
+        <button onClick={() => navigate('/practice/staff')} className="pf-tab pf-tab-staff">Staff Directory</button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
