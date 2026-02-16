@@ -25,11 +25,29 @@ async function hasSupabaseSession(): Promise<boolean> {
 
 const LS_KEY = (ownerId: string) => `pf_operating_profile_${ownerId}`;
 
+function migrateProfile(ownerId: string, raw: any): OperatingProfile {
+  const now = new Date().toISOString();
+  const base = buildDefaultProfile(ownerId);
+  const merged = {
+    ...base,
+    ...raw,
+    owner_profile_id: ownerId,
+    id: raw?.id ?? base.id,
+    created_at: raw?.created_at ?? base.created_at,
+    updated_at: now,
+  };
+  if (!Array.isArray(merged.domains) || merged.domains.length === 0) merged.domains = ['GROUP_PRACTICE'];
+  if (!Array.isArray(merged.domain_priority) || merged.domain_priority.length === 0) merged.domain_priority = [...merged.domains];
+  return merged as OperatingProfile;
+}
+
 function readLocalProfile(ownerId: string): OperatingProfile | null {
   try {
     const raw = localStorage.getItem(LS_KEY(ownerId));
     if (!raw) return null;
-    return JSON.parse(raw) as OperatingProfile;
+    const migrated = migrateProfile(ownerId, JSON.parse(raw));
+    writeLocalProfile(ownerId, migrated);
+    return migrated;
   } catch {
     return null;
   }
