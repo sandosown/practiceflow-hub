@@ -19,11 +19,11 @@ const TransferPortal: React.FC = () => {
 
   return (
     <AppLayout
-      title="Transfer Portal"
+      title="Referral Portal"
       breadcrumbs={[
         { label: 'Role Hub', path: '/hub' },
         { label: 'Group Practice', path: '/practice/radar' },
-        { label: 'Transfer Portal' },
+        { label: 'Referral Portal' },
       ]}
     >
       <div className="mt-4 flex items-center justify-between mb-6">

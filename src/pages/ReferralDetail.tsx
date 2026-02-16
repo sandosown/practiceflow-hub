@@ -65,7 +65,7 @@ const ReferralDetail: React.FC = () => {
       title={referral.client_name}
       breadcrumbs={[
         { label: 'Role Hub', path: '/hub' },
-        { label: 'Transfer Portal', path: isOwner ? '/practice/transfers' : '/practice/my-transfers' },
+        { label: 'Referral Portal', path: isOwner ? '/practice/transfers' : '/practice/my-transfers' },
         { label: referral.client_name },
       ]}
     >

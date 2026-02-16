@@ -21,15 +21,15 @@ const MyTransferPortal: React.FC = () => {
 
   return (
     <AppLayout
-      title="My Transfer Portal"
+      title="My Referral Portal"
       breadcrumbs={[
         { label: 'Role Hub', path: '/hub' },
-        { label: 'My Transfer Portal' },
+        { label: 'My Referral Portal' },
       ]}
     >
       <div className="flex gap-3 mb-6 mt-2">
         <a href="/practice/my-radar" className="pf-tab pf-tab-myradar">My Radar</a>
-        <button className="pf-tab pf-tab-mytransfer pf-tab-active">My Transfers</button>
+        <button className="pf-tab pf-tab-mytransfer pf-tab-active">My Referrals</button>
       </div>
 
       <div className="pf-glass pf-table-wrap">
