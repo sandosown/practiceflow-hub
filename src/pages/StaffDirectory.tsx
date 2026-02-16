@@ -36,7 +36,7 @@ const StaffDirectory: React.FC = () => {
         <button
           type="button"
           onClick={() => navigate('/practice/radar')}
-          className="px-4 py-2 rounded-lg pf-glass hover:opacity-100 opacity-90 transition"
+          className="pf-btn pf-btn-back"
         >
           ← Back to Group Practice
         </button>

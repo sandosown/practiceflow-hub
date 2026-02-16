@@ -48,6 +48,7 @@ const GroupPracticeRadar: React.FC = () => {
       <div className="pf-tabbar mb-6 mt-2">
         <button onClick={() => navigate('/practice/transfers')} className="pf-tab pf-tab-transfer">Transfer Portal</button>
         <button onClick={() => navigate('/practice/staff')} className="pf-tab pf-tab-staff">Staff Directory</button>
+
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
