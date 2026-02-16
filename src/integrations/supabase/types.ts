@@ -17,11 +17,15 @@ export type Database = {
       operating_profiles: {
         Row: {
           created_at: string
+          domain_labels: Json
+          domain_priority: string[]
           domains: Json
           has_interns: boolean
           has_staff: boolean
           id: string
           notification_style: string
+          notifications_pref: string
+          onboarding_complete: boolean
           owner_profile_id: string
           practice_mode: string
           updated_at: string
@@ -29,11 +33,15 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          domain_labels?: Json
+          domain_priority?: string[]
           domains?: Json
           has_interns?: boolean
           has_staff?: boolean
           id?: string
           notification_style?: string
+          notifications_pref?: string
+          onboarding_complete?: boolean
           owner_profile_id: string
           practice_mode?: string
           updated_at?: string
@@ -41,11 +49,15 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          domain_labels?: Json
+          domain_priority?: string[]
           domains?: Json
           has_interns?: boolean
           has_staff?: boolean
           id?: string
           notification_style?: string
+          notifications_pref?: string
+          onboarding_complete?: boolean
           owner_profile_id?: string
           practice_mode?: string
           updated_at?: string

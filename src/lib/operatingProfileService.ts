@@ -1,15 +1,17 @@
 import { supabase } from '@/integrations/supabase/client';
 import { OperatingProfile } from '@/types/operatingProfile';
 
-const DEFAULT_DOMAINS = { practice: true, coaching: true, home: true };
-
 const DEFAULT_VALUES = {
-  domains: DEFAULT_DOMAINS,
+  domains: ['GROUP_PRACTICE'] as string[],
+  domain_labels: { GROUP_PRACTICE: 'Group Practice', COACHING: 'Coaching Business', HOME: 'Home' },
+  domain_priority: ['GROUP_PRACTICE'] as string[],
   practice_mode: 'group' as const,
   uses_referrals: true,
   has_staff: true,
   has_interns: true,
   notification_style: 'realtime' as const,
+  notifications_pref: 'MEDIUM' as const,
+  onboarding_complete: false,
 };
 
 // --- Session check ---
@@ -100,7 +102,6 @@ export async function saveOperatingProfile(
     return merged;
   }
 
-  // DB path: fetch existing or create, then update
   let { data, error } = await supabase
     .from('operating_profiles')
     .select('*')
