@@ -91,9 +91,12 @@ const GroupPracticeRadar: React.FC = () => {
       ]}
     >
       <div className="flex items-center justify-between mb-6 mt-2">
-        <div className="pf-controlbar">
+        <div className="pf-controlbar flex-wrap">
           <button onClick={() => navigate('/practice/transfers')} className="pf-tab pf-tab-transfer">Referral Portal</button>
           <button onClick={() => navigate('/practice/staff')} className="pf-tab pf-tab-staff">Staff Directory</button>
+          <button onClick={() => navigate('/practice/comms')} className="pf-tab pf-tab-myradar">Comms</button>
+          <button onClick={() => navigate('/practice/people')} className="pf-tab pf-tab-staff">People</button>
+          <button onClick={() => navigate('/practice/ops')} className="pf-tab pf-tab-transfer">Operations</button>
         </div>
 
         {/* Mobile actions trigger */}

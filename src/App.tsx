@@ -18,6 +18,26 @@ import HomeRadar from "./pages/HomeRadar";
 import NotFound from "./pages/NotFound";
 import { OperatingProfileProvider } from "@/context/OperatingProfileContext";
 
+// Comms
+import CommsHub from "./pages/practice/CommsHub";
+import CommsAnnouncements from "./pages/practice/CommsAnnouncements";
+import CommsStaffUpdates from "./pages/practice/CommsStaffUpdates";
+import CommsResources from "./pages/practice/CommsResources";
+import CommsSupervision from "./pages/practice/CommsSupervision";
+
+// People
+import PeopleHub from "./pages/practice/PeopleHub";
+import WorkerProfileWizard from "./pages/practice/WorkerProfileWizard";
+import ProfileReviews from "./pages/practice/ProfileReviews";
+
+// Operations
+import OperationsHub from "./pages/practice/OperationsHub";
+import OpsClients from "./pages/practice/OpsClients";
+import OpsCaseload from "./pages/practice/OpsCaseload";
+import OpsTreatmentPlans from "./pages/practice/OpsTreatmentPlans";
+import OpsPayers from "./pages/practice/OpsPayers";
+import OpsVendors from "./pages/practice/OpsVendors";
+
 const queryClient = new QueryClient();
 
 const isStaffRole = (role?: string) => role === 'THERAPIST' || role === 'INTERN';
@@ -54,6 +74,27 @@ const AppRoutes = () => (
     {/* Therapist/Intern */}
     <Route path="/practice/my-radar" element={<ProtectedRoute><MyRadar /></ProtectedRoute>} />
     <Route path="/practice/my-transfers" element={<ProtectedRoute><MyTransferPortal /></ProtectedRoute>} />
+    
+    {/* Comms */}
+    <Route path="/practice/comms" element={<ProtectedRoute><CommsHub /></ProtectedRoute>} />
+    <Route path="/practice/comms/announcements" element={<ProtectedRoute><CommsAnnouncements /></ProtectedRoute>} />
+    <Route path="/practice/comms/staff-updates" element={<ProtectedRoute><CommsStaffUpdates /></ProtectedRoute>} />
+    <Route path="/practice/comms/resources" element={<ProtectedRoute><CommsResources /></ProtectedRoute>} />
+    <Route path="/practice/comms/supervision" element={<ProtectedRoute><CommsSupervision /></ProtectedRoute>} />
+    
+    {/* People */}
+    <Route path="/practice/people" element={<ProtectedRoute><PeopleHub /></ProtectedRoute>} />
+    <Route path="/practice/people/my-profile" element={<ProtectedRoute><WorkerProfileWizard /></ProtectedRoute>} />
+    <Route path="/practice/people/reviews" element={<ProtectedRoute ownerOnly><ProfileReviews /></ProtectedRoute>} />
+    <Route path="/practice/people/review/:id" element={<ProtectedRoute ownerOnly><ProfileReviews /></ProtectedRoute>} />
+    
+    {/* Operations */}
+    <Route path="/practice/ops" element={<ProtectedRoute><OperationsHub /></ProtectedRoute>} />
+    <Route path="/practice/ops/clients" element={<ProtectedRoute ownerOnly><OpsClients /></ProtectedRoute>} />
+    <Route path="/practice/ops/caseload" element={<ProtectedRoute><OpsCaseload /></ProtectedRoute>} />
+    <Route path="/practice/ops/treatment-plans" element={<ProtectedRoute><OpsTreatmentPlans /></ProtectedRoute>} />
+    <Route path="/practice/ops/payers" element={<ProtectedRoute><OpsPayers /></ProtectedRoute>} />
+    <Route path="/practice/ops/vendors" element={<ProtectedRoute ownerOnly><OpsVendors /></ProtectedRoute>} />
     
     {/* Stub roles (owner only) */}
     <Route path="/coaching" element={<ProtectedRoute ownerOnly><CoachingRadar /></ProtectedRoute>} />
