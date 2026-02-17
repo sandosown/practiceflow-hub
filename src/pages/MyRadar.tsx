@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/AppLayout';
 import RadarCard from '@/components/RadarCard';
 import { MOCK_REFERRALS } from '@/data/mockData';
@@ -30,6 +31,7 @@ const bucketMeta: { key: RadarBucket; label: string; icon: React.ReactNode; buck
 
 const MyRadar: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const operatingProfile = useMemo(() => resolveOperatingProfile(), []);
 
   const referrals = MOCK_REFERRALS.filter(r => r.workspace_id === 'w1' && r.assigned_to_profile_id === user?.id);
@@ -58,9 +60,12 @@ const MyRadar: React.FC = () => {
         { label: 'My Radar' },
       ]}
     >
-      <div className="pf-controlbar mb-6 mt-2">
+      <div className="pf-controlbar mb-6 mt-2 flex-wrap">
         <button className="pf-tab pf-tab-myradar pf-tab-active">My Radar</button>
         <a href="/practice/my-transfers" className="pf-tab pf-tab-mytransfer">My Referrals</a>
+        <button onClick={() => navigate('/practice/comms')} className="pf-tab">Comms</button>
+        <button onClick={() => navigate('/practice/people')} className="pf-tab">People</button>
+        <button onClick={() => navigate('/practice/ops')} className="pf-tab">Operations</button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
