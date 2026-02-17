@@ -104,10 +104,10 @@ const GroupPracticeRadar: React.FC = () => {
       )}
 
       {/* Command Center Navigation Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 mb-8">
         <button
           onClick={() => navigate('/practice/transfers')}
-          className="pf-glass text-left p-7 rounded-2xl group hover:scale-[1.02] transition-all duration-200 hover:shadow-lg"
+          className="pf-glass text-left p-7 rounded-2xl group hover:scale-[1.02] transition-all duration-200 hover:shadow-lg min-h-[140px] flex flex-col justify-start"
           style={{ background: 'rgba(91,183,255,0.13)', borderColor: 'rgba(91,183,255,0.28)' }}
         >
           <ArrowRightLeft className="w-8 h-8 mb-3 text-pf-sky opacity-80" />
@@ -117,7 +117,7 @@ const GroupPracticeRadar: React.FC = () => {
 
         <button
           onClick={() => navigate('/practice/staff')}
-          className="pf-glass text-left p-7 rounded-2xl group hover:scale-[1.02] transition-all duration-200 hover:shadow-lg"
+          className="pf-glass text-left p-7 rounded-2xl group hover:scale-[1.02] transition-all duration-200 hover:shadow-lg min-h-[140px] flex flex-col justify-start"
           style={{ background: 'rgba(124,108,246,0.12)', borderColor: 'rgba(124,108,246,0.25)' }}
         >
           <Users className="w-8 h-8 mb-3 text-pf-lavender opacity-80" />
@@ -127,7 +127,7 @@ const GroupPracticeRadar: React.FC = () => {
 
         <button
           onClick={() => navigate('/practice/comms')}
-          className="pf-glass text-left p-7 rounded-2xl group hover:scale-[1.02] transition-all duration-200 hover:shadow-lg"
+          className="pf-glass text-left p-7 rounded-2xl group hover:scale-[1.02] transition-all duration-200 hover:shadow-lg min-h-[140px] flex flex-col justify-start"
           style={{ background: 'rgba(47,198,180,0.12)', borderColor: 'rgba(47,198,180,0.25)' }}
         >
           <MessageSquare className="w-8 h-8 mb-3 text-pf-upcoming opacity-80" />
@@ -137,17 +137,17 @@ const GroupPracticeRadar: React.FC = () => {
 
         <button
           onClick={() => navigate('/practice/people')}
-          className="pf-glass text-left p-7 rounded-2xl group hover:scale-[1.02] transition-all duration-200 hover:shadow-lg"
+          className="pf-glass text-left p-7 rounded-2xl group hover:scale-[1.02] transition-all duration-200 hover:shadow-lg min-h-[140px] flex flex-col justify-start"
           style={{ background: 'rgba(153,204,153,0.14)', borderColor: 'rgba(153,204,153,0.28)' }}
         >
           <ClipboardList className="w-8 h-8 mb-3 text-pf-complete opacity-80" />
           <h3 className="text-lg font-semibold text-foreground mb-1">Charts Requiring Action</h3>
-          <p className="text-sm text-muted-foreground leading-relaxed">Worker profiles & onboarding reviews</p>
+          <p className="text-sm text-muted-foreground leading-relaxed">Treatment plans, notes & signatures needing review</p>
         </button>
 
         <button
           onClick={() => navigate('/practice/ops')}
-          className="pf-glass text-left p-7 rounded-2xl group hover:scale-[1.02] transition-all duration-200 hover:shadow-lg"
+          className="pf-glass text-left p-7 rounded-2xl group hover:scale-[1.02] transition-all duration-200 hover:shadow-lg min-h-[140px] flex flex-col justify-start md:col-span-2 xl:col-span-1"
           style={{ background: 'rgba(100,116,139,0.11)', borderColor: 'rgba(100,116,139,0.22)' }}
         >
           <LayoutDashboard className="w-8 h-8 mb-3 text-pf-soft-slate opacity-80" />
