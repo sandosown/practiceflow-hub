@@ -14,6 +14,380 @@ export type Database = {
   }
   public: {
     Tables: {
+      gp_announcements: {
+        Row: {
+          body: string
+          created_at: string
+          created_by_profile_id: string
+          id: string
+          pinned: boolean
+          title: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          body?: string
+          created_at?: string
+          created_by_profile_id: string
+          id?: string
+          pinned?: boolean
+          title: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          created_by_profile_id?: string
+          id?: string
+          pinned?: boolean
+          title?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
+      gp_clients: {
+        Row: {
+          created_at: string
+          date_of_birth: string | null
+          first_name: string
+          id: string
+          last_name: string
+          location: string | null
+          primary_clinician_profile_id: string | null
+          status: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          date_of_birth?: string | null
+          first_name: string
+          id?: string
+          last_name: string
+          location?: string | null
+          primary_clinician_profile_id?: string | null
+          status?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Update: {
+          created_at?: string
+          date_of_birth?: string | null
+          first_name?: string
+          id?: string
+          last_name?: string
+          location?: string | null
+          primary_clinician_profile_id?: string | null
+          status?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
+      gp_payers: {
+        Row: {
+          claims_address: string | null
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
+          id: string
+          notes: string | null
+          payer_id: string | null
+          payer_name: string
+          submission_deadlines: string | null
+          workspace_id: string
+        }
+        Insert: {
+          claims_address?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          id?: string
+          notes?: string | null
+          payer_id?: string | null
+          payer_name: string
+          submission_deadlines?: string | null
+          workspace_id?: string
+        }
+        Update: {
+          claims_address?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          id?: string
+          notes?: string | null
+          payer_id?: string | null
+          payer_name?: string
+          submission_deadlines?: string | null
+          workspace_id?: string
+        }
+        Relationships: []
+      }
+      gp_resources: {
+        Row: {
+          category: string
+          content: string | null
+          id: string
+          resource_type: string
+          title: string
+          updated_at: string
+          url: string | null
+          workspace_id: string
+        }
+        Insert: {
+          category?: string
+          content?: string | null
+          id?: string
+          resource_type?: string
+          title: string
+          updated_at?: string
+          url?: string | null
+          workspace_id?: string
+        }
+        Update: {
+          category?: string
+          content?: string | null
+          id?: string
+          resource_type?: string
+          title?: string
+          updated_at?: string
+          url?: string | null
+          workspace_id?: string
+        }
+        Relationships: []
+      }
+      gp_staff_updates: {
+        Row: {
+          author_profile_id: string
+          body: string
+          created_at: string
+          id: string
+          visibility: string
+          workspace_id: string
+        }
+        Insert: {
+          author_profile_id: string
+          body?: string
+          created_at?: string
+          id?: string
+          visibility?: string
+          workspace_id?: string
+        }
+        Update: {
+          author_profile_id?: string
+          body?: string
+          created_at?: string
+          id?: string
+          visibility?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
+      gp_supervision_sessions: {
+        Row: {
+          day_of_week: number
+          facilitator_profile_id: string
+          id: string
+          location_detail: string | null
+          location_mode: string
+          notes: string | null
+          time: string
+          workspace_id: string
+        }
+        Insert: {
+          day_of_week?: number
+          facilitator_profile_id: string
+          id?: string
+          location_detail?: string | null
+          location_mode?: string
+          notes?: string | null
+          time?: string
+          workspace_id?: string
+        }
+        Update: {
+          day_of_week?: number
+          facilitator_profile_id?: string
+          id?: string
+          location_detail?: string | null
+          location_mode?: string
+          notes?: string | null
+          time?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
+      gp_treatment_plan_cycles: {
+        Row: {
+          approved_at: string | null
+          approved_by_profile_id: string | null
+          assigned_to_profile_id: string | null
+          client_id: string | null
+          cycle_key: string
+          due_date: string
+          id: string
+          state: string
+          submitted_at: string | null
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by_profile_id?: string | null
+          assigned_to_profile_id?: string | null
+          client_id?: string | null
+          cycle_key: string
+          due_date: string
+          id?: string
+          state?: string
+          submitted_at?: string | null
+          updated_at?: string
+          workspace_id?: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by_profile_id?: string | null
+          assigned_to_profile_id?: string | null
+          client_id?: string | null
+          cycle_key?: string
+          due_date?: string
+          id?: string
+          state?: string
+          submitted_at?: string | null
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gp_treatment_plan_cycles_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "gp_clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gp_vendors: {
+        Row: {
+          documents_due_date: string | null
+          id: string
+          invoice_submission_window: string | null
+          main_contact_email: string | null
+          main_contact_name: string | null
+          main_contact_phone: string | null
+          notes: string | null
+          notes_submission_timeframe: string | null
+          vendor_name: string
+          workspace_id: string
+        }
+        Insert: {
+          documents_due_date?: string | null
+          id?: string
+          invoice_submission_window?: string | null
+          main_contact_email?: string | null
+          main_contact_name?: string | null
+          main_contact_phone?: string | null
+          notes?: string | null
+          notes_submission_timeframe?: string | null
+          vendor_name: string
+          workspace_id?: string
+        }
+        Update: {
+          documents_due_date?: string | null
+          id?: string
+          invoice_submission_window?: string | null
+          main_contact_email?: string | null
+          main_contact_name?: string | null
+          main_contact_phone?: string | null
+          notes?: string | null
+          notes_submission_timeframe?: string | null
+          vendor_name?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
+      gp_worker_profiles: {
+        Row: {
+          address: string | null
+          caqh_number: string | null
+          city: string | null
+          county: string | null
+          created_at: string
+          date_of_birth: string | null
+          email: string | null
+          first_name: string | null
+          id: string
+          last_name: string | null
+          license_type: string | null
+          npi_number: string | null
+          populations_served: string[] | null
+          provider_ethnicity: string[] | null
+          review_note: string | null
+          reviewed_at: string | null
+          reviewed_by_profile_id: string | null
+          state: string | null
+          status: string
+          submitted_at: string | null
+          updated_at: string
+          worker_profile_id: string
+          workspace_id: string
+          zip_code: string | null
+        }
+        Insert: {
+          address?: string | null
+          caqh_number?: string | null
+          city?: string | null
+          county?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          license_type?: string | null
+          npi_number?: string | null
+          populations_served?: string[] | null
+          provider_ethnicity?: string[] | null
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by_profile_id?: string | null
+          state?: string | null
+          status?: string
+          submitted_at?: string | null
+          updated_at?: string
+          worker_profile_id: string
+          workspace_id?: string
+          zip_code?: string | null
+        }
+        Update: {
+          address?: string | null
+          caqh_number?: string | null
+          city?: string | null
+          county?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          license_type?: string | null
+          npi_number?: string | null
+          populations_served?: string[] | null
+          provider_ethnicity?: string[] | null
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by_profile_id?: string | null
+          state?: string | null
+          status?: string
+          submitted_at?: string | null
+          updated_at?: string
+          worker_profile_id?: string
+          workspace_id?: string
+          zip_code?: string | null
+        }
+        Relationships: []
+      }
       operating_profiles: {
         Row: {
           created_at: string
