@@ -14,6 +14,81 @@ export type Database = {
   }
   public: {
     Tables: {
+      employee_licenses: {
+        Row: {
+          created_at: string
+          expiry_date: string | null
+          id: string
+          is_primary: boolean
+          issued_date: string | null
+          issuing_state: string | null
+          license_number: string | null
+          license_type: string
+          source: string | null
+          updated_at: string
+          worker_profile_id: string
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          expiry_date?: string | null
+          id?: string
+          is_primary?: boolean
+          issued_date?: string | null
+          issuing_state?: string | null
+          license_number?: string | null
+          license_type: string
+          source?: string | null
+          updated_at?: string
+          worker_profile_id: string
+          workspace_id?: string
+        }
+        Update: {
+          created_at?: string
+          expiry_date?: string | null
+          id?: string
+          is_primary?: boolean
+          issued_date?: string | null
+          issuing_state?: string | null
+          license_number?: string | null
+          license_type?: string
+          source?: string | null
+          updated_at?: string
+          worker_profile_id?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
+      employee_tags: {
+        Row: {
+          created_at: string
+          id: string
+          source: string | null
+          tag_type: string
+          tag_value: string
+          worker_profile_id: string
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          source?: string | null
+          tag_type: string
+          tag_value: string
+          worker_profile_id: string
+          workspace_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          source?: string | null
+          tag_type?: string
+          tag_value?: string
+          worker_profile_id?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
       gp_announcements: {
         Row: {
           body: string
@@ -436,6 +511,51 @@ export type Database = {
           practice_mode?: string
           updated_at?: string
           uses_referrals?: boolean
+        }
+        Relationships: []
+      }
+      questionnaire_draft_answers: {
+        Row: {
+          answer_json: Json
+          autofill_confidence: Json | null
+          autofill_source: string | null
+          created_at: string
+          id: string
+          locked_fields: string[] | null
+          questionnaire_version: number
+          updated_at: string
+          upload_filename: string | null
+          uploaded_file_url: string | null
+          worker_profile_id: string
+          workspace_id: string
+        }
+        Insert: {
+          answer_json?: Json
+          autofill_confidence?: Json | null
+          autofill_source?: string | null
+          created_at?: string
+          id?: string
+          locked_fields?: string[] | null
+          questionnaire_version?: number
+          updated_at?: string
+          upload_filename?: string | null
+          uploaded_file_url?: string | null
+          worker_profile_id: string
+          workspace_id?: string
+        }
+        Update: {
+          answer_json?: Json
+          autofill_confidence?: Json | null
+          autofill_source?: string | null
+          created_at?: string
+          id?: string
+          locked_fields?: string[] | null
+          questionnaire_version?: number
+          updated_at?: string
+          upload_filename?: string | null
+          uploaded_file_url?: string | null
+          worker_profile_id?: string
+          workspace_id?: string
         }
         Relationships: []
       }
