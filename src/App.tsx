@@ -100,6 +100,9 @@ const AppRoutes = () => (
     <Route path="/coaching" element={<ProtectedRoute ownerOnly><CoachingRadar /></ProtectedRoute>} />
     <Route path="/home" element={<ProtectedRoute ownerOnly><HomeRadar /></ProtectedRoute>} />
     
+    {/* DEV ONLY — remove before release */}
+    <Route path="/dev/onboarding" element={<WorkerProfileWizard />} />
+
     <Route path="*" element={<NotFound />} />
   </Routes>
 );
