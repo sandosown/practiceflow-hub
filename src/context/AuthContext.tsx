@@ -28,21 +28,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { user: null, isAuthenticated: false, isProfileComplete: false };
   });
 
-  const login = useCallback((email: string, _password: string) => {
-    const user = MOCK_USERS.find(u => u.email === email);
-    if (user) {
-      const profileComplete = localStorage.getItem(`pf_profile_${user.id}`) === 'true';
-      setState({ user, isAuthenticated: true, isProfileComplete: profileComplete });
-      localStorage.setItem('pf_auth', JSON.stringify({ userId: user.id, profileComplete }));
-      return true;
-    }
-    return false;
-  }, []);
+  const login = useCallback((email: string, password: string) => {
+  const normalizedEmail = (email ?? '').trim().toLowerCase();
+  const normalizedPassword = (password ?? '').trim();
 
-  const logout = useCallback(() => {
-    setState({ user: null, isAuthenticated: false, isProfileComplete: false });
-    localStorage.removeItem('pf_auth');
-  }, []);
+  // Enforce password: fail closed if missing
+  if (!normalizedEmail || !normalizedPassword) return false;
+
+  const user = MOCK_USERS.find(u => (u.email ?? '').trim().toLowerCase() === normalizedEmail);
+  if (!user) return false;
+
+  // Enforce password match against mock user record
+  // Assumes MOCK_USERS entries include a `password` field (string).
+  // If not present, login should fail (security > convenience).
+  const userPassword = (user as any).password;
+  if (typeof userPassword !== 'string' || userPassword.trim() !== normalizedPassword) {
+    return false;
+  }
+
+  const profileComplete = localStorage.getItem(`pf_profile_${user.id}`) === 'true';
+  setState({ user, isAuthenticated: true, isProfileComplete: profileComplete });
+  localStorage.setItem('pf_auth', JSON.stringify({ userId: user.id, profileComplete }));
+  return true;
+}, []);
+
 
   const completeProfile = useCallback(() => {
     setState(prev => {
