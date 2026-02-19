@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { UserProfile } from '@/types/models';
-import { MOCK_USERS } from '@/data/mockData';
+import { supabase } from '@/integrations/supabase/client';
 
 interface AuthState {
   user: UserProfile | null;
@@ -9,7 +9,7 @@ interface AuthState {
 }
 
 interface AuthContextType extends AuthState {
-  login: (email: string, password: string) => boolean;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   completeProfile: () => void;
   switchUser: (userId: string) => void;
@@ -18,43 +18,88 @@ interface AuthContextType extends AuthState {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [state, setState] = useState<AuthState>(() => {
-    const saved = localStorage.getItem('pf_auth');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      const user = MOCK_USERS.find(u => u.id === parsed.userId) || null;
-      return { user, isAuthenticated: !!user, isProfileComplete: parsed.profileComplete ?? false };
+  const [state, setState] = useState<AuthState>({
+  user: null,
+  isAuthenticated: false,
+  isProfileComplete: false
+});
+
+useEffect(() => {
+
+  let mounted = true;
+
+  const load = async () => {
+    const { data } = await supabase.auth.getSession();
+    const session = data.session;
+
+    if (!mounted) return;
+
+    if (!session) {
+      setState({ user: null, isAuthenticated: false, isProfileComplete: false });
+      return;
     }
-    return { user: null, isAuthenticated: false, isProfileComplete: false };
+
+    const user = {
+      id: session.user.id,
+      email: session.user.email ?? ''
+    } as unknown as UserProfile;
+
+    setState({
+      user,
+      isAuthenticated: true,
+      isProfileComplete: true
+    });
+  };
+
+  load();
+
+  const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+    if (!mounted) return;
+
+    if (!session) {
+      setState({ user: null, isAuthenticated: false, isProfileComplete: false });
+      return;
+    }
+
+    const user = {
+      id: session.user.id,
+      email: session.user.email ?? ''
+    } as unknown as UserProfile;
+
+    setState({ user, isAuthenticated: true, isProfileComplete: true });
   });
 
-  const login = useCallback((email: string, password: string) => {
-  const normalizedEmail = (email ?? '').trim().toLowerCase();
-  const normalizedPassword = (password ?? '').trim();
-
-  // Enforce password: fail closed if missing
-  if (!normalizedEmail || !normalizedPassword) return false;
-
-  const user = MOCK_USERS.find(u => (u.email ?? '').trim().toLowerCase() === normalizedEmail);
-  if (!user) return false;
-
-  // Enforce password match against mock user record
-  // Assumes MOCK_USERS entries include a `password` field (string).
-  // If not present, login should fail (security > convenience).
-  const userPassword = (user as any).password;
-  if (typeof userPassword !== 'string' || userPassword.trim() !== normalizedPassword) {
-    return false;
-  }
-
-  const profileComplete = localStorage.getItem(`pf_profile_${user.id}`) === 'true';
-  setState({ user, isAuthenticated: true, isProfileComplete: profileComplete });
-  localStorage.setItem('pf_auth', JSON.stringify({ userId: user.id, profileComplete }));
-  return true;
+  return () => {
+    mounted = false;
+    sub.subscription.unsubscribe();
+  };
 }, []);
-  const logout = useCallback(() => {
-  setState({ user: null, isAuthenticated: false, isProfileComplete: false });
-  localStorage.removeItem('pf_auth');
+
+  user: null,
+  isAuthenticated: false,
+  isProfileComplete: false
+});
+
+
+  const login = useCallback(async (email: string, password: string) => {
+  const { error } = await supabase.auth.signInWithPassword({
+    email: email.trim().toLowerCase(),
+    password: password.trim()
+  });
+
+  return !error;
 }, []);
+
+  const logout = useCallback(async () => {
+  await supabase.auth.signOut();
+
+  setState({
+    user: null,
+    isAuthenticated: false,
+    isProfileComplete: false
+  });
+}, []);
+
 
 
 
@@ -62,18 +107,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setState(prev => {
       if (prev.user) {
         localStorage.setItem(`pf_profile_${prev.user.id}`, 'true');
-        localStorage.setItem('pf_auth', JSON.stringify({ userId: prev.user.id, profileComplete: true }));
+        
       }
       return { ...prev, isProfileComplete: true };
     });
   }, []);
 
-  const switchUser = useCallback((userId: string) => {
-    const user = MOCK_USERS.find(u => u.id === userId);
-    if (user) {
-      const profileComplete = localStorage.getItem(`pf_profile_${user.id}`) === 'true';
-      setState({ user, isAuthenticated: true, isProfileComplete: profileComplete });
-      localStorage.setItem('pf_auth', JSON.stringify({ userId: user.id, profileComplete }));
+  const switchUser = useCallback(async () => {
+    const { data } = await supabase.auth.getUser();
+
+if (!data?.user) return;
+
+setState(prev => ({
+  ...prev,
+  user: {
+    id: data.user.id,
+    email: data.user.email ?? '',
+  } as any,
+  isAuthenticated: true
+}));
+
+     
     }
   }, []);
 
