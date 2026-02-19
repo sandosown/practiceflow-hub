@@ -51,6 +51,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   localStorage.setItem('pf_auth', JSON.stringify({ userId: user.id, profileComplete }));
   return true;
 }, []);
+  const logout = useCallback(() => {
+  setState({ user: null, isAuthenticated: false, isProfileComplete: false });
+  localStorage.removeItem('pf_auth');
+}, []);
+
 
 
   const completeProfile = useCallback(() => {
