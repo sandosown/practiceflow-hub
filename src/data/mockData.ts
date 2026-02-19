@@ -2,18 +2,21 @@ import { UserProfile, RoleWorkspace, Referral, ReferralChecklist } from '@/types
 
 export const MOCK_USERS: UserProfile[] = [
   {
-    id: 'u1',
-    full_name: 'Dr. Sarah Mitchell',
-    email: 'sarah@practiceflow.io',
-    phone: '(555) 100-0001',
-    role: 'OWNER',
-    status: 'active',
-    notification_prefs_json: { email: true, in_app: true },
-  },
+  id: 'u1',
+  full_name: 'Dr. Sarah Mitchell',
+  email: 'sarah@practiceflow.io',
+  password: 'owner123',
+  phone: '(555) 100-0001',
+  role: 'OWNER',
+  status: 'active',
+  notification_prefs_json: { email: true, in_app: true },
+},
+
   {
     id: 'u2',
     full_name: 'James Rivera, LCSW',
     email: 'james@practiceflow.io',
+    password: 'therapist123',
     phone: '(555) 100-0002',
     role: 'THERAPIST',
     status: 'active',
@@ -23,6 +26,7 @@ export const MOCK_USERS: UserProfile[] = [
     id: 'u3',
     full_name: 'Priya Patel, Intern',
     email: 'priya@practiceflow.io',
+    password: 'intern123',
     phone: '(555) 100-0003',
     role: 'INTERN',
     status: 'active',
