@@ -16,6 +16,7 @@ export interface UserProfile {
   id: string;
   full_name: string;
   email: string;
+  password?: string;
   phone: string;
   role: UserRole;
   status: 'active' | 'inactive';
