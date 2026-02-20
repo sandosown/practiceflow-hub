@@ -49,7 +49,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, title, breadcrumbs }) =
             <Users className="w-4 h-4 text-muted-foreground" />
             <select
               value={user?.id || ''}
-              onChange={(e) => { switchUser(e.target.value); navigate('/hub'); }}
+              onChange={() => { switchUser(); navigate('/hub'); }}
               className="text-sm bg-transparent border border-border rounded-md px-2 py-1 text-foreground"
             >
               {MOCK_USERS.map(u => (

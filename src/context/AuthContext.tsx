@@ -46,17 +46,19 @@ useEffect(() => {
   return;
 }
 
+    const isProfileComplete = localStorage.getItem(`pf_profile_${session.user.id}`) === 'true';
+
     const user = {
       id: session.user.id,
       email: session.user.email ?? ''
     } as unknown as UserProfile;
 
     setState({
-  user,
-  isAuthenticated: true,
-  isProfileComplete: true,
-  isLoading: false
-});
+      user,
+      isAuthenticated: true,
+      isProfileComplete,
+      isLoading: false
+    });
   };
 
   load();
@@ -66,13 +68,15 @@ useEffect(() => {
 
     if (!session) {
       setState({
-  user: null,
-  isAuthenticated: false,
-  isProfileComplete: false,
-  isLoading: false
-});
+        user: null,
+        isAuthenticated: false,
+        isProfileComplete: false,
+        isLoading: false
+      });
       return;
     }
+
+    const isProfileComplete = localStorage.getItem(`pf_profile_${session.user.id}`) === 'true';
 
     const user = {
       id: session.user.id,
@@ -80,11 +84,11 @@ useEffect(() => {
     } as unknown as UserProfile;
 
     setState({
-  user,
-  isAuthenticated: true,
-  isProfileComplete: true,
-  isLoading: false
-});
+      user,
+      isAuthenticated: true,
+      isProfileComplete,
+      isLoading: false
+    });
   });
 
   return () => {
@@ -128,28 +132,38 @@ useEffect(() => {
   }, []);
 
   const switchUser = useCallback(async () => {
-    const { data } = await supabase.auth.getUser();
+    setState(prev => ({ ...prev, isLoading: true }));
 
-if (!data?.user) return;
-const isProfileComplete = localStorage.getItem(`pf_profile_${data.user.id}`) === 'true';
-setState(prev => ({
-  ...prev,
-  user: {
-    id: data.user.id,
-    email: data.user.email ?? '',
-  } as any,
-isAuthenticated: true,
-isProfileComplete,
-isLoading: false
-}));
+    const { data, error } = await supabase.auth.getUser();
 
-     
+    if (error || !data?.user) {
+      setState({
+        user: null,
+        isAuthenticated: false,
+        isProfileComplete: false,
+        isLoading: false
+      });
+      return;
     }
+
+    const isProfileComplete =
+      localStorage.getItem(`pf_profile_${data.user.id}`) === 'true';
+
+    setState(prev => ({
+      ...prev,
+      user: {
+        id: data.user.id,
+        email: data.user.email ?? ''
+      } as any,
+      isAuthenticated: true,
+      isProfileComplete,
+      isLoading: false
+    }));
   }, []);
 
   return (
     <AuthContext.Provider value={{ ...state, login, logout, completeProfile, switchUser }}>
-      {state.isLoading ? null : children}
+      {state.isLoading ? <div style={{ padding: 16 }}>Loading...</div> : children}
     </AuthContext.Provider>
   );
 };
