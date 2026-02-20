@@ -6,13 +6,14 @@ interface AuthState {
   user: UserProfile | null;
   isAuthenticated: boolean;
   isProfileComplete: boolean;
+  isLoading: boolean;
 }
 
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  logout: () => Promise<void>;
   completeProfile: () => void;
-  switchUser: (userId: string) => void;
+  switchUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -21,7 +22,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [state, setState] = useState<AuthState>({
   user: null,
   isAuthenticated: false,
-  isProfileComplete: false
+  isProfileComplete: false,
+  isLoading: true
 });
 
 useEffect(() => {
@@ -35,7 +37,40 @@ useEffect(() => {
     if (!mounted) return;
 
     if (!session) {
-      setState({ user: null, isAuthenticated: false, isProfileComplete: false });
+  setState({
+    user: null,
+    isAuthenticated: false,
+    isProfileComplete: false,
+    isLoading: false
+  });
+  return;
+}
+
+    const user = {
+      id: session.user.id,
+      email: session.user.email ?? ''
+    } as unknown as UserProfile;
+
+    setState({
+  user,
+  isAuthenticated: true,
+  isProfileComplete: true,
+  isLoading: false
+});
+  };
+
+  load();
+
+  const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+    if (!mounted) return;
+
+    if (!session) {
+      setState({
+  user: null,
+  isAuthenticated: false,
+  isProfileComplete: false,
+  isLoading: false
+});
       return;
     }
 
@@ -45,28 +80,11 @@ useEffect(() => {
     } as unknown as UserProfile;
 
     setState({
-      user,
-      isAuthenticated: true,
-      isProfileComplete: true
-    });
-  };
-
-  load();
-
-  const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-    if (!mounted) return;
-
-    if (!session) {
-      setState({ user: null, isAuthenticated: false, isProfileComplete: false });
-      return;
-    }
-
-    const user = {
-      id: session.user.id,
-      email: session.user.email ?? ''
-    } as unknown as UserProfile;
-
-    setState({ user, isAuthenticated: true, isProfileComplete: true });
+  user,
+  isAuthenticated: true,
+  isProfileComplete: true,
+  isLoading: false
+});
   });
 
   return () => {
@@ -74,11 +92,6 @@ useEffect(() => {
     sub.subscription.unsubscribe();
   };
 }, []);
-
-  user: null,
-  isAuthenticated: false,
-  isProfileComplete: false
-});
 
 
   const login = useCallback(async (email: string, password: string) => {
@@ -94,10 +107,11 @@ useEffect(() => {
   await supabase.auth.signOut();
 
   setState({
-    user: null,
-    isAuthenticated: false,
-    isProfileComplete: false
-  });
+  user: null,
+  isAuthenticated: false,
+  isProfileComplete: false,
+  isLoading: false
+});
 }, []);
 
 
@@ -117,14 +131,16 @@ useEffect(() => {
     const { data } = await supabase.auth.getUser();
 
 if (!data?.user) return;
-
+const isProfileComplete = localStorage.getItem(`pf_profile_${data.user.id}`) === 'true';
 setState(prev => ({
   ...prev,
   user: {
     id: data.user.id,
     email: data.user.email ?? '',
   } as any,
-  isAuthenticated: true
+isAuthenticated: true,
+isProfileComplete,
+isLoading: false
 }));
 
      
@@ -133,7 +149,7 @@ setState(prev => ({
 
   return (
     <AuthContext.Provider value={{ ...state, login, logout, completeProfile, switchUser }}>
-      {children}
+      {state.isLoading ? null : children}
     </AuthContext.Provider>
   );
 };
