@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { UserProfile } from '@/types/models';
+import { MOCK_USERS } from '@/data/mockData';
 import { supabase } from '@/integrations/supabase/client';
 
 interface AuthState {
@@ -11,6 +12,7 @@ interface AuthState {
 
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<boolean>;
+  loginDemo: (userId: string) => void;
   logout: () => Promise<void>;
   completeProfile: () => void;
   switchUser: () => Promise<void>;
@@ -131,6 +133,17 @@ useEffect(() => {
     });
   }, []);
 
+  const loginDemo = useCallback((userId: string) => {
+    const demoUser = MOCK_USERS.find(u => u.id === userId);
+    if (!demoUser) return;
+    setState({
+      user: demoUser,
+      isAuthenticated: true,
+      isProfileComplete: true,
+      isLoading: false,
+    });
+  }, []);
+
   const switchUser = useCallback(async () => {
     setState(prev => ({ ...prev, isLoading: true }));
 
@@ -162,7 +175,7 @@ useEffect(() => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ ...state, login, logout, completeProfile, switchUser }}>
+    <AuthContext.Provider value={{ ...state, login, loginDemo, logout, completeProfile, switchUser }}>
       {state.isLoading ? <div style={{ padding: 16 }}>Loading...</div> : children}
     </AuthContext.Provider>
   );

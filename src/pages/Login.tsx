@@ -6,6 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/hooks/use-toast';
+import { MOCK_USERS } from '@/data/mockData';
+
+const DEV_DEMO_MODE = true;
 
 type Mode = 'login' | 'signup' | 'forgot';
 
@@ -16,8 +19,13 @@ const Login: React.FC = () => {
   const [error, setError] = useState('');
   const [mode, setMode] = useState<Mode>('login');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, loginDemo } = useAuth();
   const navigate = useNavigate();
+
+  const handleDemoLogin = (userId: string) => {
+    loginDemo(userId);
+    navigate('/hub');
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,6 +109,21 @@ const Login: React.FC = () => {
           <h1 className="text-3xl font-bold text-foreground">PracticeFlow</h1>
           <p className="text-muted-foreground mt-2">Your Life-Role Operating System</p>
         </div>
+
+        {/* Demo Mode */}
+        {DEV_DEMO_MODE && (
+          <div className="pf-glass p-6 mb-4">
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">Dev Demo Login</h2>
+            <div className="space-y-2">
+              {MOCK_USERS.filter(u => u.status === 'active').map(u => (
+                <Button key={u.id} variant="outline" className="w-full justify-between" onClick={() => handleDemoLogin(u.id)}>
+                  <span>{u.full_name}</span>
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary">{u.role}</span>
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Card */}
         <div className="pf-glass p-8">
