@@ -16,6 +16,7 @@ import MyTransferPortal from "./pages/MyTransferPortal";
 import CoachingRadar from "./pages/CoachingRadar";
 import HomeRadar from "./pages/HomeRadar";
 import NotFound from "./pages/NotFound";
+import ResetPassword from "./pages/ResetPassword";
 import { OperatingProfileProvider } from "@/context/OperatingProfileContext";
 
 // Comms
@@ -62,6 +63,7 @@ const AuthRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<AuthRoute><Login /></AuthRoute>} />
+    <Route path="/reset-password" element={<ResetPassword />} />
     <Route path="/profile-setup" element={<ProfileSetup />} />
     <Route path="/hub" element={<ProtectedRoute><RoleHub /></ProtectedRoute>} />
     
