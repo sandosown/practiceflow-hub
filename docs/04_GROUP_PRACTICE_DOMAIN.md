@@ -1,3 +1,8 @@
+[← Back to Master Canon](./PF-CANON.md)  
+Previous ← [03_OPERATING_PROFILE_ENGINE.md](./03_OPERATING_PROFILE_ENGINE.md)  
+Next → [05_DEVELOPMENT_GOVERNANCE.md](./05_DEVELOPMENT_GOVERNANCE.md)
+
+---
 # 04 — Group Practice Domain
 
 Derived from: PF-CANON.md (Section 5)
@@ -97,3 +102,7 @@ Never blocks manual entry.
 - No auto-assignment.
 
 Recommendation-only.
+---
+
+Previous ← [03_OPERATING_PROFILE_ENGINE.md](./03_OPERATING_PROFILE_ENGINE.md)  
+Next → [05_DEVELOPMENT_GOVERNANCE.md](./05_DEVELOPMENT_GOVERNANCE.md)
