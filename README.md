@@ -71,3 +71,22 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+---
+
+## 📚 Documentation
+
+The architectural source of truth for PracticeFlow / SympoFlo lives in `/docs`.
+
+### Master Canon
+- [PF-CANON.md](./docs/PF-CANON.md)
+
+### Structured Sections
+- [00 — App Identity](./docs/00_APP_IDENTITY.md)
+- [01 — Core System Philosophy](./docs/01_CORE_SYSTEM_PHILOSOPHY.md)
+- [02 — Global Architecture](./docs/02_GLOBAL_ARCHITECTURE.md)
+- [03 — Operating Profile Engine](./docs/03_OPERATING_PROFILE_ENGINE.md)
+- [04 — Group Practice Domain](./docs/04_GROUP_PRACTICE_DOMAIN.md)
+- [05 — Development Governance](./docs/05_DEVELOPMENT_GOVERNANCE.md)
+- [06 — Current Development State](./docs/06_CURRENT_DEVELOPMENT_STATE.md)
+
+All architectural decisions must reconcile against the Working Canon before implementation.
