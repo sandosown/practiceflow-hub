@@ -1,3 +1,8 @@
+[← Back to Master Canon](./PF-CANON.md)  
+Previous ← [00_APP_IDENTITY.md](./00_APP_IDENTITY.md)  
+Next → [02_GLOBAL_ARCHITECTURE.md](./02_GLOBAL_ARCHITECTURE.md)
+
+---
 # 01 — Core System Philosophy
 
 Derived from: PF-CANON.md (Section 2)
@@ -69,3 +74,7 @@ Urgency does NOT live in:
 - Aggressive red layouts
 - Visual panic signals
 - Overwhelming density
+---
+
+Previous ← [00_APP_IDENTITY.md](./00_APP_IDENTITY.md)  
+Next → [02_GLOBAL_ARCHITECTURE.md](./02_GLOBAL_ARCHITECTURE.md)
