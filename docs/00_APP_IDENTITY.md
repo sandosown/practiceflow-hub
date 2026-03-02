@@ -1,3 +1,7 @@
+[← Back to Master Canon](./PF-CANON.md)  
+Next → [01_CORE_SYSTEM_PHILOSOPHY.md](./01_CORE_SYSTEM_PHILOSOPHY.md)
+
+---
 # 00 — App Identity & Purpose
 
 Derived from: PF-CANON.md (Section 1)
@@ -60,3 +64,8 @@ Non-negotiable outcome: Calm Command Center
 - No shame language
 - No aggressive urgency styling
 - Assistant-like support without loss of agency
+---
+
+---
+
+Next → [01_CORE_SYSTEM_PHILOSOPHY.md](./01_CORE_SYSTEM_PHILOSOPHY.md)
