@@ -1,3 +1,8 @@
+[← Back to Master Canon](./PF-CANON.md)  
+Previous ← [02_GLOBAL_ARCHITECTURE.md](./02_GLOBAL_ARCHITECTURE.md)  
+Next → [04_GROUP_PRACTICE_DOMAIN.md](./04_GROUP_PRACTICE_DOMAIN.md)
+
+---
 # 03 — Operating Profile Engine
 
 Derived from: PF-CANON.md (Section 4)
@@ -102,3 +107,7 @@ Never intrusive.
 
 - Local storage (demo)
 - DB-backed (authenticated)
+---
+
+Previous ← [02_GLOBAL_ARCHITECTURE.md](./02_GLOBAL_ARCHITECTURE.md)  
+Next → [04_GROUP_PRACTICE_DOMAIN.md](./04_GROUP_PRACTICE_DOMAIN.md)
