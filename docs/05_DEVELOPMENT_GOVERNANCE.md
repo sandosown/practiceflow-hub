@@ -1,3 +1,8 @@
+[← Back to Master Canon](./PF-CANON.md)  
+Previous ← [04_GROUP_PRACTICE_DOMAIN.md](./04_GROUP_PRACTICE_DOMAIN.md)  
+Next → [06_CURRENT_DEVELOPMENT_STATE.md](./06_CURRENT_DEVELOPMENT_STATE.md)
+
+---
 # 05 — Development Governance
 
 Derived from: PF-CANON.md (Section 6)
@@ -43,3 +48,7 @@ Canon must never be silently overwritten.
 - All Canon updates must be versioned.
 - No legacy platform references may be reintroduced.
 - Prefix discipline must be maintained (PF / SF / PH).
+---
+
+Previous ← [04_GROUP_PRACTICE_DOMAIN.md](./04_GROUP_PRACTICE_DOMAIN.md)  
+Next → [06_CURRENT_DEVELOPMENT_STATE.md](./06_CURRENT_DEVELOPMENT_STATE.md)
