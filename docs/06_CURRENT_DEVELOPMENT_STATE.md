@@ -1,3 +1,7 @@
+[← Back to Master Canon](./PF-CANON.md)  
+Previous ← [05_DEVELOPMENT_GOVERNANCE.md](./05_DEVELOPMENT_GOVERNANCE.md)
+
+---
 # 06 — Current Development State
 
 Derived from: PF-CANON.md (Section 7)
@@ -46,3 +50,6 @@ Core philosophy is locked.
 Governance framework is established.
 
 Future development must extend — not alter — structural foundations.
+---
+
+Previous ← [05_DEVELOPMENT_GOVERNANCE.md](./05_DEVELOPMENT_GOVERNANCE.md)
