@@ -1,3 +1,8 @@
+[← Back to Master Canon](./PF-CANON.md)  
+Previous ← [01_CORE_SYSTEM_PHILOSOPHY.md](./01_CORE_SYSTEM_PHILOSOPHY.md)  
+Next → [03_OPERATING_PROFILE_ENGINE.md](./03_OPERATING_PROFILE_ENGINE.md)
+
+---
 # 02 — Global Architecture
 
 Derived from: PF-CANON.md (Section 3)
@@ -129,3 +134,7 @@ The following are NOT canonically locked:
 - Marketplace/plugin ecosystem
 - Stripe/scheduling as first-class V1 systems
 - White-label SaaS intent
+---
+
+Previous ← [01_CORE_SYSTEM_PHILOSOPHY.md](./01_CORE_SYSTEM_PHILOSOPHY.md)  
+Next → [03_OPERATING_PROFILE_ENGINE.md](./03_OPERATING_PROFILE_ENGINE.md)
