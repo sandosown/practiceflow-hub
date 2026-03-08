@@ -74,7 +74,7 @@ const OfficeBoard: React.FC = () => {
         <div className="flex items-center gap-2 text-sm mb-6" style={{ color: '#94a3b8' }}>
           <button onClick={() => navigate('/dashboard/owner')} className="hover:text-primary transition-colors">Workspaces</button>
           <span>›</span>
-          <button onClick={() => navigate('/dashboard/owner/group-practice')} className="hover:text-primary transition-colors">Group Practice Dashboard</button>
+          <button onClick={() => navigate('/dashboard/owner/group-practice')} className="hover:text-primary transition-colors">Group Practice</button>
           <span>›</span>
           <span className="font-medium" style={{ color: '#f1f5f9' }}>Office Board</span>
         </div>
