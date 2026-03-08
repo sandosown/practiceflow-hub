@@ -1,3 +1,8 @@
+| [← Index](README.md) | [📚 Index](README.md) | [01 — Core System Philosophy →](01_CORE_SYSTEM_PHILOSOPHY.md) |
+|---|---|---|
+
+---
+
 # 00 — App Identity & Purpose
 Derived from: PF-CANON.md
 Version Timestamp: 03/07/2026 — Canon Rewrite Session
@@ -79,3 +84,8 @@ Inside the app: calm structured support begins.
 ---
 
 End of 00_APP_IDENTITY.md
+
+---
+
+| [← Index](README.md) | [📚 Index](README.md) | [01 — Core System Philosophy →](01_CORE_SYSTEM_PHILOSOPHY.md) |
+|---|---|---|

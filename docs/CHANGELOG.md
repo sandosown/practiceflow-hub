@@ -1,3 +1,8 @@
+| [← SF — Brand Governance](SF-BRAND.md) | [📚 Index](README.md) | [Index →](README.md) |
+|---|---|---|
+
+---
+
 # PracticeFlow / SympoFlo — Change Log
 
 ---
@@ -142,3 +147,8 @@ Future updates must:
 2. Document all changes here
 3. Reconcile contradictions
 4. Never silently overwrite Canon
+
+---
+
+| [← SF — Brand Governance](SF-BRAND.md) | [📚 Index](README.md) | [Index →](README.md) |
+|---|---|---|

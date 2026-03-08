@@ -1,3 +1,8 @@
+| [📚 Index](README.md) | [00 — App Identity →](00_APP_IDENTITY.md) |
+|---|---|
+
+---
+
 # SympoFlo / PracticeFlow — Architecture Documentation
 
 **Canon Version:** 03/07/2026
@@ -57,3 +62,8 @@ Canon must never be silently overwritten.
 ---
 
 *PF = Runtime / Architecture / System. SF = Brand / Identity / Visual.*
+
+---
+
+| [📚 Index](README.md) | [00 — App Identity →](00_APP_IDENTITY.md) |
+|---|---|

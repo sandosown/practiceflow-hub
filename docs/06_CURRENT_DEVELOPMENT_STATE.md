@@ -1,3 +1,8 @@
+| [← 05 — Development Governance](05_DEVELOPMENT_GOVERNANCE.md) | [📚 Index](README.md) | [SF — Brand Governance →](SF-BRAND.md) |
+|---|---|---|
+
+---
+
 # 06 — Current Development State
 Derived from: PF-CANON.md
 Version Timestamp: 03/07/2026 — Canon Rewrite Session
@@ -123,3 +128,8 @@ Future development must extend — not alter — structural foundations.
 ---
 
 End of 06_CURRENT_DEVELOPMENT_STATE.md
+
+---
+
+| [← 05 — Development Governance](05_DEVELOPMENT_GOVERNANCE.md) | [📚 Index](README.md) | [SF — Brand Governance →](SF-BRAND.md) |
+|---|---|---|

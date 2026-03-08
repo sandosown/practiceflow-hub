@@ -1,3 +1,8 @@
+| [← 04 — Group Practice Domain](04_GROUP_PRACTICE_DOMAIN.md) | [📚 Index](README.md) | [06 — Current Dev State →](06_CURRENT_DEVELOPMENT_STATE.md) |
+|---|---|---|
+
+---
+
 # 05 — Development Governance
 Derived from: PF-CANON.md
 Version Timestamp: 03/07/2026 — Canon Rewrite Session
@@ -105,3 +110,8 @@ See `SF-BRAND.md` in `/docs` for:
 ---
 
 End of 05_DEVELOPMENT_GOVERNANCE.md
+
+---
+
+| [← 04 — Group Practice Domain](04_GROUP_PRACTICE_DOMAIN.md) | [📚 Index](README.md) | [06 — Current Dev State →](06_CURRENT_DEVELOPMENT_STATE.md) |
+|---|---|---|

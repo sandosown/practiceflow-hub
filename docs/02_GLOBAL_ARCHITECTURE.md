@@ -1,3 +1,8 @@
+| [← 01 — Core System Philosophy](01_CORE_SYSTEM_PHILOSOPHY.md) | [📚 Index](README.md) | [03 — Operating Profile →](03_OPERATING_PROFILE_ENGINE.md) |
+|---|---|---|
+
+---
+
 # 02 — Global Architecture
 Derived from: PF-CANON.md
 Version Timestamp: 03/07/2026 — Canon Rewrite Session
@@ -274,3 +279,8 @@ The following are NOT canonically locked:
 ---
 
 End of 02_GLOBAL_ARCHITECTURE.md
+
+---
+
+| [← 01 — Core System Philosophy](01_CORE_SYSTEM_PHILOSOPHY.md) | [📚 Index](README.md) | [03 — Operating Profile →](03_OPERATING_PROFILE_ENGINE.md) |
+|---|---|---|

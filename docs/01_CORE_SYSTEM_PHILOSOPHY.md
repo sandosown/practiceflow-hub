@@ -1,3 +1,8 @@
+| [← 00 — App Identity](00_APP_IDENTITY.md) | [📚 Index](README.md) | [02 — Global Architecture →](02_GLOBAL_ARCHITECTURE.md) |
+|---|---|---|
+
+---
+
 # 01 — Core System Philosophy
 Derived from: PF-CANON.md
 Version Timestamp: 03/07/2026 — Canon Rewrite Session
@@ -120,3 +125,8 @@ Users do not select cognitive modes. The system applies them.
 ---
 
 End of 01_CORE_SYSTEM_PHILOSOPHY.md
+
+---
+
+| [← 00 — App Identity](00_APP_IDENTITY.md) | [📚 Index](README.md) | [02 — Global Architecture →](02_GLOBAL_ARCHITECTURE.md) |
+|---|---|---|

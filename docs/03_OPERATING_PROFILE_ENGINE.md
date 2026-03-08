@@ -1,3 +1,8 @@
+| [← 02 — Global Architecture](02_GLOBAL_ARCHITECTURE.md) | [📚 Index](README.md) | [04 — Group Practice Domain →](04_GROUP_PRACTICE_DOMAIN.md) |
+|---|---|---|
+
+---
+
 # 03 — Operating Profile Engine
 Derived from: PF-CANON.md
 Version Timestamp: 03/07/2026 — Canon Rewrite Session
@@ -160,3 +165,8 @@ Automatic migration merges old localStorage profiles with DEFAULT_VALUES. No man
 ---
 
 End of 03_OPERATING_PROFILE_ENGINE.md
+
+---
+
+| [← 02 — Global Architecture](02_GLOBAL_ARCHITECTURE.md) | [📚 Index](README.md) | [04 — Group Practice Domain →](04_GROUP_PRACTICE_DOMAIN.md) |
+|---|---|---|

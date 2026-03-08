@@ -1,3 +1,8 @@
+| [← 06 — Current Dev State](06_CURRENT_DEVELOPMENT_STATE.md) | [📚 Index](README.md) | [Changelog →](CHANGELOG.md) |
+|---|---|---|
+
+---
+
 # SF — SympoFlo Brand Governance
 Version Timestamp: 03/07/2026 — Canon Rewrite Session
 Authoritative brand governance document. All SF visual and identity decisions live here.
@@ -203,3 +208,8 @@ It must NOT feel:
 ---
 
 End of SF-BRAND.md
+
+---
+
+| [← 06 — Current Dev State](06_CURRENT_DEVELOPMENT_STATE.md) | [📚 Index](README.md) | [Changelog →](CHANGELOG.md) |
+|---|---|---|

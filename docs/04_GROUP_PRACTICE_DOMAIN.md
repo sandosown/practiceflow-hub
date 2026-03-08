@@ -1,3 +1,8 @@
+| [← 03 — Operating Profile](03_OPERATING_PROFILE_ENGINE.md) | [📚 Index](README.md) | [05 — Development Governance →](05_DEVELOPMENT_GOVERNANCE.md) |
+|---|---|---|
+
+---
+
 # 04 — Group Practice Domain
 Derived from: PF-CANON.md
 Version Timestamp: 03/07/2026 — Canon Rewrite Session
@@ -342,3 +347,8 @@ Business Intern does not route to Training Engine.
 ---
 
 End of 04_GROUP_PRACTICE_DOMAIN.md
+
+---
+
+| [← 03 — Operating Profile](03_OPERATING_PROFILE_ENGINE.md) | [📚 Index](README.md) | [05 — Development Governance →](05_DEVELOPMENT_GOVERNANCE.md) |
+|---|---|---|
