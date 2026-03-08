@@ -22,9 +22,13 @@ import InternClinicalDashboard from "./pages/dashboard/InternClinicalDashboard";
 import InternBusinessDashboard from "./pages/dashboard/InternBusinessDashboard";
 import StaffDashboard from "./pages/dashboard/StaffDashboard";
 
+// Owner GP pages
+import GroupPracticeDashboard from "./pages/dashboard/GroupPracticeDashboard";
+import OfficeBoard from "./pages/dashboard/OfficeBoard";
+import GPModulePlaceholder from "./pages/dashboard/GPModulePlaceholder";
+
 const queryClient = new QueryClient();
 
-/** Redirects authenticated users away from public auth pages */
 const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, session } = useSession();
   if (isAuthenticated && session) {
@@ -33,14 +37,12 @@ const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <>{children}</>;
 };
 
-/** Requires authentication; redirects to /login otherwise */
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated } = useSession();
   if (!isAuthenticated) return <Navigate to="/login" replace />;
   return <>{children}</>;
 };
 
-/** Catch-all: redirects to correct dashboard or login */
 const RootRedirect = () => {
   const { isAuthenticated, session } = useSession();
   if (isAuthenticated && session) {
@@ -51,16 +53,15 @@ const RootRedirect = () => {
 
 const AppRoutes = () => (
   <Routes>
-    {/* Root redirect */}
     <Route path="/" element={<RootRedirect />} />
 
-    {/* Public auth routes */}
+    {/* Public */}
     <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
     <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
     <Route path="/password-reset" element={<PublicRoute><PasswordReset /></PublicRoute>} />
     <Route path="/reset-password" element={<ResetPassword />} />
 
-    {/* Protected dashboard shells */}
+    {/* Dashboards */}
     <Route path="/dashboard/owner" element={<ProtectedRoute><OwnerDashboard /></ProtectedRoute>} />
     <Route path="/dashboard/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
     <Route path="/dashboard/supervisor" element={<ProtectedRoute><SupervisorDashboard /></ProtectedRoute>} />
@@ -69,10 +70,21 @@ const AppRoutes = () => (
     <Route path="/dashboard/intern/business" element={<ProtectedRoute><InternBusinessDashboard /></ProtectedRoute>} />
     <Route path="/dashboard/staff" element={<ProtectedRoute><StaffDashboard /></ProtectedRoute>} />
 
-    {/* Onboarding placeholder */}
-    <Route path="/onboarding" element={<ProtectedRoute><div className="min-h-screen bg-background flex items-center justify-center"><p className="text-muted-foreground">Onboarding — Phase 2</p></div></ProtectedRoute>} />
+    {/* Owner GP sub-pages */}
+    <Route path="/dashboard/owner/group-practice" element={<ProtectedRoute><GroupPracticeDashboard /></ProtectedRoute>} />
+    <Route path="/dashboard/owner/group-practice/office-board" element={<ProtectedRoute><OfficeBoard /></ProtectedRoute>} />
+    <Route path="/dashboard/owner/group-practice/charts" element={<ProtectedRoute><GPModulePlaceholder title="Charts Requiring Action" /></ProtectedRoute>} />
+    <Route path="/dashboard/owner/group-practice/management" element={<ProtectedRoute><GPModulePlaceholder title="Management Center" /></ProtectedRoute>} />
+    <Route path="/dashboard/owner/group-practice/clients" element={<ProtectedRoute><GPModulePlaceholder title="Client Database" /></ProtectedRoute>} />
+    <Route path="/dashboard/owner/group-practice/caseload" element={<ProtectedRoute><GPModulePlaceholder title="Caseload Integration" /></ProtectedRoute>} />
+    <Route path="/dashboard/owner/group-practice/treatment" element={<ProtectedRoute><GPModulePlaceholder title="Treatment Plan Tracker" /></ProtectedRoute>} />
+    <Route path="/dashboard/owner/group-practice/supervision" element={<ProtectedRoute><GPModulePlaceholder title="Supervision Structure" /></ProtectedRoute>} />
+    <Route path="/dashboard/owner/group-practice/insurance" element={<ProtectedRoute><GPModulePlaceholder title="Insurance Database" /></ProtectedRoute>} />
+    <Route path="/dashboard/owner/group-practice/vendors" element={<ProtectedRoute><GPModulePlaceholder title="Vendor Database" /></ProtectedRoute>} />
 
-    {/* 404 */}
+    {/* Onboarding placeholder */}
+    <Route path="/onboarding" element={<ProtectedRoute><div className="min-h-screen bg-background flex items-center justify-center"><p className="text-muted-foreground">Onboarding — Phase 3</p></div></ProtectedRoute>} />
+
     <Route path="*" element={<NotFound />} />
   </Routes>
 );
