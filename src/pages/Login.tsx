@@ -22,7 +22,6 @@ const Login: React.FC = () => {
     const demo = DEMO_USERS.find(u => u.id === userId);
     if (!demo) return;
     loginDemo(userId);
-    // Build a synthetic session to compute route
     const synth: SessionContext = {
       user_id: demo.id,
       practice_id: demo.practice_id,
@@ -48,8 +47,6 @@ const Login: React.FC = () => {
     if (loginError) {
       setError(loginError);
     }
-    // On success, onAuthStateChange in SessionContext will resolve session
-    // and App.tsx will redirect via route guards
     setLoading(false);
   };
 
