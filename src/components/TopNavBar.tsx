@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSessionData, useSession } from '@/context/SessionContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -8,11 +8,17 @@ const TopNavBar: React.FC = () => {
   const session = useSessionData();
   const { logout } = useSession();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = async () => {
     await logout();
     navigate('/login');
   };
+
+  // Only show workspace name when inside a workspace (not on opening dashboard)
+  const isInsideWorkspace = location.pathname.includes('/group-practice') ||
+    location.pathname.includes('/coaching') ||
+    location.pathname.includes('/home-workspace');
 
   return (
     <header className="border-b border-border px-6 py-3 flex items-center justify-between bg-card">
@@ -24,21 +30,16 @@ const TopNavBar: React.FC = () => {
       </div>
 
       <span className="text-sm text-muted-foreground hidden md:inline">
-        {session.workspace_name ?? 'No workspace'}
+        {isInsideWorkspace ? (session.workspace_name ?? '') : ''}
       </span>
 
       <div className="flex items-center gap-3">
         {session.full_name && (
           <span className="text-sm text-muted-foreground hidden md:inline">{session.full_name}</span>
         )}
-        <span className="text-xs px-2 py-0.5 rounded-full bg-primary/15 text-primary font-medium">
-          {session.role}
-        </span>
-        <span className="text-xs px-2 py-0.5 rounded-full bg-secondary text-muted-foreground font-medium">
-          {session.mode}
-        </span>
-        <Button variant="ghost" size="sm" onClick={handleLogout} className="text-muted-foreground hover:text-foreground">
+        <Button variant="ghost" size="sm" onClick={handleLogout} className="text-muted-foreground hover:text-foreground gap-1.5">
           <LogOut className="w-4 h-4" />
+          <span className="text-sm">Log out</span>
         </Button>
       </div>
     </header>
