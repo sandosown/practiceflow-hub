@@ -4,52 +4,52 @@
 
 @layer base {
   :root {
-    /* SympoFlo Dark Navy System */
-    --background: 220 40% 13%;
+    /* SympoFlo Dark Navy System — Phase 4 */
+    --background: 220 50% 7%;
     --foreground: 210 40% 96%;
 
-    --card: 220 35% 18%;
+    --card: 220 40% 14%;
     --card-foreground: 210 40% 96%;
 
-    --popover: 220 35% 18%;
+    --popover: 220 40% 14%;
     --popover-foreground: 210 40% 96%;
 
     --primary: 170 60% 50%;
-    --primary-foreground: 220 40% 8%;
+    --primary-foreground: 220 50% 5%;
 
-    --secondary: 220 30% 25%;
+    --secondary: 220 35% 20%;
     --secondary-foreground: 210 40% 96%;
 
-    --muted: 220 30% 22%;
-    --muted-foreground: 215 20% 60%;
+    --muted: 220 35% 18%;
+    --muted-foreground: 215 20% 55%;
 
     --accent: 170 60% 50%;
-    --accent-foreground: 220 40% 8%;
+    --accent-foreground: 220 50% 5%;
 
     --destructive: 270 30% 45%;
     --destructive-foreground: 210 40% 96%;
 
-    --border: 220 25% 25%;
-    --input: 220 25% 25%;
+    --border: 220 30% 20%;
+    --input: 220 40% 16%;
     --ring: 170 60% 50%;
 
     --radius: 0.75rem;
 
     /* Signal colors (no red) */
     --signal-warning: 38 92% 50%;
-    --signal-warning-foreground: 220 40% 8%;
+    --signal-warning-foreground: 220 50% 5%;
     --signal-info: 210 70% 55%;
     --signal-info-foreground: 210 40% 96%;
     --signal-success: 150 42% 50%;
-    --signal-success-foreground: 220 40% 8%;
+    --signal-success-foreground: 220 50% 5%;
 
-    --sidebar-background: 220 40% 10%;
+    --sidebar-background: 220 50% 5%;
     --sidebar-foreground: 210 40% 96%;
     --sidebar-primary: 170 60% 50%;
-    --sidebar-primary-foreground: 220 40% 8%;
-    --sidebar-accent: 220 30% 22%;
+    --sidebar-primary-foreground: 220 50% 5%;
+    --sidebar-accent: 220 35% 18%;
     --sidebar-accent-foreground: 210 40% 96%;
-    --sidebar-border: 220 25% 25%;
+    --sidebar-border: 220 30% 20%;
     --sidebar-ring: 170 60% 50%;
   }
 }
@@ -68,27 +68,28 @@
 @layer utilities {
   /* ── Surface card ── */
   .sf-card {
-    background: hsl(220 35% 18%);
-    border: 1px solid hsl(220 25% 28%);
+    background: hsl(220 40% 14%);
+    border: 1px solid hsl(220 30% 22%);
     border-radius: 12px;
-    transition: border-color 0.15s ease;
+    transition: all 0.2s ease;
   }
   .sf-card:hover {
     border-color: hsl(170 60% 50% / 0.5);
   }
   .sf-card-muted {
-    background: hsl(220 35% 18%);
-    border: 1px solid hsl(220 25% 22%);
+    background: hsl(220 40% 14%);
+    border: 1px solid hsl(220 30% 18%);
     border-radius: 12px;
-    opacity: 0.6;
+    opacity: 0.45;
   }
 
   /* ── Alert card ── */
   .sf-alert-card {
-    background: hsl(220 30% 20%);
-    border: 1px solid hsl(220 25% 28%);
-    border-radius: 10px;
+    background: hsl(220 35% 16%);
+    border: 1px solid hsl(220 30% 22%);
+    border-radius: 12px;
     min-width: 260px;
     flex-shrink: 0;
+    transition: all 0.2s ease;
   }
 }
