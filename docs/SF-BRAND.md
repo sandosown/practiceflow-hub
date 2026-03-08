@@ -1,209 +1,203 @@
-| [← 06 — Current Dev State](06_CURRENT_DEVELOPMENT_STATE.md) | [📚 Index](README.md) | [Changelog →](CHANGELOG.md) |
+| [← 05 — Development Governance](05_DEVELOPMENT_GOVERNANCE.md) | [📚 Index](README.md) |  |
 |---|---|---|
 
 ---
 
-# SF — SympoFlo Brand Governance
-Version Timestamp: 03/07/2026 — Canon Rewrite Session
-Authoritative brand governance document. All SF visual and identity decisions live here.
-See PF-CANON.md for system architecture. When brand and architecture conflict, architecture governs.
+# SF-BRAND.md — SympoFlo Brand & Language Doctrine
+
+**Version:** 03/08/2026 — Phase 5 Update  
+**Serial:** SF-BRAND-003  
+**Status:** LOCKED
 
 ---
 
-## Product Naming
+## Emotional Target
 
-- **Full name:** SympoFlo
-- **Capitalization locked:** Capital S and capital F only — `SympoFlo` — no exceptions
-- **Runtime system:** PracticeFlow (PF)
-- **Brand overlay:** SympoFlo (SF)
-- **Prefix discipline:** PF = architecture/system, SF = brand/identity/visual
+> "SympoFlo turns complex responsibility into calm command."
 
-**Brand positioning:**
-A Life-Role Operating System — structured support across every domain you operate in.
+> "SympoFlo should feel like walking into a command center that's ON — not one that's powered down."
+
+The user should feel: **"I'm stepping into command."**  
+Not: "I'm checking another productivity app."
 
 ---
 
-## App Icon (SF-LOGO-001) — Locked. No further redesign permitted.
+## Psychological Doctrine — Calm Command Alive
 
-**Specifications:**
-- Deep midnight navy rounded square background
-- White dominant flowing "S" ribbon mark
-- Aqua/blue accent stroke following lower curve only
-- Accent does NOT intrude into the center of the white S
-- Slight dimensional depth preserved — not fully flat
-- Clean, sharp silhouette
-- Icon must remain recognizable at small sizes
+The calm lives in hierarchy and clarity — not in muting everything.  
+Aliveness is part of the promise — relief from sterile legacy tools.
 
-Dark mode glow variant: SF-LOGO-001-DARK locked.
+### The 10-Second Trust Moment
+Within the first seconds, the user asks:
+1. "Does this system understand what I actually do?"
+2. "Do I know where to start?"
+3. "Is this calm or chaotic?"
 
----
-
-## Wordmark
-
-Direction locked: **Option D — Slightly Bold and Grounded**
-Wordmark refinement must align to locked icon — brand system built around icon, not vice versa.
+If answered correctly, the user feels: **"This system understands my work. I can rely on this."**
 
 ---
 
-## Brand Build Sequence (Locked)
+## Language Doctrine — LOCKED
 
-- A → Icon ✅ Complete
-- B → Wordmark (direction locked, refinement in progress)
-- C → Full brand system (pending)
+### The Single-Sentence Rule
+Every piece of UI text does one job in one sentence.  
+No paragraphs. No stacked explanations. No motivational filler.
 
-No looping once an element is locked. No further iteration on the locked icon.
+### Three Pattern Types
 
----
+**1. Orientation** — helps user choose context
+- "Which role are you stepping into?"
+- "Where would you like to focus?"
 
-## Theme System
+**2. Operational** — describes real work
+- "Review open referrals."
+- "Check therapist capacity."
+- "Approve onboarding."
 
-### Dark Mode
-- **Default experience** — dark mode loads by default
-- Base: deep midnight navy-charcoal (not black)
-- Aqua accent consistent
+**3. Resolution** — directs action on a signal
+- "Resolve scheduling conflict."
+- "Credential renewal approaching."
 
-### Light Mode
-- **Fully supported** — user toggle visible and simple
-- Base: cool neutral off-white (not pure white)
-- Aqua accent consistent
-- No psychological behavior tied to theme selection
-- Design must work equally well in both modes
+### Supporting Micro-Text Rule
+One short supporting line permitted if needed.  
+Primary text must still be a single sentence.
 
-### Accent
-- Aqua consistent across both modes
-- Aqua supports structure — does not dominate
+### What Is BANNED From Language
+- Life coach tone: "Stay on top of things" / "Keep crushing it"
+- Gamified language: "Hit your goals!" / "Let's get productive!"
+- Motivational copy of any kind
+- Vague non-operational phrases
+- Multi-sentence explanations in UI
 
----
+### The Trust Sequence
+**Role → Radar → Action**
 
-## Color Philosophy
-
-- Aqua/Teal — primary accent, supports structure, does not dominate
-- **Red — rejected.** Conflicts with therapist calm philosophy. No red urgency styling.
-- Color conveys meaning — never decoration
-
----
-
-## Two UI Archetypes
-
-### Hat Card Archetype (entry/navigation)
-- Centered
-- Square or near-square
-- 60–70% Lovable scale
-- Identifies workspace clearly without being oversized
-
-### Operational Panel Archetype (data-driven content)
-- Horizontal
-- Compact — 50–60% height
-- Scroll internally; page scroll minimized
-
-Clear separation between archetypes is required. No mixing.
+### Required Tone
+Mission control. Operations dashboard. Executive decision surface.
 
 ---
 
-## Density & Layout Rules
+## Logo — Brand Kit SF-001 (LOCKED)
 
-- Compact density standard: 60–70% scale for cards
-- Operational panels: 50–60% height
-- Max 2 visual depth levels in layout
-- Horizontal operational panels preferred
-- No masonry or chaotic floating panel layouts
-- No oversized marketing tiles inside app
-- No landing-page feature tile aesthetic inside app
-- No oversized accessibility-template panels
-- Executive clarity over oversized accessibility scaling
+**Status:** SVG recreation deferred (LOG-017). Placeholder in use.
 
----
+### Official Colors
+- Navy: #1B2D5B
+- Aqua: #30B8C9
+- White: #FFFFFF
 
-## Visual Anti-Patterns (Locked — Never Use)
+### Official Versions
+- Full Color — light backgrounds
+- White Version — dark backgrounds (preferred in-app nav)
+- Outlined/Glowing — login hero
 
-- No gradients
-- No haze backgrounds
-- No cotton-candy gradient backgrounds
-- No full-card pastel tinting
-- No decorative glow (glow = activation only)
-- No persistent ambient glow
-- No heavy stylization or excessive flourishes
-- No Canva-style white base adoption
-- No marketing-style hero dashboards
-- No visual noise (dotted lines, decorative flourishes)
-- No masonry or chaotic floating panel layouts
-- No per-screen custom styling overrides
+### Wordmark
+Font: Georgia, serif. Not bold. Not sans-serif.
 
 ---
 
-## Glow Rule
+## Visual Doctrine
 
-**Glow = activation signal only.**
-Never decorative. Never ambient. Never persistent.
-Activated states may use glow. Idle states must not.
+### Primary Palette
 
----
+| Token | Value |
+|---|---|
+| Background (opening) | #060e1e |
+| Background (app) | #0a1628 |
+| Surface | #1a2a4a |
+| Border subtle | #1e3a5f |
+| Accent/Primary | #2dd4bf |
+| Text Primary | #f1f5f9 |
+| Text Secondary | #94a3b8 |
+| Text Muted | #64748b |
 
-## Alert Visual Rule
+### 5-Layer Card System
+1. Base surface: #1a2a4a
+2. Depth gradient: base → accent at 8–12% opacity
+3. Border: 1px accent at 40–50% opacity
+4. Left stripe: 4px solid accent at full opacity
+5. Glow: box-shadow in accent at low opacity
 
-Alerts use border-emphasis — not full-bleed color blocks.
-Early warning model — escalate gradually.
-No punitive tone.
-No panic-style visual urgency.
+### Glow Intensity Scale
+- Resting: border 40%, faint ambient glow
+- Hover: border 70%, glow spreads
+- Active: border 100%, glow fully expressed
 
----
+### Landing Screen Energy System
+- Background: #060e1e
+- 90 twinkling stars (CSS keyframe, randomized, useMemo)
+- 5 nebula glow pools (teal, blue, amber, green, center)
+- Flow connectors with animated pulse nodes between cards
+- Greeting: Georgia serif, shimmer gradient animation
+- Cards: 240×210px, border-radius 24px, float animation
 
-## Empty State Rule
-
-**Empty ≠ Error.**
-Empty states must never look like error states.
-Modules remain visible when empty.
-
----
-
-## Token Discipline
-
-- All UI must reference centralized design tokens — no hardcoded hex values
-- Update tokens at source — not screens individually
-- Update shared components before screen-level edits
-- No component forks permitted
-- Token-first policy enforced
-- Component-first policy enforced
-
----
-
-## Implementation Discipline
-
-- New screens must begin from defined layout templates
-- Dark mode and light mode verification required for every screen
-- Control Mode and Action Mode verification required for every screen
-- No ad-hoc UI invention
-- No per-screen styling overrides
-- No patch-loop refactors
-- Structured velocity: speed with validation
+### Hard Color Prohibitions — ABSOLUTE
+- Red (any tone) — BANNED
+- Rose / warm pink — BANNED
+- Pastel washes (full card fills) — BANNED
+- Flat uniform navy on all cards — BANNED
+- Decorative glow with no function — BANNED
 
 ---
 
-## Navigation Philosophy
+## Domain Accent Map
 
-- No deep menu trees
-- Breadcrumbs only when navigation depth exceeds 2 levels
-- Pagination preferred over infinite scroll for tables
-- Filter-first before pagination when possible
-- Tooltips limited to informational use — critical states use Alerts
+### Group Practice Modules
+| Module | Accent |
+|---|---|
+| Charts Requiring Action | #d97706 |
+| Office Board | #0ea5e9 |
+| Management Center | #7c3aed |
+| Client Database | #0d9488 |
+| Caseload Integration | #3b82f6 |
+| Treatment Plan Tracker | #059669 |
+| Supervision Structure | #4f46e5 |
+| Insurance Database | #78716c |
+| Vendor Database | #92764a |
+
+### Workspace Accents
+| Workspace | Accent |
+|---|---|
+| Group Practice | #2dd4bf |
+| Coaching | #f59e0b |
+| Home | #4ade80 |
+
+### Radar Signal Accents
+| Signal | Accent |
+|---|---|
+| License/Credential | #d97706 |
+| Verification overdue | #ea580c |
+| Unassigned referral | #0ea5e9 |
+| Discharge deadline | #7c3aed |
+| Onboarding stuck | #3b82f6 |
+| Missing credentials | #78716c |
 
 ---
 
-## Interface Character
+## Naming Conventions — LOCKED
 
-The interface must feel:
-- Operational
-- Structured
-- High-signal
-- Calm
-- Assistant-like
+| Banned | Correct |
+|---|---|
+| Choose a workspace | Which role are you stepping into? |
+| Your workspaces are ready | (removed — greeting only) |
+| Comms | Office Board |
+| Attention Required | Radar |
+| PracticeFlow | SympoFlo |
+| Group Practice Dashboard | Group Practice |
+| [Any workspace] Dashboard | [Workspace name only] |
 
-It must NOT feel:
-- Clinical or hospital-style
-- Corporate and cold
-- Playful or childish
-- SaaS-bloated
-- Marketing-forward
+---
+
+## Navigation Rules — LOCKED
+
+- Breadcrumb on every sub-page
+- Back button on every sub-page
+- No role badge in persistent nav
+- No mode badge in persistent nav
+- Logout: "Log out" label — not icon only
+- Workspace context: inside workspace only
+- Opening dashboard: no Radar, no workspace bleed
+- Surface names: workspace name only, no qualifier
 
 ---
 
@@ -211,5 +205,5 @@ End of SF-BRAND.md
 
 ---
 
-| [← 06 — Current Dev State](06_CURRENT_DEVELOPMENT_STATE.md) | [📚 Index](README.md) | [Changelog →](CHANGELOG.md) |
+| [← 05 — Development Governance](05_DEVELOPMENT_GOVERNANCE.md) | [📚 Index](README.md) |  |
 |---|---|---|
