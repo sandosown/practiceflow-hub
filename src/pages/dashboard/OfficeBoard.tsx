@@ -83,7 +83,12 @@ const OfficeBoard: React.FC = () => {
           <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/owner/group-practice')} className="text-muted-foreground">
             <ArrowLeft className="w-4 h-4 mr-1" /> Back
           </Button>
-          <h1 className="text-2xl font-bold" style={{ color: '#f1f5f9' }}>Office Board</h1>
+          <h1
+            className="text-2xl font-bold pl-3"
+            style={{ color: '#f1f5f9', borderLeft: `4px solid ${OB_ACCENT}` }}
+          >
+            Office Board
+          </h1>
         </div>
 
         {/* Tab bar */}

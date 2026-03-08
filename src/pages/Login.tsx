@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from '@/context/SessionContext';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { DEMO_USERS } from '@/data/demoUsers';
 import { getDashboardRoute } from '@/lib/routing';
 import type { SessionContext } from '@/types/session';
 import { cardStyle, cardHoverStyle } from '@/lib/cardStyle';
+import SympoFloIcon from '@/components/SympoFloIcon';
 
 const DEV_DEMO_MODE = true;
 
@@ -63,18 +63,22 @@ const Login: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center p-4" style={{ background: '#0a1628' }}>
       <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <div
-            className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
-            style={{
-              background: 'hsl(170 60% 50%)',
-              boxShadow: '0 0 20px rgba(45, 212, 191, 0.5)',
-            }}
-          >
-            <span className="font-bold text-2xl" style={{ color: '#0a1628' }}>SF</span>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <SympoFloIcon size={64} glow={true} />
           </div>
-          <h1 className="text-3xl font-bold" style={{ color: '#f1f5f9' }}>SympoFlo</h1>
-          <p className="mt-2" style={{ color: '#64748b' }}>Your Multi-Workspace Operating System</p>
+          <div style={{
+            fontFamily: 'Georgia, serif',
+            fontSize: '28px',
+            color: '#FFFFFF',
+            marginTop: '12px',
+            fontWeight: 'normal',
+          }}>SympoFlo</div>
+          <div style={{
+            fontSize: '13px',
+            color: '#64748b',
+            marginTop: '4px',
+          }}>Your Life-Role Operating System</div>
         </div>
 
         {/* Demo Mode */}
