@@ -12,31 +12,29 @@ const SympoFloIcon: React.FC<SympoFloIconProps> = ({ size = 32, glow = false }) 
 
   return (
     <svg
-      viewBox="0 0 32 32"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
       width={size}
       height={size}
+      viewBox="0 0 40 40"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
       style={{ filter: glowFilter, flexShrink: 0 }}
     >
-      <rect width="32" height="32" rx="7" fill="#1B2D5B" />
+      <rect width="40" height="40" rx="9" fill="#1B2D5B"/>
       <path
-        d="M22 8 C22 8 14 8 10 12 C7 15 9 18 13 18"
+        d="M28 10 C28 10 22 8 16 10 C10 12 8 17 13 20 C16 21.5 22 22 25 23"
         stroke="white"
-        strokeWidth="2.8"
+        strokeWidth="3.2"
         strokeLinecap="round"
         fill="none"
-        opacity="0.95"
       />
       <path
-        d="M10 18 C10 18 14 18 18 21 C22 24 20 26 16 26"
+        d="M15 20 C15 20 18 21 21 23 C25 25.5 29 28 24 31 C20 33 14 32 12 31"
         stroke="#30B8C9"
-        strokeWidth="2"
+        strokeWidth="2.2"
         strokeLinecap="round"
         fill="none"
-        opacity="0.9"
       />
-      <circle cx="22" cy="8.5" r="1.2" fill="white" opacity="0.7" />
+      <circle cx="28" cy="10" r="1.5" fill="white" opacity="0.8"/>
     </svg>
   );
 };
