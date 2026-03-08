@@ -514,6 +514,84 @@ export type Database = {
         }
         Relationships: []
       }
+      practices: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          clinician_subtype: string | null
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          intern_subtype: string | null
+          last_workspace_id: string | null
+          onboarding_complete: boolean
+          practice_id: string | null
+          role: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          clinician_subtype?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          intern_subtype?: string | null
+          last_workspace_id?: string | null
+          onboarding_complete?: boolean
+          practice_id?: string | null
+          role?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          clinician_subtype?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          intern_subtype?: string | null
+          last_workspace_id?: string | null
+          onboarding_complete?: boolean
+          practice_id?: string | null
+          role?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_last_workspace_id_fkey"
+            columns: ["last_workspace_id"]
+            isOneToOne: false
+            referencedRelation: "practices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_practice_id_fkey"
+            columns: ["practice_id"]
+            isOneToOne: false
+            referencedRelation: "practices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       questionnaire_draft_answers: {
         Row: {
           answer_json: Json
