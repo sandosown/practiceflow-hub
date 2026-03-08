@@ -2,6 +2,7 @@ import React from 'react';
 import { useSessionData, useSession } from '@/context/SessionContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
+import SympoFloIcon from '@/components/SympoFloIcon';
 
 const TopNavBar: React.FC = () => {
   const session = useSessionData();
@@ -26,17 +27,15 @@ const TopNavBar: React.FC = () => {
         borderBottom: '1px solid rgba(45, 212, 191, 0.15)',
       }}
     >
-      <div className="flex items-center gap-3">
-        <div
-          className="w-8 h-8 rounded-lg flex items-center justify-center"
-          style={{
-            background: 'hsl(170 60% 50%)',
-            boxShadow: '0 0 12px rgba(45, 212, 191, 0.4)',
-          }}
-        >
-          <span className="font-bold text-sm" style={{ color: '#0a1628' }}>SF</span>
-        </div>
-        <span className="font-semibold text-lg" style={{ color: '#f1f5f9' }}>SympoFlo</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <SympoFloIcon size={32} glow={true} />
+        <span style={{
+          fontFamily: 'Georgia, serif',
+          fontSize: '18px',
+          color: '#FFFFFF',
+          fontWeight: 'normal',
+          letterSpacing: '0.01em',
+        }}>SympoFlo</span>
       </div>
 
       <span className="text-sm hidden md:inline" style={{ color: '#94a3b8' }}>
