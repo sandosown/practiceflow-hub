@@ -3,6 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import TopNavBar from '@/components/TopNavBar';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { cardStyle } from '@/lib/cardStyle';
+
+// Map module id to accent color
+const MODULE_ACCENTS: Record<string, string> = {
+  'Charts Requiring Action': '#d97706',
+  'Office Board': '#0ea5e9',
+  'Management Center': '#7c3aed',
+  'Client Database': '#0d9488',
+  'Caseload Integration': '#3b82f6',
+  'Treatment Plan Tracker': '#059669',
+  'Supervision Structure': '#4f46e5',
+  'Insurance Database': '#78716c',
+  'Vendor Database': '#92764a',
+};
 
 interface Props {
   title: string;
@@ -10,28 +24,34 @@ interface Props {
 
 const GPModulePlaceholder: React.FC<Props> = ({ title }) => {
   const navigate = useNavigate();
+  const accent = MODULE_ACCENTS[title] ?? '#2dd4bf';
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen" style={{ background: '#0a1628' }}>
       <TopNavBar />
       <div className="max-w-5xl mx-auto px-6 py-6">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+        <div className="flex items-center gap-2 text-sm mb-6" style={{ color: '#94a3b8' }}>
           <button onClick={() => navigate('/dashboard/owner')} className="hover:text-primary transition-colors">Workspaces</button>
           <span>›</span>
           <button onClick={() => navigate('/dashboard/owner/group-practice')} className="hover:text-primary transition-colors">Group Practice Dashboard</button>
           <span>›</span>
-          <span className="text-foreground font-medium">{title}</span>
+          <span className="font-medium" style={{ color: '#f1f5f9' }}>{title}</span>
         </div>
 
         <div className="flex items-center gap-3 mb-8">
           <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/owner/group-practice')} className="text-muted-foreground">
             <ArrowLeft className="w-4 h-4 mr-1" /> Back
           </Button>
-          <h1 className="text-2xl font-bold text-foreground">{title}</h1>
+          <h1
+            className="text-2xl font-bold pl-3"
+            style={{ color: '#f1f5f9', borderLeft: `4px solid ${accent}` }}
+          >
+            {title}
+          </h1>
         </div>
 
-        <div className="sf-card p-8 text-center">
-          <p className="text-muted-foreground">Coming in Phase 3</p>
+        <div className="p-8 text-center" style={cardStyle(accent)}>
+          <p style={{ color: '#64748b' }}>Coming in Phase 5</p>
         </div>
       </div>
     </div>

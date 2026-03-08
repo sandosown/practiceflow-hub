@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopNavBar from '@/components/TopNavBar';
 import { Briefcase, GraduationCap, Home, ChevronRight } from 'lucide-react';
 import { useSessionData } from '@/context/SessionContext';
+import { cardStyle, cardHoverStyle, iconSquareStyle } from '@/lib/cardStyle';
 
 const getGreeting = (): string => {
   const h = new Date().getHours();
@@ -20,41 +21,65 @@ const WORKSPACES = [
 const OwnerDashboard: React.FC = () => {
   const navigate = useNavigate();
   const session = useSessionData();
-  const firstName = session.full_name?.split(' ')[0] ?? '';
+  const rawFirst = session.full_name?.split(' ')[0] ?? '';
+  // Fix double period: if name already ends with ".", don't add another
+  const firstName = rawFirst.endsWith('.') ? rawFirst.slice(0, -1) : rawFirst;
+  const displayName = session.full_name?.startsWith('Dr.') ? `Dr. ${session.full_name.split(' ').slice(1).join(' ').split(' ')[0]}` : firstName;
+
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen" style={{ background: '#0a1628' }}>
       <TopNavBar />
 
-      <main className="max-w-5xl mx-auto px-6 py-10 space-y-10">
-        <h1 className="text-2xl font-bold text-foreground">
-          {getGreeting()}, {firstName}.
-        </h1>
+      <main className="max-w-3xl mx-auto px-6 py-10 space-y-8">
+        <div>
+          <h1 className="text-3xl font-bold" style={{ color: '#f1f5f9' }}>
+            {getGreeting()}, {displayName}.
+          </h1>
+          <p className="text-sm mt-1" style={{ color: '#64748b' }}>
+            Your workspaces are ready.
+          </p>
+        </div>
 
         <section>
-          <h2 className="text-lg font-semibold text-foreground mb-4">Choose a workspace</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {WORKSPACES.map(w => (
-              <button
-                key={w.id}
-                disabled={!w.active}
-                onClick={() => w.active && w.path && navigate(w.path)}
-                className={`sf-card p-5 text-left flex items-start gap-4 ${!w.active ? 'opacity-40 cursor-not-allowed hover:border-border' : 'cursor-pointer'}`}
-                style={{ borderLeft: `4px solid ${w.accent}` }}
-              >
-                <div
-                  className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: `${w.accent}26` }}
+          <h2 className="text-lg font-semibold mb-4" style={{ color: '#f1f5f9' }}>Choose a workspace</h2>
+          <div className="flex flex-col gap-4">
+            {WORKSPACES.map(w => {
+              const isHovered = hoveredId === w.id;
+              const style = w.active
+                ? (isHovered ? cardHoverStyle(w.accent) : cardStyle(w.accent))
+                : cardStyle(w.accent, { muted: true });
+
+              return (
+                <button
+                  key={w.id}
+                  disabled={!w.active}
+                  onClick={() => w.active && w.path && navigate(w.path)}
+                  onMouseEnter={() => setHoveredId(w.id)}
+                  onMouseLeave={() => setHoveredId(null)}
+                  className={`p-5 text-left flex items-center gap-4 ${!w.active ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                  style={{ ...style, minHeight: '80px', padding: '20px 24px' }}
                 >
-                  <w.icon className="w-5 h-5" style={{ color: w.accent }} />
-                </div>
-                <div>
-                  <p className="font-semibold text-foreground text-sm">{w.label}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">{w.subtitle}</p>
-                </div>
-                {w.active && <ChevronRight className="w-4 h-4 text-muted-foreground ml-auto self-center" />}
-              </button>
-            ))}
+                  <div
+                    className="flex-shrink-0"
+                    style={{ ...iconSquareStyle(w.accent), width: 48, height: 48 }}
+                  >
+                    <w.icon className="w-6 h-6" style={{ color: w.accent }} />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-bold text-lg" style={{ color: '#f1f5f9' }}>{w.label}</p>
+                    <p className="text-sm mt-0.5" style={{ color: '#64748b' }}>{w.subtitle}</p>
+                  </div>
+                  {w.active && <ChevronRight className="w-5 h-5" style={{ color: '#64748b' }} />}
+                  {!w.active && (
+                    <span className="text-xs px-2.5 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.06)', color: '#64748b' }}>
+                      Coming Soon
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </section>
       </main>
