@@ -1,154 +1,97 @@
-| [← SF — Brand Governance](SF-BRAND.md) | [📚 Index](README.md) | [Index →](README.md) |
+| [← 05 — Development Governance](05_DEVELOPMENT_GOVERNANCE.md) | [📚 Index](README.md) |  |
 |---|---|---|
 
 ---
 
-# PracticeFlow / SympoFlo — Change Log
+# SympoFlo Changelog
 
 ---
 
-## 03/07/2026 — Canon Rewrite Session
+## 03/08/2026 — Phase 5 Session
 
-**Type:** Full Canon Rewrite (not incremental update)
+### Phase 5 — Visual Overhaul & Language Doctrine
 
-**Reason:** Canon was established 03/02/2026 after portions of the app were already built. 22 extraction documents from ChatGPT brainstorming sessions were reviewed, 94 architectural items were identified, 8 deferred decisions were resolved, and the full Canon was rewritten to reflect the complete authoritative architectural state.
+#### LOG-009 — Opening dashboard workspace cards redesigned
+Stacked rectangular rows replaced with horizontal rounded square cards (240×210px, border-radius 24px).
 
-**Changes:**
+#### LOG-010 — Landing screen ambient energy system
+Deep space background (#060e1e), 90 twinkling stars, 5 nebula glow pools, flow connector lines with pulsing nodes between cards, ambient radial glow. Landing screen must feel alive.
 
-### Section 0 — Canon Governance
-- Structural Stability Rule formalized explicitly
-- Scope containment rule added
-- Canon Update Protocol expanded to 5 steps
+#### LOG-011 — Landing screen language overhaul
+"Choose a workspace" removed. Replaced with: "Which role are you stepping into?" (uppercase, muted, 13px). Supporting line: "Choose the role you want to step into."
 
-### Section 1 — App Identity
-- Added layered product positioning (architectural + Life-Role OS brand)
-- Added "PracticeFlow tracks reality — not records"
-- Added "feels like an assistant, not a filing cabinet"
-- Added manual entry philosophy
-- Expanded emotional objective
+#### LOG-012 — "Your workspaces are ready." removed
+Replaced with serif greeting: "Good [morning/afternoon/evening], Dr. Sarah." with shimmer gradient animation.
 
-### Section 2 — Core System Philosophy
-- Added Radar 3-question framework
-- Added role-scoped Radar rule (no global radar)
-- Added deny-by-default permission model
-- Added escalation direction rule
-- Added single active role rule
-- Added interruptible workflows rule
-- Added resolution pattern detail
-- Sharpened urgency vs layout rules
+#### LOG-013 — "Workspaces" terminology under review
+Too corporate for the app philosophy. Pending resolution when earlier chat notes are located.
 
-### Section 3 — Global Architecture
-- Added full workspace registry (GROUP_PRACTICE, COACHING, HOME, CUSTOM_1, CUSTOM_2)
-- Added custom workspace rules
-- Added 6-role two-tier role model (replaces 3-role snapshot)
-- Added Clinician subtypes (LICENSED / LP)
-- Added Intern subtypes (CLINICAL / BUSINESS)
-- Added LP vs Clinical Intern vs Business Intern three-way distinction
-- Added boot loading state ("Preparing your workspace…")
-- Added Control Dashboard structural rules
-- Added Attention Layer with canonical examples
-- Added Behavioral Guidance Rule (cognitive modes as automatic behavior)
-- Expanded Engine Registry to 8 engines (Training Engine added as #8)
-- Added engine scope boundaries for all 8 engines
-- Added universal object fields rule (hat_id + engine_source)
-- Added Engine Activation Matrix reference
-- Added "Need a Tool?" assist panel
-- Added event logging append-only rule
-- Added cross-engine audit index rule
-- Added Asset & Product Tracker spec
-- Added suggestion chip rules (max 2–3)
-- Added recurring logic rule
-- Added Document Control System metadata requirements
-- Added solo-to-multi-tier growth rule
-- Added Growth Engine pipeline stages
+#### LOG-014 — Deep page color consistency enforced
+Every page at every depth maintains domain accent color system. No page reverts to flat navy. GPModulePlaceholder uses module-specific accent. Role shells maintain teal card system.
 
-### Section 4 — Operating Profile Engine
-- Added onboarding 3-step wizard structure (locked)
-- Added onboarding emotional copy (locked)
-- Added Onboarding State Machine (6 states + completion gate)
-- Added configuration isolation rule
-- Added Radar density preference field
-- Expanded profile schema
+#### LOG-015 — SympoFlo logo brand kit confirmed (DEFERRED)
+Real logo confirmed: Serial SF-001, locked design. Navy rounded square, flowing S with white upper sweep and teal/aqua lower sweep. White version for dark backgrounds. SVG recreation deferred — hand-drawn paths cannot accurately reproduce the mark. Revisit when proper PNG export or original SVG file is available.
 
-### Section 5 — Group Practice Domain
-- Added sub-engine structure for Group Practice
-- Added People Engine = Worker Profiles only rule
-- Added Clients live under Operations rule
-- Expanded Worker Profile Wizard to 7 tabs (from 3)
-- Added credentials structure (full fields)
-- Added multi-license repeatable cards rule
-- Added EAP classification
-- Added multi-select UI patterns
-- Added Tag Taxonomy (4 categories + matching weights)
-- Added Upload to Autofill full spec
-- Added unified data pipeline rule
-- Added extraction output shape
-- Added low-confidence field highlighting rule
-- Added Upload to Autofill V1 feature flag decision
-- Added Upload to Autofill future categories
-- Added no silent DB writes rule
-- Added draft-first architecture rule
-- Added Referral Matching full spec with weights
-- Added Client Lifecycle full status set
-- Added Therapist capacity fields
-- Added Assignment History table
-- Added Termination Request table + lifecycle
-- Added Transfer Request table + lifecycle
-- Added capacity rules + override
-- Added permission boundaries (full role matrix)
-- Added UI placement decisions (Reassign/Termination/Supervisor)
-- Added 3-day discharge rule
-- Added termination reason categories
-- Added archive/reactivate rules
-- Added audit trail requirement
-- Added LP Compliance subsystem overview
-- Added Training Engine — Group Practice scope
+#### LOG-016 — Language Doctrine LOCKED
+Full language system locked. See SF-BRAND.md and 01_CORE_SYSTEM_PHILOSOPHY.md.
+- Single-Sentence Rule: every UI text does one job in one sentence
+- Three pattern types: Orientation / Operational / Resolution
+- Trust sequence: Role → Radar → Action
+- Banned: life coach tone, gamified language, motivational copy
+- Required tone: mission control / operations dashboard / executive decision surface
 
-### Section 6 — Development Governance
-- Added Feature Readiness Rule (4 questions)
-- Added no dead-end screens rule
-- Added configuration isolation rule
-- Added Git workflow details
+#### LOG-017 — Logo SVG deferred
+Current placeholder stays. Real brand mark cannot be recreated from hand-drawn SVG paths. Return when original vector file or clean PNG export is available.
 
-### Section 7 — Current Development State
-- Updated to 03/07/2026
-- Added rename decisions (locked, pending code implementation)
-- Expanded pending items list
-- Updated active constraints list
-
-### New Files Added
-- `SF-BRAND.md` — full SF brand governance (new Canon section)
-- `CHANGELOG.md` — this file
-
-### Rename Decisions Locked
-- Role Hub → Workspaces
-- "Select a role to get started" → "Choose a workspace"
-- Group Practice Radar → Group Practice Dashboard
+#### LOG-018 — "Group Practice Dashboard" renamed to "Group Practice" — LOCKED
+No second word on any workspace surface name. The workspace name IS the surface name.
+- "Group Practice Dashboard" → "Group Practice"
+- Pattern applies to all future workspaces: "Coaching", "Home" — no qualifier
+- All breadcrumbs, headers, back buttons updated
+- Route paths unchanged
 
 ---
 
-## 03/02/2026 — 10:00 AM EST — Initial Canon
+## 03/08/2026 — Phases 1–4 Session
 
-- Created initial authoritative Working Canon
-- Established Canon Governance Rules
-- Locked prefix discipline (PF / SF)
-- Confirmed multi-hat architecture
-- Confirmed Group Practice is first-class but not required
-- Confirmed Operating Profile Engine structure
-- Confirmed Radar + Resolution separation model
-- Confirmed domain isolation rule
-- Confirmed HIPAA-level compliance constraint
-- Removed obsolete platform references
+### Phase 1 — Boot Engine
+- Session context, 7 demo users, routing, login page, Supabase RLS
+- Demo users: Dr. Sarah Mitchell (OWNER), Marcus Chen (ADMIN), Dr. Angela Torres (SUPERVISOR), James Rivera LCSW (CLINICIAN/LICENSED), Priya Patel (INTERN/CLINICAL), Alex Nguyen (INTERN/BUSINESS), Taylor Brooks (STAFF)
+
+### Phase 2 — Dark Navy Dashboard
+- Dark navy theme (#0f1a2e background, #1a2a4a cards)
+- Owner Dashboard with Radar + workspace cards
+- Group Practice with 9 module cards
+- Office Board with 3 working tabs
+
+### Phase 3 — Structural Fixes
+- Opening dashboard cleaned: no Radar, no workspace context, warm greeting
+- Nav bar: removed role badge, removed mode badge, added "Log out" label
+- Radar moved into Group Practice (renamed from "Attention Required")
+- Login page: solid dark background, all 7 demo users listed
+- Workspace cards: accent left borders applied
+
+### Phase 4 — Visual Overhaul
+- Background deepened to #0a1628
+- 5-layer card system applied everywhere
+- Domain accent colors on all module cards
+- Glow system: resting/hover/active states
+- Radar cards each have signal-specific accent color
+- Greeting fixed: "Good morning, Dr. Sarah." (no double period)
+- Placeholder pages: "Coming in Phase 5"
 
 ---
 
-Future updates must:
-1. Add new version timestamp
-2. Document all changes here
-3. Reconcile contradictions
-4. Never silently overwrite Canon
+## 03/07/2026 — Full Canon Rewrite
+- 11 files, 1867 insertions
+- Navigation bars added to all split files
+- SF-BRAND.md created and locked
 
 ---
 
-| [← SF — Brand Governance](SF-BRAND.md) | [📚 Index](README.md) | [Index →](README.md) |
+End of CHANGELOG.md
+
+---
+
+| [← 05 — Development Governance](05_DEVELOPMENT_GOVERNANCE.md) | [📚 Index](README.md) |  |
 |---|---|---|

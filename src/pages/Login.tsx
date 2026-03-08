@@ -1,220 +1,171 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '@/context/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
-import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+import { useSession } from '@/context/SessionContext';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { toast } from '@/hooks/use-toast';
-import { MOCK_USERS } from '@/data/mockData';
+import { DEMO_USERS } from '@/data/demoUsers';
+import { getDashboardRoute } from '@/lib/routing';
+import type { SessionContext } from '@/types/session';
+import { cardStyle, cardHoverStyle } from '@/lib/cardStyle';
+import SympoFloIcon from '@/components/SympoFloIcon';
 
 const DEV_DEMO_MODE = true;
-
-type Mode = 'login' | 'signup' | 'forgot';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  const [mode, setMode] = useState<Mode>('login');
   const [loading, setLoading] = useState(false);
-  const { login, loginDemo } = useAuth();
+  const { login, loginDemo } = useSession();
   const navigate = useNavigate();
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   const handleDemoLogin = (userId: string) => {
+    const demo = DEMO_USERS.find(u => u.id === userId);
+    if (!demo) return;
     loginDemo(userId);
-    navigate('/hub');
+    const synth: SessionContext = {
+      user_id: demo.id,
+      practice_id: demo.practice_id,
+      role: demo.role,
+      clinician_subtype: demo.clinician_subtype,
+      intern_subtype: demo.intern_subtype,
+      mode: 'CONTROL',
+      visibility_scope: [],
+      workflow_scope: [],
+      onboarding_complete: demo.onboarding_complete,
+      workspace_name: demo.workspace_name,
+      full_name: demo.full_name,
+      email: demo.email,
+    };
+    navigate(getDashboardRoute(synth));
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
-    const success = await login(email, password);
-    if (success) {
-      navigate('/hub');
-    } else {
-      setError('Invalid email or password.');
+    const { error: loginError } = await login(email, password);
+    if (loginError) {
+      setError(loginError);
     }
     setLoading(false);
   };
 
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      setError('Passwords do not match.');
-      return;
-    }
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters.');
-      return;
-    }
-    setLoading(true);
-    setError('');
-    const { error: signUpError } = await supabase.auth.signUp({
-      email: email.trim().toLowerCase(),
-      password: password.trim(),
-      options: { emailRedirectTo: window.location.origin },
-    });
-    if (signUpError) {
-      setError(signUpError.message);
-    } else {
-      toast({
-        title: 'Check your email',
-        description: 'We sent you a confirmation link. Please verify your email to sign in.',
-      });
-      setMode('login');
-      setPassword('');
-      setConfirmPassword('');
-    }
-    setLoading(false);
-  };
-
-  const handleForgotPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(
-      email.trim().toLowerCase(),
-      { redirectTo: `${window.location.origin}/reset-password` }
-    );
-    if (resetError) {
-      setError(resetError.message);
-    } else {
-      toast({
-        title: 'Reset link sent',
-        description: 'Check your email for a password reset link.',
-      });
-      setMode('login');
-    }
-    setLoading(false);
-  };
-
-  const switchMode = (m: Mode) => {
-    setMode(m);
-    setError('');
-    setPassword('');
-    setConfirmPassword('');
+  const roleLabel = (u: typeof DEMO_USERS[0]) => {
+    let r = u.role as string;
+    if (u.intern_subtype) r += ` (${u.intern_subtype})`;
+    if (u.clinician_subtype) r += ` (${u.clinician_subtype})`;
+    return r;
   };
 
   return (
-    <div className="min-h-screen pf-app-bg flex items-center justify-center p-4">
-      <div className="w-full max-w-md animate-fade-in">
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: '#0a1628' }}>
+      <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center mx-auto mb-4">
-            <span className="text-primary-foreground font-bold text-2xl">PF</span>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <SympoFloIcon size={64} glow={true} />
           </div>
-          <h1 className="text-3xl font-bold text-foreground">PracticeFlow</h1>
-          <p className="text-muted-foreground mt-2">Your Life-Role Operating System</p>
+          <div style={{
+            fontFamily: 'Georgia, serif',
+            fontSize: '28px',
+            color: '#FFFFFF',
+            marginTop: '12px',
+            fontWeight: 'normal',
+          }}>SympoFlo</div>
+          <div style={{
+            fontSize: '13px',
+            color: '#64748b',
+            marginTop: '4px',
+          }}>Your Life-Role Operating System</div>
         </div>
 
         {/* Demo Mode */}
         {DEV_DEMO_MODE && (
-          <div className="pf-glass p-6 mb-4">
-            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">Dev Demo Login</h2>
+          <div
+            className="rounded-xl p-6 mb-4"
+            style={{
+              background: '#1a2a4a',
+              border: '1px solid rgba(45, 212, 191, 0.2)',
+            }}
+          >
+            <h2 className="text-sm font-semibold uppercase tracking-wide mb-3" style={{ color: '#64748b' }}>
+              Dev Demo Login
+            </h2>
             <div className="space-y-2">
-              {MOCK_USERS.filter(u => u.status === 'active').map(u => (
-                <Button key={u.id} variant="outline" className="w-full justify-between" onClick={() => handleDemoLogin(u.id)}>
-                  <span>{u.full_name}</span>
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary">{u.role}</span>
-                </Button>
-              ))}
+              {DEMO_USERS.map(u => {
+                const isHovered = hoveredId === u.id;
+                return (
+                  <button
+                    key={u.id}
+                    className="w-full text-left flex items-center justify-between p-3"
+                    style={isHovered ? cardHoverStyle('#2dd4bf') : cardStyle('#2dd4bf')}
+                    onClick={() => handleDemoLogin(u.id)}
+                    onMouseEnter={() => setHoveredId(u.id)}
+                    onMouseLeave={() => setHoveredId(null)}
+                  >
+                    <span className="text-sm font-medium" style={{ color: '#f1f5f9' }}>{u.full_name}</span>
+                    <span
+                      className="text-xs px-2 py-0.5 rounded-full font-medium"
+                      style={{ background: 'rgba(45,212,191,0.15)', color: '#2dd4bf' }}
+                    >
+                      {roleLabel(u)}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}
 
-        {/* Card */}
-        <div className="pf-glass p-8">
-          <h2 className="text-xl font-semibold text-foreground mb-6">
-            {mode === 'login' && 'Sign in to your account'}
-            {mode === 'signup' && 'Create your account'}
-            {mode === 'forgot' && 'Reset your password'}
-          </h2>
-
-          {/* ---- LOGIN ---- */}
-          {mode === 'login' && (
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div>
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" value={email}
-                  onChange={(e) => { setEmail(e.target.value); setError(''); }}
-                  placeholder="you@practiceflow.io" className="mt-1" />
-              </div>
-              <div>
-                <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••" className="mt-1" />
-              </div>
-              {error && <p className="text-sm text-destructive">{error}</p>}
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Signing in…' : 'Sign In'}
-              </Button>
-              <div className="flex items-center justify-between text-sm mt-2">
-                <button type="button" onClick={() => switchMode('forgot')}
-                  className="text-primary hover:underline">Forgot password?</button>
-                <button type="button" onClick={() => switchMode('signup')}
-                  className="text-primary hover:underline">Create account</button>
-              </div>
-            </form>
-          )}
-
-          {/* ---- SIGN UP ---- */}
-          {mode === 'signup' && (
-            <form onSubmit={handleSignup} className="space-y-4">
-              <div>
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" value={email}
-                  onChange={(e) => { setEmail(e.target.value); setError(''); }}
-                  placeholder="you@example.com" className="mt-1" />
-              </div>
-              <div>
-                <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Min 6 characters" className="mt-1" />
-              </div>
-              <div>
-                <Label htmlFor="confirm">Confirm Password</Label>
-                <Input id="confirm" type="password" value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="••••••••" className="mt-1" />
-              </div>
-              {error && <p className="text-sm text-destructive">{error}</p>}
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Creating account…' : 'Sign Up'}
-              </Button>
-              <button type="button" onClick={() => switchMode('login')}
-                className="block w-full text-center text-sm text-primary hover:underline mt-2">
-                Already have an account? Sign in
-              </button>
-            </form>
-          )}
-
-          {/* ---- FORGOT PASSWORD ---- */}
-          {mode === 'forgot' && (
-            <form onSubmit={handleForgotPassword} className="space-y-4">
-              <p className="text-sm text-muted-foreground">
-                Enter your email and we'll send you a link to reset your password.
-              </p>
-              <div>
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" value={email}
-                  onChange={(e) => { setEmail(e.target.value); setError(''); }}
-                  placeholder="you@example.com" className="mt-1" />
-              </div>
-              {error && <p className="text-sm text-destructive">{error}</p>}
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Sending…' : 'Send Reset Link'}
-              </Button>
-              <button type="button" onClick={() => switchMode('login')}
-                className="block w-full text-center text-sm text-primary hover:underline mt-2">
-                Back to sign in
-              </button>
-            </form>
-          )}
+        {/* Login Form */}
+        <div
+          className="rounded-xl p-8"
+          style={{
+            background: '#1a2a4a',
+            border: '1px solid rgba(45, 212, 191, 0.3)',
+            boxShadow: '0 0 32px rgba(45, 212, 191, 0.1)',
+          }}
+        >
+          <h2 className="text-xl font-semibold mb-6" style={{ color: '#f1f5f9' }}>Sign in to your account</h2>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <Label htmlFor="email" style={{ color: '#94a3b8' }}>Email</Label>
+              <Input
+                id="email" type="email" value={email}
+                onChange={e => { setEmail(e.target.value); setError(''); }}
+                placeholder="you@example.com"
+                className="mt-1"
+                style={{ background: '#0f1e38', borderColor: 'rgba(45,212,191,0.2)', color: '#f1f5f9' }}
+              />
+            </div>
+            <div>
+              <Label htmlFor="password" style={{ color: '#94a3b8' }}>Password</Label>
+              <Input
+                id="password" type="password" value={password}
+                onChange={e => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="mt-1"
+                style={{ background: '#0f1e38', borderColor: 'rgba(45,212,191,0.2)', color: '#f1f5f9' }}
+              />
+            </div>
+            {error && <p className="text-sm" style={{ color: '#f59e0b' }}>{error}</p>}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-2.5 rounded-lg font-semibold text-sm transition-all"
+              style={{ background: '#2dd4bf', color: '#0a1628' }}
+              onMouseEnter={e => (e.currentTarget.style.filter = 'brightness(1.1)')}
+              onMouseLeave={e => (e.currentTarget.style.filter = 'brightness(1)')}
+            >
+              {loading ? 'Signing in…' : 'Sign In'}
+            </button>
+            <div className="flex items-center justify-between text-sm mt-2">
+              <a href="/password-reset" style={{ color: '#2dd4bf' }} className="hover:underline">Forgot password?</a>
+              <a href="/register" style={{ color: '#2dd4bf' }} className="hover:underline">Create account</a>
+            </div>
+          </form>
         </div>
       </div>
     </div>
