@@ -5,7 +5,7 @@
 
 # 02 — Global Architecture
 Derived from: PF-CANON.md
-Version Timestamp: 03/07/2026 — Canon Rewrite Session
+Version Timestamp: 03/08/2026 — Phase 6 Pre-Build Canon Update
 See CHANGELOG.md for full version history.
 
 ---
@@ -176,6 +176,35 @@ No floating objects are permitted. All objects are workspace-scoped and engine-a
 | 7 | Document Control System | Centralized registry — cross-hat infrastructure, hat-isolated UX | No orphan documents |
 | 8 | Training Engine | Clinical Intern lifecycle, supervision assignment, caseload tracking | Business Intern excluded |
 
+### Major Moments — Engine-Level Feature (All Engines)
+
+Every engine contains its own **Major Moments Radar**.
+Major Moments is NOT a global feature above the system — it lives inside each engine.
+Engine context defines the category and tone of moments captured within it.
+
+**Purpose:** Structured capture and retrieval of meaningful milestones in the user's personal and entrepreneurial journey.
+
+**Placement:** Module-level feature within each engine dashboard.
+
+**Auto-capture triggers per engine:**
+- People Engine: first hire, staff milestone
+- Operations Engine: first client, client count milestones
+- Revenue Engine: revenue milestones
+- Compliance Engine: license approval, certification completion
+- Personal/Life Engine: personal milestones (marriage, children, moves)
+- Group Practice (all applicable engines): hire, license approval, certification, first client, client milestones
+
+**Tone by engine type:**
+- Business engines: achievement framing — "You've come a long way. Take a moment to appreciate what you've built and achieved."
+- Life Engine: personal/human framing — "These are the moments that made you who you are. Take a moment and reflect."
+
+**Reflection Banner:**
+- Owner-only
+- Appears at top of engine dashboard
+- Dismissible — disappears for the session on dismiss
+- Not persistent, not intrusive
+- References a past moment from that date in a previous year
+
 ### Engine Activation Matrix
 Engine enablement is stored per-hat. Engine Activation Matrix governs engine-per-hat state.
 
@@ -233,6 +262,74 @@ Document metadata must include:
 Documents may link to objects OR live at workspace level.
 No orphan documents allowed.
 Cross-workspace infrastructure with workspace-isolated user experience.
+
+---
+
+## Search Standard (V1)
+
+**Local search is the V1 standard for all database modules.**
+
+Every module that holds records must include a search bar scoped to that module only.
+
+Modules requiring local search:
+- Client Database
+- Worker Profiles (People Engine)
+- Insurance Database
+- Vendor Database
+- Document Control System
+- Major Moments Radar
+- Compliance Records
+
+Search bar placement: top of the module surface, above the record list.
+
+Search must support: keyword, name, date (where applicable).
+
+**Global search** (cross-module, cross-engine) is a future phase feature — not V1.
+
+---
+
+## Navigation & Settings
+
+### Top Navigation Bar
+- Logo (left)
+- Workspace context (center — inside workspace only)
+- User name + avatar dropdown (right)
+- Log out (clearly labeled)
+- No role badge in persistent nav
+- No mode badge in persistent nav
+
+### Avatar Dropdown (Top-Right)
+Quick access from any screen. Contains:
+- Profile link
+- Settings link
+- Log out
+
+### Settings Page
+- Dedicated full page — not a modal
+- Every role gets a Settings surface scoped to their role
+- Owner sees: workspace config, domain priority, notification intensity, radar density, Operating Profile settings
+- All roles see: personal profile (name, email, password), notification preferences relevant to their role
+- No role sees settings that belong to another role
+
+---
+
+## Help & Guide System
+
+### Contextual Help ("?" Icons)
+- Small "?" icons appear next to complex fields, sections, or workflows
+- On tap/click: brief plain-language explanation of what the field does and why it matters
+- Lives exactly at the point of confusion
+- Non-intrusive, never blocks workflow
+
+### Guide Center
+- Dedicated page accessible from Settings and nav
+- Organized by role and engine
+- Searchable
+- Built progressively — content added as modules are built
+- Examples: "How do I add a clinician", "How does LP tracking work", "How do I transfer a client"
+- Role-scoped — users only see guides relevant to their role
+
+Both systems (contextual "?" icons + Guide Center) are active in V1.
 
 ---
 

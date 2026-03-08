@@ -5,7 +5,7 @@
 
 # 04 — Group Practice Domain
 Derived from: PF-CANON.md
-Version Timestamp: 03/07/2026 — Canon Rewrite Session
+Version Timestamp: 03/08/2026 — Phase 6 Pre-Build Canon Update
 See CHANGELOG.md for full version history.
 
 ---
@@ -35,7 +35,7 @@ First-class workspace. Exemplar implementation of PF structure.
 
 ---
 
-## Canonical Modules (9)
+## Canonical Modules (10)
 
 1. Charts Requiring Action
 2. Office Board (formerly Comms)
@@ -46,6 +46,18 @@ First-class workspace. Exemplar implementation of PF structure.
 7. Supervision Structure
 8. Insurance Database
 9. Vendor Database
+10. Major Moments
+
+**Note:** Major Moments was added as the 10th canonical module in the 03/08/2026 Phase 6 Pre-Build Canon Update. The previous locked list of 9 is superseded.
+
+### Major Moments — Group Practice
+- Accent: `#a78bfa` (soft violet — distinct from all operational module accents)
+- Subtitle: "Your milestones and achievements."
+- Core prompt: "What happened on this day?"
+- Unique visual treatment: subtle scrapbook-inspired card aesthetic within dark navy doctrine
+- No light or paper backgrounds — scrapbook feel achieved through card layering, typography, and soft shadow treatment
+- Reflection Banner (Owner only): appears at top of GP engine dashboard, dismissible per session
+- Auto-capture triggers in GP context: hire event, license approval, certification completion, first client added, client count milestones
 
 ---
 
@@ -176,6 +188,23 @@ ACTIVE
 - Archived clients are searchable under Archive filter
 - Archived rows visually grayed out
 - Reactivation = Admin only, requires therapist reassignment
+
+---
+
+## Search — Group Practice Modules
+
+All database modules within Group Practice include local search.
+Search is scoped to the module — no cross-module search in V1.
+
+Modules with required local search:
+- Client Database (keyword, name, status, therapist)
+- Worker Profiles / People Engine (name, role, credential status)
+- Insurance Database (payer name, status)
+- Vendor Database (vendor name, category)
+- Major Moments (keyword, date, event name)
+- Compliance Records (clinician name, week, status)
+
+Search bar placement: top of module surface, above the record list.
 
 ---
 
