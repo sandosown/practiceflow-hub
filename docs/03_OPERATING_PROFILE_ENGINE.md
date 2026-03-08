@@ -5,7 +5,7 @@
 
 # 03 — Operating Profile Engine
 Derived from: PF-CANON.md
-Version Timestamp: 03/08/2026 — Phase 6 Pre-Build Canon Update
+Version Timestamp: 03/08/2026 — Engine Philosophy + Workspace Naming Canon Update
 See CHANGELOG.md for full version history.
 
 ---
@@ -16,6 +16,8 @@ Owner-only configuration layer.
 
 Stores:
 - Workspace selection
+- Workspace names (company/context names entered by owner)
+- Workspace logo (per workspace)
 - Workspace priority
 - Notification intensity
 - Radar density preference
@@ -32,7 +34,30 @@ Configuration flows must never appear during normal daily workflow.
 - Staff never see onboarding.
 - Staff never depend on owner configuration logic.
 - Staff routing is independent of Operating Profile state.
-- Staff self-onboard independently — they receive access, create their own credentials, and go through their own role-scoped onboarding flow. The owner does not configure staff profiles.
+
+---
+
+## Workspace Naming (Canon-Locked)
+
+The owner names each workspace to reflect their actual company or life context.
+Default labels are fallbacks only — they are never the final intended experience.
+
+**Naming rules:**
+- Owner enters a company/context name per workspace during onboarding (optional at that step)
+- Name can be entered or changed anytime in Settings
+- Employees see the actual company name, not the default category label
+- Default label (e.g. "Group Practice", "Coaching", "Home") shows until a name is entered
+- No locks — names are always editable
+
+**Logo rules:**
+- Owner may upload a logo per workspace during onboarding or in Settings
+- Logo appears on the workspace card on the opening Owner dashboard alongside the company name
+- Logo is optional — if none uploaded, the "S" placeholder renders as fallback
+- No logo size restrictions locked in V1 (to be defined in SF-BRAND.md)
+
+**Why this matters:**
+No entrepreneur wants to log in and see "Group Practice" — they want to see "Good Health LLC."
+This is a core expression of the personal assistant philosophy: the system knows who you are.
 
 ---
 
@@ -45,7 +70,8 @@ Configuration flows must never appear during normal daily workflow.
 ### Owner Onboarding Wizard — 3-Step Flow
 
 **Step 1 — Workspace Selection**
-Card-based toggles. GROUP_PRACTICE is pre-selected but may be deselected if not applicable to the user's domain.
+Card-based toggles. GROUP_PRACTICE is pre-selected but may be deselected if not applicable.
+Each workspace card includes an optional field: "What do you call this? (optional)" — owner may name it now or later.
 
 **Step 2 — Workspace Priority Ordering**
 Explicit up/down movement ordering.
@@ -58,7 +84,7 @@ Onboarding configuration is profile-stored and settings-editable only.
 
 ### Onboarding State Machine
 
-The State Machine governs system-level boot completion — not user-visible wizard steps. These operate at different layers.
+The State Machine governs system-level boot completion — not user-visible wizard steps.
 
 **System layer (backend completion contract):**
 ```
@@ -71,7 +97,8 @@ HAT_SELECTION
 ```
 
 **Owner-facing layer (wizard UI):**
-3-step wizard (above). The wizard drives HAT_SELECTION and RADAR_CONFIGURATION states. ENGINE_CONFIGURATION, ROLE_INITIALIZATION, and INVITE_STAGING are system-resolved — not user-facing steps.
+3-step wizard (above). The wizard drives HAT_SELECTION and RADAR_CONFIGURATION states.
+ENGINE_CONFIGURATION, ROLE_INITIALIZATION, and INVITE_STAGING are system-resolved — not user-facing steps.
 
 - No dashboard release before ACTIVATION_COMPLETE
 - Role context must initialize before first dashboard load
@@ -86,53 +113,8 @@ HAT_SELECTION
 - Load last-used workspace automatically
 
 ### Configuration Isolation Rule
-Onboarding and configuration flows must never appear during normal daily workflow. Configuration is profile-stored and settings-editable only.
-
----
-
-## Setup Assistance — Owner Checklist
-
-The Setup Assistance system provides a structured checklist to guide the Owner through essential configuration required to activate system routing.
-
-### Checklist Philosophy
-- Contains **essentials only** — the minimum the system needs to begin routing correctly
-- Non-essential configuration (engine setup, insurance database, staff profiles) is available at any time through Settings — no checklist pressure
-- Checklist **disappears permanently** once all essential items are marked complete
-- Checklist does NOT represent a full practice setup — it represents system activation readiness
-
-### Essential Checklist Items (Owner)
-1. Workspace selection complete
-2. Domain priority set
-3. Notification intensity selected
-4. Radar density selected
-
-These four items correspond directly to the onboarding wizard steps. Once `onboarding_complete = true`, the checklist is dismissed permanently.
-
-### Checklist Visibility
-- Appears on Owner dashboard until essentials are complete
-- Calm, non-intrusive presentation — never blocks workflow
-- Does not reappear after dismissal via completion
-- Lives as a dashboard element — not a modal, not a blocking flow
-
-### Staff Onboarding
-Staff self-onboard independently. They are not part of the Owner checklist.
-Staff receive access credentials, create their own login, and are guided through their own role-scoped onboarding flow.
-Owner does not configure staff profiles as part of setup.
-
----
-
-## Contextual First-Visit Guidance
-
-On first visit to each engine or module, the system may display a brief contextual orientation card.
-
-**Behavior:**
-- Appears once on first visit only
-- Dismissed on interaction or navigation
-- Plain language — one sentence describing what the surface does
-- Never blocks the primary content
-- Never re-appears after dismissal
-
-This is distinct from the Help & Guide system (see 02_GLOBAL_ARCHITECTURE.md). First-visit guidance is automatic and passive. The Guide Center is active and user-initiated.
+Onboarding and configuration flows must never appear during normal daily workflow.
+Configuration is profile-stored and settings-editable only.
 
 ---
 
@@ -141,6 +123,8 @@ This is distinct from the Help & Guide system (see 02_GLOBAL_ARCHITECTURE.md). F
 **Canon-locked fields:**
 ```
 workspaces (array)
+workspace_names (record — key: workspace_id, value: custom name string)
+workspace_logos (record — key: workspace_id, value: logo asset reference)
 domain_priority (ordered array)
 domain_labels (record)
 notifications_pref: LOW | MEDIUM | HIGH
@@ -156,7 +140,8 @@ has_staff (boolean)
 has_interns (boolean)
 notification_style (realtime | daily_digest)
 ```
-These fields exist in the current implementation. They are not yet formally reconciled into Canon architecture. They must not be removed without a Canon Update Protocol entry. Reconciliation is a future governance task.
+These fields exist in the current implementation. They are not yet formally reconciled into Canon architecture.
+They must not be removed without a Canon Update Protocol entry. Reconciliation is a future governance task.
 
 ---
 
@@ -195,19 +180,7 @@ LOW / MEDIUM / HIGH
 Adjusts:
 - Reminder cadence
 - Escalation intervals
-- Treatment plan prompts
-- Supervision alerts
-
-Never intrusive.
-
----
-
-## Persistence
-
-- Local storage (demo / no session)
-- DB-backed (authenticated session)
-
-Automatic migration merges old localStorage profiles with DEFAULT_VALUES. No manual clearing required.
+- Alert sensitivity
 
 ---
 
