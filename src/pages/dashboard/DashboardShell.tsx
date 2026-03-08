@@ -17,18 +17,11 @@ const DashboardShell: React.FC<DashboardShellProps> = ({ roleLabel }) => {
         <h1 className="text-3xl font-bold text-foreground mb-4">{roleLabel} Dashboard</h1>
 
         <div className="space-y-3 text-sm text-muted-foreground mb-8">
-          <p><strong className="text-foreground">Mode:</strong> {session.mode}</p>
           <p><strong className="text-foreground">Workspace:</strong> {session.workspace_name ?? 'None assigned'}</p>
-          {session.clinician_subtype && (
-            <p><strong className="text-foreground">Clinician Type:</strong> {session.clinician_subtype}</p>
-          )}
-          {session.intern_subtype && (
-            <p><strong className="text-foreground">Intern Type:</strong> {session.intern_subtype}</p>
-          )}
         </div>
 
         <div className="sf-card inline-block px-6 py-3">
-          <p className="text-muted-foreground">Dashboard coming in Phase 3</p>
+          <p className="text-muted-foreground">Dashboard content coming soon</p>
         </div>
       </main>
     </div>
