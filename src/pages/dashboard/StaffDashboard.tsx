@@ -139,7 +139,7 @@ const StaffDashboard: React.FC = () => {
               paddingLeft: '12px',
             }}
           >
-            My Tasks
+            MY TASKS
           </h2>
           <div className="space-y-3">
             {tasks.map((t, idx) => (
