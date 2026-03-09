@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import TopNavBar from '@/components/TopNavBar';
 import { Briefcase, GraduationCap, Home } from 'lucide-react';
 import { useSessionData } from '@/context/SessionContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const getGreeting = (): string => {
   const h = new Date().getHours();
@@ -37,6 +38,7 @@ const FlowConnector: React.FC<FlowConnectorProps> = ({ accent1, accent2 }) => (
 const OwnerDashboard: React.FC = () => {
   const navigate = useNavigate();
   const session = useSessionData();
+  const isMobile = useIsMobile();
   const rawFirst = session.full_name?.split(' ')[0] ?? '';
   const firstName = rawFirst.endsWith('.') ? rawFirst.slice(0, -1) : rawFirst;
   const displayName = session.full_name?.startsWith('Dr.') ? `Dr. ${session.full_name.split(' ').slice(1).join(' ').split(' ')[0]}` : firstName;
@@ -60,7 +62,7 @@ const OwnerDashboard: React.FC = () => {
     })), []);
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#060e1e', position: 'relative', overflow: 'hidden' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#060e1e', position: 'relative', overflow: isMobile ? 'auto' : 'hidden' }}>
       <TopNavBar />
 
       {/* Keyframes */}
@@ -94,19 +96,43 @@ const OwnerDashboard: React.FC = () => {
       ))}
 
       {/* Main content */}
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 2 }}>
+      <main style={{ 
+        flex: 1, 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center', 
+        justifyContent: isMobile ? 'flex-start' : 'center', 
+        position: 'relative', 
+        zIndex: 2,
+        padding: isMobile ? '24px 16px 32px' : 0,
+      }}>
 
         {/* Greeting */}
         <div style={{
-          textAlign: 'center', marginBottom: 52, position: 'relative',
-          opacity: mounted ? 1 : 0, transform: mounted ? 'translateY(0)' : 'translateY(-20px)',
+          textAlign: 'center', 
+          marginBottom: isMobile ? 32 : 52, 
+          position: 'relative',
+          opacity: mounted ? 1 : 0, 
+          transform: mounted ? 'translateY(0)' : 'translateY(-20px)',
           transition: 'all 0.9s cubic-bezier(0.22, 1, 0.36, 1)',
+          width: isMobile ? '100%' : 'auto',
+          paddingTop: isMobile ? 16 : 0,
         }}>
           {/* Glow above greeting */}
-          <div style={{ position: 'absolute', top: -50, left: '50%', transform: 'translateX(-50%)', width: 360, height: 80, background: 'radial-gradient(ellipse, rgba(45,212,191,0.18) 0%, transparent 70%)', filter: 'blur(24px)', pointerEvents: 'none' }} />
+          <div style={{ 
+            position: 'absolute', 
+            top: isMobile ? -30 : -50, 
+            left: '50%', 
+            transform: 'translateX(-50%)', 
+            width: isMobile ? 280 : 360, 
+            height: isMobile ? 60 : 80, 
+            background: 'radial-gradient(ellipse, rgba(45,212,191,0.18) 0%, transparent 70%)', 
+            filter: 'blur(24px)', 
+            pointerEvents: 'none' 
+          }} />
           <h1 style={{
             fontFamily: 'Georgia, serif',
-            fontSize: 'clamp(26px, 3.8vw, 44px)',
+            fontSize: isMobile ? 'clamp(28px, 8vw, 40px)' : 'clamp(26px, 3.8vw, 44px)',
             fontWeight: 'normal',
             letterSpacing: '-0.01em',
             background: 'linear-gradient(90deg, #e2f8f5, #ffffff, #b2f0ea)',
@@ -115,36 +141,54 @@ const OwnerDashboard: React.FC = () => {
             WebkitTextFillColor: 'transparent',
             animation: 'greetShimmer 6s ease-in-out infinite',
             margin: 0,
+            padding: isMobile ? '0 8px' : 0,
           }}>
             {getGreeting()}, {displayName}.
           </h1>
-          <p style={{ fontSize: 13, color: '#4a6080', marginTop: 10, letterSpacing: '0.08em', textTransform: 'uppercase' as const }}>
+          <p style={{ 
+            fontSize: isMobile ? 11 : 13, 
+            color: '#4a6080', 
+            marginTop: isMobile ? 8 : 10, 
+            letterSpacing: '0.08em', 
+            textTransform: 'uppercase' as const 
+          }}>
             Which role are you stepping into?
           </p>
         </div>
 
-        {/* Cards row */}
+        {/* Cards container */}
         <div style={{
-          display: 'flex', alignItems: 'center', gap: 0, position: 'relative',
-          opacity: mounted ? 1 : 0, transform: mounted ? 'translateY(0)' : 'translateY(24px)',
+          display: 'flex', 
+          flexDirection: isMobile ? 'column' : 'row',
+          alignItems: 'center', 
+          gap: isMobile ? 16 : 0, 
+          position: 'relative',
+          opacity: mounted ? 1 : 0, 
+          transform: mounted ? 'translateY(0)' : 'translateY(24px)',
           transition: 'all 1s cubic-bezier(0.22, 1, 0.36, 1) 0.2s',
+          width: isMobile ? '100%' : 'auto',
         }}>
           {WORKSPACES.map((w, i) => {
             const isHovered = hoveredId === w.id && w.active;
             return (
               <React.Fragment key={w.id}>
-                {i > 0 && <FlowConnector accent1={WORKSPACES[i - 1].accent} accent2={w.accent} />}
+                {/* Flow connectors - desktop only */}
+                {!isMobile && i > 0 && <FlowConnector accent1={WORKSPACES[i - 1].accent} accent2={w.accent} />}
                 <div
                   onClick={() => w.active && w.path && navigate(w.path)}
                   onMouseEnter={() => w.active && setHoveredId(w.id)}
                   onMouseLeave={() => setHoveredId(null)}
                   style={{
-                    width: 240, height: 210, borderRadius: 24, position: 'relative',
+                    width: isMobile ? '100%' : 240, 
+                    height: isMobile ? 'auto' : 210, 
+                    minHeight: isMobile ? 160 : 210,
+                    borderRadius: 24, 
+                    position: 'relative',
                     cursor: w.active ? 'pointer' : 'default',
                     opacity: w.active ? 1 : 0.6,
                     transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
                     transform: isHovered ? 'translateY(-10px) scale(1.03)' : 'translateY(0) scale(1)',
-                    animation: w.active && !isHovered ? 'floatUp 4s ease-in-out infinite' : 'none',
+                    animation: w.active && !isHovered && !isMobile ? 'floatUp 4s ease-in-out infinite' : 'none',
                   }}
                 >
                   {/* Outer glow */}
@@ -157,19 +201,35 @@ const OwnerDashboard: React.FC = () => {
 
                   {/* Card body */}
                   <div style={{
-                    position: 'relative', zIndex: 1, width: '100%', height: '100%', borderRadius: 24,
+                    position: 'relative', 
+                    zIndex: 1, 
+                    width: '100%', 
+                    height: '100%', 
+                    minHeight: isMobile ? 160 : 210,
+                    borderRadius: 24,
                     background: 'linear-gradient(145deg, #1a2f52 0%, #0f1e38 55%, #080f20 100%)',
                     border: `1.5px solid ${w.accent}${isHovered ? 'bb' : '55'}`,
                     boxShadow: isHovered
                       ? `0 0 35px ${w.accent}55, 0 0 70px ${w.accent}22, inset 0 1px 0 rgba(255,255,255,0.1)`
                       : `0 0 18px ${w.accent}22, inset 0 1px 0 rgba(255,255,255,0.05)`,
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                    gap: 14, overflow: 'hidden', transition: 'all 0.4s ease',
+                    display: 'flex', 
+                    flexDirection: isMobile ? 'row' : 'column', 
+                    alignItems: 'center', 
+                    justifyContent: isMobile ? 'flex-start' : 'center',
+                    gap: isMobile ? 16 : 14, 
+                    overflow: 'hidden', 
+                    transition: 'all 0.4s ease',
+                    padding: isMobile ? '20px 24px' : 0,
                   }}>
                     {/* Inner nebula */}
                     <div style={{
-                      position: 'absolute', top: '10%', left: '50%', transform: 'translateX(-50%)',
-                      width: 140, height: 140, borderRadius: '50%',
+                      position: 'absolute', 
+                      top: isMobile ? '50%' : '10%', 
+                      left: isMobile ? '20%' : '50%', 
+                      transform: isMobile ? 'translate(-50%, -50%)' : 'translateX(-50%)',
+                      width: isMobile ? 100 : 140, 
+                      height: isMobile ? 100 : 140, 
+                      borderRadius: '50%',
                       background: `radial-gradient(circle, ${w.accent}${isHovered ? '28' : '14'} 0%, transparent 70%)`,
                       filter: 'blur(24px)', transition: 'all 0.4s ease', pointerEvents: 'none',
                     }} />
@@ -178,28 +238,38 @@ const OwnerDashboard: React.FC = () => {
 
                     {/* Icon */}
                     <div style={{
-                      width: 62, height: 62, borderRadius: 18,
+                      width: isMobile ? 52 : 62, 
+                      height: isMobile ? 52 : 62, 
+                      borderRadius: isMobile ? 14 : 18,
                       background: `linear-gradient(135deg, ${w.accent}30, ${w.second}18)`,
                       border: `1px solid ${w.accent}66`,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       boxShadow: `0 0 24px ${w.accent}44`,
                       position: 'relative', zIndex: 1,
+                      flexShrink: 0,
                     }}>
-                      <w.icon size={28} color={w.accent} />
+                      <w.icon size={isMobile ? 24 : 28} color={w.accent} />
                     </div>
 
                     {/* Label */}
-                    <div style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
-                      <p style={{ color: '#f1f5f9', fontWeight: 600, fontSize: 15, letterSpacing: '0.02em', margin: 0 }}>{w.label}</p>
+                    <div style={{ textAlign: isMobile ? 'left' : 'center', position: 'relative', zIndex: 1, flex: isMobile ? 1 : 'none' }}>
+                      <p style={{ color: '#f1f5f9', fontWeight: 600, fontSize: isMobile ? 16 : 15, letterSpacing: '0.02em', margin: 0 }}>{w.label}</p>
                       <p style={{ color: w.active ? w.accent : '#475569', fontSize: 12, marginTop: 4, letterSpacing: '0.04em' }}>{w.subtitle}</p>
                     </div>
 
                     {/* Coming Soon badge */}
                     {!w.active && (
                       <div style={{
-                        position: 'absolute', bottom: 16, padding: '3px 14px', borderRadius: 20,
-                        background: `${w.accent}18`, border: `1px solid ${w.accent}33`,
-                        color: w.accent, fontSize: 11, letterSpacing: '0.06em',
+                        position: isMobile ? 'relative' : 'absolute', 
+                        bottom: isMobile ? 'auto' : 16, 
+                        padding: '3px 14px', 
+                        borderRadius: 20,
+                        background: `${w.accent}18`, 
+                        border: `1px solid ${w.accent}33`,
+                        color: w.accent, 
+                        fontSize: 11, 
+                        letterSpacing: '0.06em',
+                        flexShrink: 0,
                       }}>Coming Soon</div>
                     )}
                   </div>
