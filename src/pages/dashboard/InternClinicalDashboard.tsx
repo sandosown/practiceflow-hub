@@ -42,7 +42,7 @@ const InternClinicalDashboard: React.FC = () => {
         {/* Section 1 — Radar */}
         <section className="mb-10">
           <h2 className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3" style={{ color: '#94a3b8', borderLeft: '4px solid #2dd4bf' }}>
-            Radar
+            RADAR
           </h2>
           <div className="flex gap-4 overflow-x-auto pb-2">
             {radarSignals.map((s) => (
@@ -58,7 +58,7 @@ const InternClinicalDashboard: React.FC = () => {
         {/* Section 2 — My Caseload */}
         <section className="mb-10">
           <h2 className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3" style={{ color: '#94a3b8', borderLeft: '4px solid #2dd4bf' }}>
-            My Caseload
+            MY CASELOAD
           </h2>
           <input
             type="text"
@@ -89,7 +89,7 @@ const InternClinicalDashboard: React.FC = () => {
         {/* Section 3 — Supervision */}
         <section className="mb-10">
           <h2 className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3" style={{ color: '#94a3b8', borderLeft: '4px solid #4f46e5' }}>
-            Supervision
+            SUPERVISION
           </h2>
           <div className="p-5" style={cardStyle('#4f46e5')}>
             <div className="flex items-start justify-between">
@@ -107,7 +107,7 @@ const InternClinicalDashboard: React.FC = () => {
         {/* Section 4 — Office Board */}
         <section>
           <h2 className="text-xs font-semibold uppercase tracking-widest mb-1 pl-3" style={{ color: '#94a3b8', borderLeft: '4px solid #0ea5e9' }}>
-            Office Board
+            OFFICE BOARD
           </h2>
           <p className="text-xs mb-4 pl-3" style={{ color: '#64748b' }}>Announcements, safety protocols &amp; updates</p>
           <div className="p-5" style={cardStyle('#0ea5e9')}>

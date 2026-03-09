@@ -37,8 +37,8 @@ const ClinicianDashboard: React.FC = () => {
 
         {/* Section 1 — Attention Layer */}
         <section className="mb-10">
-          <h2 className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: '#94a3b8' }}>
-            Attention
+          <h2 className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3" style={{ color: '#94a3b8', borderLeft: '4px solid #2dd4bf' }}>
+            RADAR
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {signals.map((s) => (
@@ -49,8 +49,8 @@ const ClinicianDashboard: React.FC = () => {
                 <p className="text-sm mb-3" style={{ color: '#f1f5f9' }}>{s.detail}</p>
                 <button
                   className="text-xs font-medium px-3 py-1 rounded"
-                  style={{
-                    background: `rgba(${hexRgb(s.accent)},0.15)`,
+                   style={{
+                    background: 'transparent',
                     color: s.accent,
                     border: `1px solid rgba(${hexRgb(s.accent)},0.4)`,
                   }}
@@ -64,8 +64,8 @@ const ClinicianDashboard: React.FC = () => {
 
         {/* Section 2 — My Caseload */}
         <section>
-          <h2 className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: '#94a3b8' }}>
-            My Caseload
+          <h2 className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3" style={{ color: '#94a3b8', borderLeft: '4px solid #2dd4bf' }}>
+            MY CASELOAD
           </h2>
           <div className="flex flex-col gap-3">
             {caseload.map((c) => {

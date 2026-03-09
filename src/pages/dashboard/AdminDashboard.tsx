@@ -49,7 +49,7 @@ const AdminDashboard: React.FC = () => {
             className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3"
             style={{ color: '#94a3b8', borderLeft: '4px solid #2dd4bf' }}
           >
-            Radar
+            RADAR
           </h2>
           <div className="flex gap-4 overflow-x-auto pb-2">
             {radarSignals.map((s) => (
@@ -57,7 +57,7 @@ const AdminDashboard: React.FC = () => {
                 <p className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: s.accent }}>
                   {s.type}
                 </p>
-                <p className="text-sm mb-3" style={{ color: '#f1f5f9' }}>{s.detail}</p>
+                <p className="text-sm font-semibold mb-3" style={{ color: '#f1f5f9' }}>{s.detail}</p>
                 <button className="text-xs font-medium px-3 py-1 rounded" style={outlineBtn(s.accent)}>
                   Resolve
                 </button>
@@ -72,7 +72,7 @@ const AdminDashboard: React.FC = () => {
             className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3"
             style={{ color: '#94a3b8', borderLeft: '4px solid #2dd4bf' }}
           >
-            Workflow Queue
+            WORKFLOW QUEUE
           </h2>
           <div className="flex flex-col gap-3">
             {workflowQueue.map((w) => (
@@ -106,7 +106,7 @@ const AdminDashboard: React.FC = () => {
             className="text-xs font-semibold uppercase tracking-widest mb-1 pl-3"
             style={{ color: '#94a3b8', borderLeft: '4px solid #0ea5e9' }}
           >
-            Office Board
+            OFFICE BOARD
           </h2>
           <p className="text-xs mb-4 pl-3" style={{ color: '#64748b' }}>
             Announcements, safety protocols &amp; updates

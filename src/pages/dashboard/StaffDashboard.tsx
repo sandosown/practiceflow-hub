@@ -106,7 +106,7 @@ const StaffDashboard: React.FC = () => {
               paddingLeft: '12px',
             }}
           >
-            Radar
+            RADAR
           </h2>
           <div
             className="flex gap-4 overflow-x-auto pb-2"
@@ -139,7 +139,7 @@ const StaffDashboard: React.FC = () => {
               paddingLeft: '12px',
             }}
           >
-            My Tasks
+            MY TASKS
           </h2>
           <div className="space-y-3">
             {tasks.map((t, idx) => (
@@ -178,7 +178,7 @@ const StaffDashboard: React.FC = () => {
               paddingLeft: '12px',
             }}
           >
-            Office Board
+            OFFICE BOARD
           </h2>
           <p className="text-sm mb-4 pl-4" style={{ color: '#94a3b8' }}>
             Announcements, safety protocols & updates

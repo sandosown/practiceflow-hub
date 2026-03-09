@@ -58,7 +58,7 @@ const SupervisorDashboard: React.FC = () => {
             className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3"
             style={{ color: '#94a3b8', borderLeft: '4px solid #2dd4bf' }}
           >
-            Radar
+            RADAR
           </h2>
           <div className="flex gap-4 overflow-x-auto pb-2">
             {radarSignals.map((s) => (
@@ -81,7 +81,7 @@ const SupervisorDashboard: React.FC = () => {
             className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3"
             style={{ color: '#94a3b8', borderLeft: '4px solid #2dd4bf' }}
           >
-            Supervision Queue
+            SUPERVISION QUEUE
           </h2>
           <div className="flex flex-col gap-3">
             {supervisees.map((s) => (
@@ -115,7 +115,7 @@ const SupervisorDashboard: React.FC = () => {
             className="text-xs font-semibold uppercase tracking-widest mb-1 pl-3"
             style={{ color: '#94a3b8', borderLeft: '4px solid #0ea5e9' }}
           >
-            Office Board
+            OFFICE BOARD
           </h2>
           <p className="text-xs mb-4 pl-3" style={{ color: '#64748b' }}>
             Announcements, safety protocols &amp; updates
