@@ -89,7 +89,7 @@ const InternClinicalDashboard: React.FC = () => {
         {/* Section 3 — Supervision */}
         <section className="mb-10">
           <h2 className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3" style={{ color: '#94a3b8', borderLeft: '4px solid #4f46e5' }}>
-            Supervision
+            SUPERVISION
           </h2>
           <div className="p-5" style={cardStyle('#4f46e5')}>
             <div className="flex items-start justify-between">
