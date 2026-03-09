@@ -106,7 +106,7 @@ const StaffDashboard: React.FC = () => {
               paddingLeft: '12px',
             }}
           >
-            Radar
+            RADAR
           </h2>
           <div
             className="flex gap-4 overflow-x-auto pb-2"
