@@ -81,7 +81,7 @@ const SupervisorDashboard: React.FC = () => {
             className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3"
             style={{ color: '#94a3b8', borderLeft: '4px solid #2dd4bf' }}
           >
-            Supervision Queue
+            SUPERVISION QUEUE
           </h2>
           <div className="flex flex-col gap-3">
             {supervisees.map((s) => (
