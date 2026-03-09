@@ -58,7 +58,7 @@ const InternClinicalDashboard: React.FC = () => {
         {/* Section 2 — My Caseload */}
         <section className="mb-10">
           <h2 className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3" style={{ color: '#94a3b8', borderLeft: '4px solid #2dd4bf' }}>
-            My Caseload
+            MY CASELOAD
           </h2>
           <input
             type="text"
