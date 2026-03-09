@@ -42,7 +42,7 @@ const InternClinicalDashboard: React.FC = () => {
         {/* Section 1 — Radar */}
         <section className="mb-10">
           <h2 className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3" style={{ color: '#94a3b8', borderLeft: '4px solid #2dd4bf' }}>
-            Radar
+            RADAR
           </h2>
           <div className="flex gap-4 overflow-x-auto pb-2">
             {radarSignals.map((s) => (
