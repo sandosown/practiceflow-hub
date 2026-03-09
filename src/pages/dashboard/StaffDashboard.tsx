@@ -178,7 +178,7 @@ const StaffDashboard: React.FC = () => {
               paddingLeft: '12px',
             }}
           >
-            Office Board
+            OFFICE BOARD
           </h2>
           <p className="text-sm mb-4 pl-4" style={{ color: '#94a3b8' }}>
             Announcements, safety protocols & updates

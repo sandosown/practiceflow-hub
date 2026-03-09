@@ -57,7 +57,7 @@ const AdminDashboard: React.FC = () => {
                 <p className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: s.accent }}>
                   {s.type}
                 </p>
-                <p className="text-sm mb-3" style={{ color: '#f1f5f9' }}>{s.detail}</p>
+                <p className="text-sm font-semibold mb-3" style={{ color: '#f1f5f9' }}>{s.detail}</p>
                 <button className="text-xs font-medium px-3 py-1 rounded" style={outlineBtn(s.accent)}>
                   Resolve
                 </button>

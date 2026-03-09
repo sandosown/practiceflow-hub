@@ -66,7 +66,7 @@ const ClinicianDashboard: React.FC = () => {
         {/* Section 2 — My Caseload */}
         <section>
           <h2 className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: '#94a3b8' }}>
-            My Caseload
+            MY CASELOAD
           </h2>
           <div className="flex flex-col gap-3">
             {caseload.map((c) => {
