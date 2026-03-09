@@ -106,7 +106,7 @@ const AdminDashboard: React.FC = () => {
             className="text-xs font-semibold uppercase tracking-widest mb-1 pl-3"
             style={{ color: '#94a3b8', borderLeft: '4px solid #0ea5e9' }}
           >
-            Office Board
+            OFFICE BOARD
           </h2>
           <p className="text-xs mb-4 pl-3" style={{ color: '#64748b' }}>
             Announcements, safety protocols &amp; updates
