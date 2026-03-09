@@ -50,8 +50,8 @@ const ClinicianDashboard: React.FC = () => {
                 <p className="text-sm mb-3" style={{ color: '#f1f5f9' }}>{s.detail}</p>
                 <button
                   className="text-xs font-medium px-3 py-1 rounded"
-                  style={{
-                    background: `rgba(${hexRgb(s.accent)},0.15)`,
+                   style={{
+                    background: 'transparent',
                     color: s.accent,
                     border: `1px solid rgba(${hexRgb(s.accent)},0.4)`,
                   }}
