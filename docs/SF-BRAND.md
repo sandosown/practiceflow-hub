@@ -5,8 +5,8 @@
 
 # SF-BRAND.md — SympoFlo Brand & Language Doctrine
 
-**Version:** 03/08/2026 — Phase 6 Pre-Build Update
-**Serial:** SF-BRAND-004
+**Version:** 03/13/2026 — Light/Dark Mode + Navigation Visual System Update (previously 03/08/2026 — Phase 6 Pre-Build Update)
+**Serial:** SF-BRAND-005
 **Status:** LOCKED
 
 ---
@@ -110,9 +110,45 @@ Font: Georgia, serif. Not bold. Not sans-serif.
 
 ---
 
+## Theme System — Light Mode + Dark Mode
+
+**LOG-070 — LOCKED**
+
+### Mode Rule
+- **Light Mode is the default experience** for all users
+- **Dark Mode is user-selectable** via Settings
+- All domain accent colors are **mode-agnostic** — identical in both modes
+- The `#2dd4bf` primary accent is unchanged in both modes
+- Mode toggle lives in Settings only — never exposed in primary nav
+
+### Light Mode Token System
+| Token | Value | Usage |
+|---|---|---|
+| Page background | `#f1f4f8` | All screen backgrounds |
+| Surface (cards) | `#ffffff` | All card interiors |
+| Header / Nav bar | `#1a2a5e` | Top bar, bottom nav bar |
+| Text Primary | `#1a2a5e` | Headings, card labels |
+| Text Secondary | `#94a3b8` | Subtitles, metadata |
+| Section labels | `#94a3b8` | UPPERCASE section headers |
+| Accent / Primary | `#2dd4bf` | Active states, CTAs, highlights |
+
+### Dark Mode Token System
+| Token | Value | Usage |
+|---|---|---|
+| Page background | `#1e3a5f` | All screen backgrounds |
+| Surface (cards) | `#1a3254` | All card interiors |
+| Header / Nav bar | `#152d4e` | Top bar, bottom nav bar |
+| Top bar | `#243f6a` | Secondary header surfaces |
+| Text Primary | `#f1f5f9` | Headings, card labels |
+| Text Secondary | `#7ea8c9` | Subtitles, metadata |
+| Section labels | `#5a8ab0` | UPPERCASE section headers |
+| Accent / Primary | `#2dd4bf` | Active states, CTAs, highlights |
+
+---
+
 ## Visual Doctrine
 
-### Primary Palette
+### Legacy Dark Mode Primary Palette (current build — preserved)
 
 | Token | Value |
 |---|---|
@@ -125,7 +161,27 @@ Font: Georgia, serif. Not bold. Not sans-serif.
 | Text Secondary | #94a3b8 |
 | Text Muted | #64748b |
 
-### 5-Layer Card System
+### Card Border System — Updated (LOG-071)
+
+**Asymmetric Accent Border (replaces 5-layer left-stripe-only doctrine)**
+
+Every card uses an asymmetric accent border where the left edge is bold and the remaining edges are subtle — creating a directional depth effect.
+
+```
+border-left:   4px solid [domain accent]           — full opacity
+border-top:    1px solid [domain accent at 25%]    — subtle
+border-bottom: 1px solid [domain accent at 25%]    — subtle
+border-right:  1px solid [domain accent at 15%]    — whisper
+```
+
+Rules:
+- The left stripe is preserved and extended — this is an evolution, not a replacement
+- Interior of card stays clean — color lives in the border only
+- No colored card fills — ever
+- Applies in both Light Mode and Dark Mode
+- Accent color used is always the domain accent of the module the card belongs to
+
+### Legacy 5-Layer Card System (Dark Mode — current build)
 1. Base surface: #1a2a4a
 2. Depth gradient: base → accent at 8–12% opacity
 3. Border: 1px accent at 40–50% opacity
@@ -154,13 +210,53 @@ Font: Georgia, serif. Not bold. Not sans-serif.
 
 ---
 
+## Bottom Navigation Bar — Visual Spec
+
+**LOG-064 — LOCKED**
+
+### Structure
+5 items. Always visible. No scrolling. Labels always shown below icons.
+
+| Position | Label |
+|---|---|
+| 1 | Home |
+| 2 | Board |
+| 3 | My Work |
+| 4 | Calendar |
+| 5 | More |
+
+### Visual Rules
+- Background: `#1a2a5e` (light mode) / `#152d4e` (dark mode)
+- Active item icon + label: `#2dd4bf`
+- Active item background tint: `rgba(45,212,191,0.12)` — subtle
+- Inactive items: `rgba(255,255,255,0.55)`
+- Notification badge: `#2dd4bf` pill, dark text `#0f172a`
+- Icon size: 22×22px
+- Label size: 8–9px
+- Nav bar height: consistent with platform tap target standards
+- Never icon-only — labels always present
+
+### More Drawer Visual Rules
+- Slides up from bottom — not a full-screen takeover
+- Background: `#1a2a5e` (light) / `#152d4e` (dark) — matches nav bar
+- Drawer handle: `32px × 3px`, `rgba(255,255,255,0.2)`, centered at top
+- User profile + role label visible at top of drawer
+- Items grouped in labeled sections
+- Item background: `rgba(255,255,255,0.07)`
+- Item label: `#e2eaf4`
+- Section labels: `#5a8ab0`, `9px`, uppercase, tracked
+- Role-filtered: absent items are completely invisible — never grayed, never locked
+- Dismiss: tap outside or swipe down
+
+---
+
 ## Domain Accent Map
 
 ### Group Practice Modules
 | Module | Accent |
 |---|---|
 | Charts Requiring Action | #d97706 |
-| Office Board | #0ea5e9 |
+| Message Board (formerly Office Board) | #0ea5e9 |
 | Management Center | #7c3aed |
 | Client Database | #0d9488 |
 | Caseload Integration | #3b82f6 |
@@ -242,6 +338,10 @@ Major Moments is the only module with a unique visual treatment distinct from op
 - Section headers use 4px left border in primary accent
 - Role-scoped content — no visible sections that don't apply to current role
 
+### Bottom Navigation Bar (LOG-064)
+- See Bottom Navigation Bar — Visual Spec section above
+- Mode toggle (Light/Dark) lives in Settings — never in nav
+
 ---
 
 ## Naming Conventions — LOCKED
@@ -251,6 +351,7 @@ Major Moments is the only module with a unique visual treatment distinct from op
 | Choose a workspace | Which role are you stepping into? |
 | Your workspaces are ready | (removed — greeting only) |
 | Comms | Office Board |
+| Office Board | Message Board |
 | Attention Required | Radar |
 | PracticeFlow | SympoFlo |
 | Group Practice Dashboard | Group Practice |
@@ -270,6 +371,9 @@ Major Moments is the only module with a unique visual treatment distinct from op
 - Opening dashboard: no Radar, no workspace bleed
 - Surface names: workspace name only, no qualifier
 - Avatar dropdown: Profile, Settings, Log out — always in that order
+- Bottom nav: 5 items persistent on all workspace screens — exception: Owner opening dashboard
+- More drawer: role-filtered, absent items invisible
+- Mode toggle: Settings only — never in nav
 
 ---
 

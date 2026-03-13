@@ -89,6 +89,80 @@ No second word on any workspace surface name. The workspace name IS the surface 
 
 ---
 
+## 03/13/2026 — Navigation System, Light/Dark Mode, Calendar & Appointments Session
+
+### LOG-064 — Global Navigation System (Bottom Nav) — LOCKED
+Persistent bottom navigation bar added to all GP workspace screens for all roles.
+Exception: Owner opening dashboard (hat selector) — no bottom nav.
+5 items: Home, Board, My Work, Calendar, More.
+Content inside each item is role-scoped. Nav bar itself is identical for all roles.
+
+### LOG-065 — Message Board (replaces Office Board) — LOCKED
+Office Board renamed to Message Board everywhere — nav, module name, breadcrumbs, code.
+Accent color unchanged: #0ea5e9.
+All roles can read AND post. Owner + Admin can pin and manage.
+
+### LOG-066 — Recognition System — LOCKED
+Owner, Admin, Supervisor can give recognition.
+All roles can receive recognition.
+No peer-to-peer in V1.
+Lives in More drawer — visible to all roles.
+
+### LOG-067 — Direct Messages — LOCKED
+GP-scoped internal direct messaging utility.
+Lives in More drawer — visible to all roles.
+Separate from Message Board (practice-wide broadcast).
+Cross-hat messaging not permitted.
+
+### LOG-068 — Feed — LOCKED
+Live practice activity stream. Role-scoped per user lane.
+Operational activity only — not a social feed.
+Moved to More drawer (was previously a bottom nav candidate).
+
+### LOG-069 — Directory — LOCKED
+Lives in More drawer — visible to all roles.
+Role-scoped visibility: Owner/Admin see all staff. Clinical roles see clinical staff only.
+Operational roles see operational staff only.
+
+### LOG-070 — Light Mode + Dark Mode Token System — LOCKED
+Light Mode is the default experience.
+Dark Mode is user-selectable via Settings.
+Domain accent colors are mode-agnostic.
+Full token tables in SF-BRAND.md.
+
+### LOG-071 — Card Border System (Asymmetric Accent Border) — LOCKED
+Replaces previous 4px left-stripe-only doctrine.
+Left: 4px solid accent at full opacity.
+Top/Bottom: 1px solid accent at 25% opacity.
+Right: 1px solid accent at 15% opacity.
+Interior stays clean — color lives in border only.
+
+### LOG-072 — Calendar & Appointments (Operations Engine — Universal) — LOCKED
+Calendar and Appointments live in the Operations Engine.
+Universal capability across all hats where Operations Engine is active.
+Base appointment types: Personal, Meeting, Session, Other.
+Each hat adds domain-specific types on top.
+Calendar earns permanent bottom nav slot across all workspaces.
+
+### LOG-073 — GP Calendar Layer (GP-Specific Rules) — LOCKED
+GP appointment types extend universal base: Client Session, Supervision Session, Staff Meeting, Intake.
+Supervisor can view supervisee calendars (read only, own supervisees only).
+Supervision appointments created by Supervisor appear on supervisee calendar automatically.
+Completed supervision sessions feed into LP Compliance verification records.
+
+### LOG-074 — Owner Active Workload Flag (Operating Profile — Per Hat) — LOCKED
+Onboarding question: "Do you personally carry an active workload in this practice — such as clients, cases, or sessions?"
+Yes = personal workload tab on dashboard for that hat.
+No = clean leadership/CEO view.
+Stored per hat. Changeable in Settings. Default: No.
+GP follow-up: supervision oversight structure question if Yes.
+
+### LOG-075 — Bottom Nav Update: Calendar Replaces Feed — LOCKED
+Final bottom nav: Home, Board, My Work, Calendar, More.
+Feed moved to More drawer — not removed, repositioned.
+
+---
+
 End of CHANGELOG.md
 
 ---

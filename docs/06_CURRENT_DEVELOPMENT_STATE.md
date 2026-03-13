@@ -5,8 +5,8 @@
 
 # 06 — Current Development State
 
-**Canon Version:** 03/08/2026 — Engine Philosophy + Major Moments + Workspace Naming Update
-**Repo:** github.com/sandosown/practiceflow-hub
+**Canon Version:** 03/13/2026 — Navigation System + Light/Dark Mode + Calendar Update (previously 03/08/2026 — Engine Philosophy + Major Moments + Workspace Naming Update)
+**Repo:** github.com/sandosount/practiceflow-hub
 **Connected to Lovable:** ✅
 
 ---
@@ -23,6 +23,8 @@
 | Phase 6 | Role-Specific Dashboard Content | 🔄 IN PROGRESS |
 | Phase 7 | Module Pages — Real Content | 🔜 PENDING |
 | Phase 8 | Action Mode | 🔜 PENDING |
+| Phase 9 | Navigation System + Light/Dark Mode | 🔜 PENDING — Canon locked, build pending |
+| Phase 10 | Calendar & Appointments | 🔜 PENDING — Canon locked, build pending |
 
 ---
 
@@ -101,10 +103,21 @@
 
 ## What Is NOT Built Yet (Phase 6+)
 
+- Bottom navigation bar (all roles) — **canon now locked (LOG-064)**
+- Light Mode — **canon now locked (LOG-070)**
+- Dark Mode toggle in Settings — **canon now locked (LOG-070)**
+- Message Board (renamed from Office Board) — **canon now locked (LOG-065)**
+- Calendar & Appointments (Operations Engine) — **canon now locked (LOG-072, LOG-073)**
+- Recognition system — **canon now locked (LOG-066)**
+- Direct Messages (GP-scoped) — **canon now locked (LOG-067)**
+- Feed (More drawer) — **canon now locked (LOG-068)**
+- Directory (More drawer) — **canon now locked (LOG-069)**
+- Owner Active Workload Flag — **canon now locked (LOG-074)**
+- More drawer (role-filtered) — **canon now locked (LOG-064)**
 - INTERN CLINICAL dashboard (Phase 6 — next)
 - INTERN BUSINESS dashboard
 - STAFF dashboard
-- The 9 module pages with real data and actions
+- The 10 module pages with real data and actions
 - Major Moments module (Phase 7)
 - Workspace naming / logo upload (Phase 7)
 - Action Mode (mobile-first, device-detected)
@@ -178,6 +191,18 @@
 | LOG-061 | Suggestive automation: 2-3 chips max, disappear on navigation, never interrupt workflow |
 | LOG-062 | Recurring logic supported in V1 via suggestive prompts |
 | LOG-063 | Context Isolation Principle: no cross-hat bleed in UI — hat → radar → engine → objects only |
+| LOG-064 | Bottom nav system locked: Home, Board, My Work, Calendar, More — all GP screens all roles |
+| LOG-065 | Office Board renamed to Message Board — all roles read + post, Owner/Admin pin + manage |
+| LOG-066 | Recognition: Owner/Admin/Supervisor give, all roles receive, no peer-to-peer V1 |
+| LOG-067 | Direct Messages: GP-scoped utility, More drawer, separate from Message Board |
+| LOG-068 | Feed: live practice activity stream, role-scoped, More drawer |
+| LOG-069 | Directory: More drawer, role-scoped visibility per role type |
+| LOG-070 | Light Mode (default) + Dark Mode (user-selectable) token system locked |
+| LOG-071 | Asymmetric accent border system: 4px left full opacity, 1px top/bottom at 25%, 1px right at 15% |
+| LOG-072 | Calendar & Appointments in Operations Engine — universal across all hats |
+| LOG-073 | GP Calendar layer: GP appointment types, supervisor/supervisee visibility rules |
+| LOG-074 | Owner Active Workload Flag: per-hat, onboarding question locked, supervision structure options |
+| LOG-075 | Calendar replaces Feed in bottom nav — Feed moves to More drawer |
 
 ---
 
@@ -195,7 +220,12 @@
 
 ---
 
-## Visual Doctrine (Current)
+## Visual Doctrine
+
+### Note on Visual Doctrine (03/13/2026)
+Light Mode and Dark Mode token systems are now locked (LOG-070). The dark navy tokens below remain the canonical Dark Mode system. Light Mode is the new default. See SF-BRAND.md for full token tables for both modes.
+
+### Dark Mode Tokens (current build / user-selectable)
 
 | Token | Value |
 |---|---|
@@ -208,16 +238,31 @@
 | Text Muted | #64748b |
 | Major Moments accent | #a78bfa |
 
-Card system: 5-layer (surface, depth gradient, border, 4px left stripe, glow)
+### Light Mode Tokens (new default — LOG-070)
+
+| Token | Value |
+|---|---|
+| Page background | #f1f4f8 |
+| Surface (cards) | #ffffff |
+| Header / Nav bar | #1a2a5e |
+| Text Primary | #1a2a5e |
+| Text Secondary | #94a3b8 |
+| Section labels | #94a3b8 |
+| Accent / Primary | #2dd4bf |
+
+Card system: 5-layer (surface, depth gradient, border, 4px left stripe, glow) — Dark Mode
+Asymmetric accent border (LOG-071) — Light Mode and Dark Mode going forward
 Glow states: resting / hover / active
 No red, rose, pink anywhere — ever
+
+---
 
 ## Domain Accent Map (GP Modules)
 
 | Module | Accent |
 |---|---|
 | Charts Requiring Action | #d97706 |
-| Office Board | #0ea5e9 |
+| Message Board (formerly Office Board) | #0ea5e9 |
 | Management Center | #7c3aed |
 | Client Database | #0d9488 |
 | Caseload Integration | #3b82f6 |

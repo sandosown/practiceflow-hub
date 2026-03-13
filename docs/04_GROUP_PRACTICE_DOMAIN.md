@@ -5,7 +5,7 @@
 
 # 04 — Group Practice Domain
 Derived from: PF-CANON.md
-Version Timestamp: 03/08/2026 — Phase 6 Pre-Build Canon Update
+Version Timestamp: 03/13/2026 — Navigation System + Calendar + Message Board Update (previously 03/08/2026 — Phase 6 Pre-Build Canon Update)
 See CHANGELOG.md for full version history.
 
 ---
@@ -16,11 +16,11 @@ First-class workspace. Exemplar implementation of PF structure.
 
 **Sub-Engines in Group Practice:**
 - PeopleHub (Worker Profiles)
-- Operations (Clients, Caseload, Events)
+- Operations (Clients, Caseload, Events, Calendar & Appointments)
 - Referral Engine
 - Compliance Engine (LP)
 - Training Engine (Clinical Intern)
-- Office Board (Communications)
+- Message Board (Communications)
 
 ---
 
@@ -38,7 +38,7 @@ First-class workspace. Exemplar implementation of PF structure.
 ## Canonical Modules (10)
 
 1. Charts Requiring Action
-2. Office Board (formerly Comms)
+2. Message Board (formerly Office Board — LOG-065)
 3. Management Center
 4. Client Database
 5. Caseload Integration
@@ -58,6 +58,161 @@ First-class workspace. Exemplar implementation of PF structure.
 - No light or paper backgrounds — scrapbook feel achieved through card layering, typography, and soft shadow treatment
 - Reflection Banner (Owner only): appears at top of GP engine dashboard, dismissible per session
 - Auto-capture triggers in GP context: hire event, license approval, certification completion, first client added, client count milestones
+
+---
+
+## Module Name Change — LOCKED
+
+**LOG-065**
+
+| Old Name | New Canon Name |
+|---|---|
+| Office Board | Message Board |
+
+Message Board replaces Office Board everywhere: nav label, module name, breadcrumbs, section headers, all canon references, all code.
+Accent color unchanged: `#0ea5e9`
+
+---
+
+## Message Board — GP
+
+**LOG-065 — LOCKED**
+
+### Access Rule
+All roles can read AND post to the Message Board.
+Owner + Admin can pin posts and manage the board.
+No role is read-only — everyone has a voice on the board.
+
+### Post Types
+- Announcement — practice-wide notice (pinnable)
+- Reminder — recurring or deadline-based notice (pinnable)
+- Notice — informational, non-urgent
+
+### Visual Concept
+Physical bulletin board metaphor.
+Grid of pinned cards within the light/dark mode doctrine.
+Each card has a colored pin-dot indicator using `#0ea5e9`.
+Pinned cards remain at top until unpinned by Owner or Admin.
+
+### Posting Rules
+- Owner / Admin: post any type, pin any post, remove any post
+- All other roles: post freely, cannot pin or remove others' posts
+
+---
+
+## GP Calendar Layer
+
+**LOG-073 — LOCKED**
+
+### GP Appointment Types (extends universal Operations Engine base)
+Universal base types (inherited): Personal, Meeting, Session, Other
+GP-specific additions:
+- Client Session
+- Supervision Session
+- Staff Meeting
+- Intake
+
+### GP Visibility Rules
+| Role | Calendar Sees |
+|---|---|
+| Owner (workload = No) | Full practice calendar — all appointments |
+| Owner (workload = Yes) | Full practice calendar + own client sessions |
+| Admin | Full practice calendar — all appointments |
+| Supervisor | Own appointments + all supervisee appointments (read only) |
+| Clinician | Own appointments only |
+| Clinical Intern | Own appointments only |
+| Business Intern | Own appointments only — non-clinical |
+| Staff | Own appointments only — non-clinical |
+
+### Supervisor Supervisee Calendar Rule
+- Supervisor can tap any supervisee in their supervision list and view that person's full appointment calendar
+- Read only — Supervisor cannot edit supervisee appointments
+- Scoped to own supervisees only — not the full practice
+- Purpose: supervision load awareness, gap identification
+
+### Supervision Appointment Auto-Assign Rule
+When a Supervisor creates a Supervision Session appointment and assigns it to a Clinician or Clinical Intern:
+- Appointment appears on Supervisor's calendar
+- Appointment appears on supervisee's calendar simultaneously
+- Supervisee's calendar entry is labeled: "Added by [Supervisor name]"
+- Supervisee cannot delete a supervisor-assigned appointment — they may only mark it as needing reschedule (which notifies Supervisor)
+
+### Appointment → LP Compliance Linkage
+Completed Supervision Session appointments may be linked to LP Compliance weekly verification records.
+This is optional in V1 — not required.
+Linked sessions surface in the LP Compliance audit trail.
+
+### Appointment → Client Session Linkage
+A Client Session appointment may be linked to a specific client record.
+Optional in V1 — not required to create an appointment.
+Linked appointments surface in the client record activity trail.
+
+---
+
+## Recognition System — GP
+
+**LOG-066 — LOCKED**
+
+### Rule
+- Owner, Admin, Supervisor can give recognition
+- All roles can receive recognition
+- No peer-to-peer recognition in V1
+- Lives in More drawer — visible to all roles
+- Recognition is GP-scoped — does not appear in other hats
+
+---
+
+## Direct Messages — GP
+
+**LOG-067 — LOCKED**
+
+### Rule
+- GP-scoped internal direct messaging utility
+- One-to-one or small group messaging within GP workspace
+- Lives in More drawer — visible to all roles
+- Completely separate from Message Board (which is practice-wide broadcast)
+- Cross-hat messaging is not permitted — GP messages stay in GP
+- PracticeFlow is not a messaging platform — this is a scoped utility serving the virtual office communication need
+
+---
+
+## Feed — GP
+
+**LOG-068 — LOCKED**
+
+### Rule
+- Live GP practice activity stream
+- Role-scoped — each role sees activity relevant to their lane only
+- Operational activity only — not a social feed
+- Calm command center tone maintained throughout
+- Lives in More drawer — visible to all roles
+- Examples of feed items:
+  - New client assigned to clinician
+  - Supervision session logged
+  - Intern hours submitted
+  - Document uploaded
+  - New Message Board post
+  - Treatment plan updated
+
+---
+
+## Directory — GP
+
+**LOG-069 — LOCKED**
+
+### Rule
+- Lives in More drawer — visible to all roles
+- Role-scoped visibility:
+
+| Role | Directory Shows |
+|---|---|
+| Owner | All staff |
+| Admin | All staff |
+| Supervisor | Clinical staff only |
+| Clinician | Clinical staff only |
+| Clinical Intern | Clinical staff only |
+| Business Intern | Operational staff only |
+| Staff | Operational staff only |
 
 ---
 

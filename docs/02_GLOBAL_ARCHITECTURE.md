@@ -5,7 +5,7 @@
 
 # 02 — Global Architecture
 Derived from: PF-CANON.md
-Version Timestamp: 03/08/2026 — Engine Philosophy + Major Moments Canon Update
+Version Timestamp: 03/13/2026 — Calendar & Appointments Update (previously 03/08/2026 — Engine Philosophy + Major Moments Canon Update)
 See CHANGELOG.md for full version history.
 
 ---
@@ -217,7 +217,7 @@ No floating objects are permitted. All objects are workspace-scoped and engine-a
 | # | Engine | Core Purpose | V1 Scope | Explicitly Excluded in V1 |
 |---|---|---|---|---|
 | 1 | People Engine | Relational identity & responsibility | Profiles, roles, status, linked docs/contracts/events, responsibilities | CRM communication logs, email tracking, call logs |
-| 2 | Operations Engine | Execution & coordination | Tasks, projects, workflows, 3-phase event lifecycle, asset/product tracker, recurring logic (suggestive) | Full PM suite, POS logic, barcode scanning |
+| 2 | Operations Engine | Execution & coordination | Tasks, projects, workflows, 3-phase event lifecycle, asset/product tracker, recurring logic (suggestive), **Calendar & Appointments** | Full PM suite, POS logic, barcode scanning |
 | 3 | Revenue Engine | Financial awareness | Income, lightweight expenses, simple profit snapshot, offer/event/product revenue, milestones | Accounting ledger, tax system, payroll, bank sync, invoicing |
 | 4 | Growth Engine | Forward momentum | Goals, KPIs, milestones, skill development, marketing visibility, pipeline awareness (New→Contacted→Proposal→Won→Lost) | CRM automation, sales forecasting, complex funnel builders |
 | 5 | Compliance Engine | Obligation & legitimacy | Contracts, licenses, certifications, insurance, expiration tracking, renewal reminders, assigned responsibility | Risk scoring, e-signature platform, legal drafting |
@@ -259,6 +259,55 @@ This protects the user from feeling lost and reinforces the personal assistant i
 - No barcode scanning in Asset Tracker (V1)
 - Document Control System is infrastructure — it is not a user-selectable engine
 - Training Engine is Group Practice-only — it is not a universal engine
+
+---
+
+## Calendar & Appointments (Operations Engine — Universal)
+
+**LOG-072 — LOCKED**
+
+### Architectural Home
+Calendar and Appointments live in the **Operations Engine**.
+This is a universal capability available across all hats where the Operations Engine is active.
+It is NOT a GP-specific feature.
+
+### Universal Appointment Types (Base — All Hats)
+- Personal
+- Meeting
+- Session
+- Other
+
+Each hat domain layer adds its own types on top of this base.
+No hat may remove the base types.
+
+### Universal Rules
+- Every role gets a Calendar surface scoped to their active hat
+- Any role can create their own appointments
+- Owner / Admin (or equivalent authority role per hat) can create appointments for any member of their workspace
+- When an authority role schedules an appointment with a specific member, it appears on that member's calendar automatically
+- Calendar is always hat-scoped — no cross-hat calendar bleed ever
+- Every appointment object requires: `hat_id` + `engine_source: operations`
+
+### Calendar Visibility by Authority Level (Universal)
+| Role Type | Sees |
+|---|---|
+| Owner / Admin | Full workspace calendar — all appointments |
+| Supervisory roles | Own appointments + all supervisee appointments (read only) |
+| Individual contributors | Own appointments only |
+
+### Recurring Appointments
+Supported via Operations Engine recurring logic.
+V1: suggestive prompts only — not automatic.
+
+### Calendar Nav Placement
+Calendar earns a **permanent bottom nav slot** across all workspaces where the Operations Engine is active.
+It is position 4 in the standard 5-item bottom nav.
+
+### Appointment Creation Rules
+- Any role creates their own appointments freely
+- Authority roles (Owner, Admin, Supervisor equivalents) may create appointments assigned to other members
+- Assigned appointments appear on the recipient's calendar with a label indicating who created them
+- No silent appointment creation — recipient always sees the source
 
 ---
 

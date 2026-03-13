@@ -5,7 +5,7 @@
 
 # 03 — Operating Profile Engine
 Derived from: PF-CANON.md
-Version Timestamp: 03/08/2026 — Engine Philosophy + Workspace Naming Canon Update
+Version Timestamp: 03/13/2026 — Owner Active Workload Flag Update (previously 03/08/2026 — Engine Philosophy + Workspace Naming Canon Update)
 See CHANGELOG.md for full version history.
 
 ---
@@ -130,6 +130,8 @@ domain_labels (record)
 notifications_pref: LOW | MEDIUM | HIGH
 radar_density_pref
 onboarding_complete: boolean
+owner_carries_workload (record — key: hat_id, value: boolean)
+owner_supervision_structure (record — key: hat_id, value: supervision_type)
 ```
 
 **Pre-Canon fields (present in codebase — pending architectural reconciliation):**
@@ -181,6 +183,58 @@ Adjusts:
 - Reminder cadence
 - Escalation intervals
 - Alert sensitivity
+
+---
+
+## Owner Active Workload Flag
+
+**LOG-074 — LOCKED**
+
+### Purpose
+Determines whether the Owner personally carries an active workload within a given hat — such as a caseload, client sessions, or teaching slots.
+This flag is per-hat, not global.
+
+### Onboarding Question (Locked Copy)
+> "Do you personally carry an active workload in this practice — such as clients, cases, or sessions?"
+
+Presented during hat onboarding. Answerable during onboarding or changeable anytime in Settings.
+
+### Answer: Yes
+- Owner gets a personal workload tab on their dashboard scoped to this hat
+- In GP hat: Owner Caseload tab appears — functions identically to Clinician caseload but owner-scoped
+- In Coaching hat: Owner Sessions tab appears
+- In other hats: equivalent workload surface renders per hat domain rules
+- Owner's personal workload is private — never visible to other staff unless hat-specific supervision rules explicitly permit it
+
+### Answer: No
+- Clean leadership / CEO view only
+- No personal workload tab rendered
+- No caseload or session items appear on Owner dashboard
+
+### Flag Storage Rules
+- Stored per hat in Operating Profile: `owner_carries_workload: boolean`
+- Owner may carry workload in one hat but not another — flags are independent
+- Changeable anytime in Settings — no re-onboarding required
+- Default value: **No** (leadership view) unless Owner selects Yes
+
+### GP-Specific Follow-Up Question (when workload flag = Yes in GP hat)
+> "Who provides clinical oversight for your caseload?"
+
+Options presented:
+1. I am self-supervising (licensed independent practitioner)
+2. Another supervisor in this practice
+3. External supervisor (outside this system)
+
+**This question is not locked to one answer.**
+Different owner-operators run GP practices differently.
+The system must flex for solo licensed practitioners, group practice owners who also see clients, and owner-operators who delegate all clinical supervision.
+
+### Supervision Visibility Rule (GP)
+| Supervision Type | Supervisor visibility into Owner caseload |
+|---|---|
+| SELF_SUPERVISED | No other role has visibility |
+| INTERNAL_SUPERVISOR | Named supervisor has same visibility as any supervisee |
+| EXTERNAL_SUPERVISOR | No internal role has visibility |
 
 ---
 

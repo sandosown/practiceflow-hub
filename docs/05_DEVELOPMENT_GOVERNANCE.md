@@ -5,7 +5,7 @@
 
 # 05 — Development Governance
 Derived from: PF-CANON.md
-Version Timestamp: 03/08/2026 — Phase 6 Pre-Build Canon Update
+Version Timestamp: 03/13/2026 — Navigation System Governance Update (previously 03/08/2026 — Phase 6 Pre-Build Canon Update)
 See CHANGELOG.md for full version history.
 
 ---
@@ -82,6 +82,92 @@ Before any feature is built, it must answer:
 - All roles: personal profile (name, email, password), role-relevant notification preferences
 - No role sees settings belonging to another role
 - Settings page is the only place where configuration flows may appear
+
+---
+
+## Bottom Navigation Bar Governance
+
+**LOG-064 — LOCKED**
+
+### Rule
+A persistent bottom navigation bar lives on all GP workspace screens for all roles.
+
+**Exception:** Owner opening dashboard (hat selector screen) — no bottom nav appears here. This screen is pre-workspace and must remain clean.
+
+### Standard 5-Item Bottom Nav
+| Position | Label | Purpose |
+|---|---|---|
+| 1 | Home | Radar — role-scoped priority signals |
+| 2 | Board | Message Board — practice-wide communication |
+| 3 | My Work | Role-aware work surface |
+| 4 | Calendar | Appointments — role-scoped |
+| 5 | More | Role-filtered drawer |
+
+### Nav Bar Visual Rules
+- Background: Header/Nav bar token (`#1a2a5e` light / `#152d4e` dark)
+- Active item: `#2dd4bf` — icon + label both highlighted
+- Active item background tint: `rgba(45,212,191,0.12)` — subtle
+- Inactive items: `rgba(255,255,255,0.55)`
+- Notification badge: `#2dd4bf` pill with count
+- Labels always visible below icons — never icon-only
+- 5 items always visible — no scrolling nav bar
+- Height: consistent with platform standard tap targets
+
+### My Work — Role-Aware Content Rule
+Same nav label for all roles. Content inside is role-scoped:
+| Role | My Work Shows |
+|---|---|
+| Owner | Full GP module access |
+| Admin | Workflow queue + management items |
+| Supervisor | Supervision queue + pending approvals |
+| Clinician | Caseload + treatment plans |
+| Clinical Intern | Caseload + supervision hours |
+| Business Intern | Assigned tasks + operations |
+| Staff | Assigned tasks |
+
+### More Drawer Governance
+
+**Visible to ALL roles:**
+- Directory
+- Messages (direct — GP-scoped only)
+- Feed
+- Recognition
+- Guide Center
+- Settings
+
+**Owner + Admin only:**
+- Management Center
+- Insurance Database
+- Vendor Database
+- Client Database (full)
+- Compliance (full)
+
+**Supervisor adds:**
+- Supervision Structure
+- Client Database (own supervisees only)
+- Compliance (own supervisees only)
+- Treatment Plans (own supervisees only)
+
+**Clinician + Clinical Intern adds:**
+- Supervision (own sessions only)
+- Treatment Plans (own clients only)
+- Compliance (own records only)
+
+**Business Intern + Staff:**
+- Universal items only — no clinical items visible ever
+
+### Drawer Visual Rules
+- Slides up from bottom
+- Same background color as bottom nav bar
+- User profile + role visible at top of drawer
+- Items grouped by category with section labels
+- Role-filtered: items not applicable to role are completely absent — never grayed out, never locked, never visible
+- Dismiss: tap outside drawer or swipe down
+
+### Structural Integrity Rule
+Navigation cannot precede critical information in Control Mode.
+The Radar (Home) must always be the first nav item.
+No nav item may bypass the Radar-first doctrine.
 
 ---
 
@@ -181,6 +267,7 @@ See `SF-BRAND.md` in `/docs` for:
 | "Select a role to get started" | "Choose a workspace" |
 | Group Practice Radar | Group Practice Dashboard |
 | Comms | Office Board |
+| Office Board | Message Board |
 
 ---
 
