@@ -38,6 +38,12 @@ const OWNER_SECTIONS: DrawerSection[] = [
     ],
   },
   {
+    title: 'PERSONAL',
+    items: [
+      { label: 'Major Moments', icon: Sparkles, path: '/dashboard/owner/group-practice/major-moments' },
+    ],
+  },
+  {
     title: 'COMMUNICATION',
     items: [
       { label: 'Messages', icon: Mail, path: '/dashboard/owner/group-practice/office-board' },
