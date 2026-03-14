@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Home, MessageSquare, Briefcase, Calendar, MoreHorizontal,
-  LayoutDashboard, Users, CreditCard, Package, ShieldCheck,
+  LayoutDashboard, Users, CreditCard, Package, ShieldCheck, Shield,
   Contact, Award, Mail, Rss, BookOpen, Settings, Sparkles,
 } from 'lucide-react';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
