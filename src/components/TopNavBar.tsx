@@ -53,8 +53,7 @@ const TopNavBar: React.FC = () => {
           onMouseEnter={e => (e.currentTarget.style.color = '#ffffff')}
           onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.5)')}
         >
-          <LogOut className="w-4 h-4" />
-          <span>Log out</span>
+          Log out
         </button>
       </div>
     </header>
