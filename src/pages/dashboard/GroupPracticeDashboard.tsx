@@ -52,10 +52,9 @@ const GroupPracticeDashboard: React.FC = () => {
         {/* Radar */}
         <section className="mb-10">
           <h2
-            className="text-xl font-bold mb-4 pl-3"
-            style={{ color: '#f1f5f9', borderLeft: '4px solid #2dd4bf' }}
+            className="text-xl font-bold mb-4 pl-3 text-foreground border-l-4 border-primary"
           >
-            Radar
+            RADAR
           </h2>
           <div className="flex gap-3 overflow-x-auto pb-2">
             {SIGNALS.map((s, i) => (
