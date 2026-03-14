@@ -67,7 +67,7 @@ const DraggableCard: React.FC<{ referral: Referral; isMobile: boolean; onMoveSta
   const style: React.CSSProperties = {
     ...cardStyle(ACCENT),
     borderRadius: 10,
-    opacity: isDragging ? 0.4 : 1,
+    opacity: isDragging ? 0 : 1,
     transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined,
     cursor: 'grab',
     touchAction: 'none',
