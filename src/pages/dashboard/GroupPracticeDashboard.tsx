@@ -74,12 +74,12 @@ const GroupPracticeDashboard: React.FC = () => {
               ? 'no signals requiring your attention.'
               : `${count} signal${count !== 1 ? 's' : ''} requiring your attention.`;
             return (
-              <>
-                <span style={{ color: '#1a2a5e', fontSize: 16, fontWeight: 400 }}>{greeting}, Dr. Sarah.</span>
-                <span style={{ color: '#94a3b8', fontSize: 16 }}> — </span>
-                <span style={{ color: '#1a2a5e', fontSize: 16, fontWeight: 400 }}>You currently have </span>
-                <span style={{ color: '#2dd4bf', fontSize: 16, fontWeight: 600 }}>{signalText}</span>
-              </>
+              <p style={{ color: '#1a2a5e', fontSize: 16, fontWeight: 400, margin: 0 }}>
+                {`${greeting}, Dr. Sarah. `}
+                <span style={{ color: '#94a3b8' }}>—</span>
+                {" You currently have "}
+                <span style={{ color: '#2dd4bf', fontWeight: 600 }}>{signalText}</span>
+              </p>
             );
           })()}
         </div>
