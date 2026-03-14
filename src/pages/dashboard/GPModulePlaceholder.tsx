@@ -41,7 +41,7 @@ const GPModulePlaceholder: React.FC<Props> = ({ title }) => {
 
         <div className="flex items-center gap-3 mb-8">
           <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/owner/group-practice')} className="text-muted-foreground">
-            <ArrowLeft className="w-4 h-4 mr-1" /> Back
+            <ArrowLeft className="w-4 h-4" />
           </Button>
           <h1
             className="text-2xl font-bold pl-3"
