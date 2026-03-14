@@ -71,7 +71,6 @@ const MajorMoments: React.FC = () => {
           <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/owner/group-practice')} className="text-muted-foreground">
             <ArrowLeft className="w-4 h-4" />
           </Button>
-          </Button>
           <h1
             className="text-2xl font-bold text-foreground pl-3"
             style={{ ...georgia, borderLeft: `4px solid ${ACCENT}` }}

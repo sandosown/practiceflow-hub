@@ -76,7 +76,6 @@ const TreatmentPlanTracker: React.FC = () => {
           <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/owner/group-practice')} className="text-muted-foreground">
             <ArrowLeft className="w-4 h-4" />
           </Button>
-          </Button>
           <h1 className="text-2xl font-bold text-foreground pl-3" style={{ borderLeft: '4px solid #059669' }}>Treatment Plan Tracker</h1>
         </div>
         <div className="relative mb-8 max-w-md">
