@@ -109,11 +109,32 @@ Replaces Caseload Integration. The Referral Pipeline is a manual kanban workflow
 
 ### Pipeline Stages
 
+Default stages (in order):
+
 1. New Referral
 2. Contact Made
 3. Pre-Screening Complete
 4. Insurance Verified
 5. Assigned
+
+Custom stages (LOG-092):
+
+- Owner can add custom stages anywhere in the chain — before, after, or between existing stages
+- Custom stages are hat-scoped
+- Stage order is drag-reorderable by Owner
+- Default stages cannot be removed — only custom stages can be deleted
+- A + button appears in the stage header bar to add a new stage at that position
+- Custom stage name is user-defined, max 30 characters
+
+### Outcome Bucket Entry (LOG-093)
+
+- Cards can be moved to outcome buckets via two methods:
+  1. Drag and drop card directly into outcome bucket column
+  2. Forward/back arrows on each card — desktop and mobile
+- Forward arrow moves card to next stage or outcome bucket
+- Back arrow moves card to previous stage
+- All movements logged with user + timestamp
+- Outcome buckets: Declined (muted), No Response (muted), Intake Complete (#059669)
 
 ### Outcome Buckets
 
