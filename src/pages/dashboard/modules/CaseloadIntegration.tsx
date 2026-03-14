@@ -217,8 +217,6 @@ const ReferralPipeline: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6 py-6 pb-20">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm mb-6 text-muted-foreground">
-          <button onClick={() => navigate('/dashboard/owner/group-practice')} className="hover:text-primary transition-colors">Group Practice</button>
-          <span>›</span>
           <span className="text-foreground font-medium">Referral Pipeline</span>
         </nav>
 
