@@ -109,7 +109,7 @@ const CaseloadIntegration: React.FC = () => {
             {filteredClinicians.map((c, i) => {
               const badge = AVAILABILITY_STYLES[c.availability];
               return (
-                <div key={i} className="p-4 flex items-center justify-between gap-4" style={cardStyle('#3b82f6')}>
+                <div key={i} className="p-4 flex items-center justify-between gap-4" style={cardStyle('#0ea5e9')}>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <p className="text-sm font-semibold text-foreground">{c.name}</p>
