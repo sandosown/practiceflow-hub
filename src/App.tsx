@@ -36,6 +36,7 @@ import InsuranceDatabase from "./pages/dashboard/modules/InsuranceDatabase";
 import VendorDatabase from "./pages/dashboard/modules/VendorDatabase";
 import FinanceTab from "./pages/dashboard/modules/FinanceTab";
 import MajorMoments from "./pages/dashboard/modules/MajorMoments";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
