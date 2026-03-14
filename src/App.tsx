@@ -34,6 +34,7 @@ import SupervisionStructure from "./pages/dashboard/modules/SupervisionStructure
 import ManagementCenter from "./pages/dashboard/modules/ManagementCenter";
 import InsuranceDatabase from "./pages/dashboard/modules/InsuranceDatabase";
 import VendorDatabase from "./pages/dashboard/modules/VendorDatabase";
+import FinanceTab from "./pages/dashboard/modules/FinanceTab";
 import MajorMoments from "./pages/dashboard/modules/MajorMoments";
 
 const queryClient = new QueryClient();
