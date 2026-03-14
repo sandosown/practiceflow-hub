@@ -84,10 +84,9 @@ const GroupPracticeRadar: React.FC = () => {
 
   return (
     <AppLayout
-      title="Group Practice Radar"
+      title="Radar"
       breadcrumbs={[
-        { label: 'Role Hub', path: '/hub' },
-        { label: 'Group Practice Radar' },
+        { label: 'Radar' },
       ]}
     >
       {/* Mobile actions trigger */}

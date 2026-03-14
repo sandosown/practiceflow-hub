@@ -33,8 +33,6 @@ const TransferPortal: React.FC = () => {
     <AppLayout
       title="Referral Portal"
       breadcrumbs={[
-        { label: 'Role Hub', path: '/hub' },
-        { label: 'Group Practice', path: '/practice/radar' },
         { label: 'Referral Portal' },
       ]}
     >

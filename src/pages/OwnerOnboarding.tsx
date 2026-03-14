@@ -61,7 +61,7 @@ const OwnerOnboarding: React.FC<OwnerOnboardingProps> = ({ onComplete }) => {
   const [selectedDomains, setSelectedDomains] = useState<string[]>(['GROUP_PRACTICE']);
   const [priority, setPriority] = useState<string[]>(['GROUP_PRACTICE']);
   const [domainLabels, setDomainLabels] = useState<Record<string, string>>({
-    GROUP_PRACTICE: 'Group Practice',
+    GROUP_PRACTICE: 'Your Practice',
     COACHING: 'Coaching Business',
     HOME: 'Home',
   });
