@@ -6,7 +6,7 @@ import { ArrowLeft, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
-import { useSessionData } from '@/context/SessionContext';
+import { useSessionData, useSession } from '@/context/SessionContext';
 
 const ACCENT = '#2dd4bf';
 
