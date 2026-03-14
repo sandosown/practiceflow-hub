@@ -268,7 +268,9 @@ Each signal type has its own accent (see Radar Signal Accents below).
 
 ## NEXT BUILD
 
-**Resume at:** Phase 9 — Navigation System + Light/Dark Mode
+**Resume at:** Phase 9 — Navigation System + Light/Dark Mode (IN PROGRESS)
+
+Pending canon additions ready to build: Referral Pipeline (LOG-076), Finance Tab (LOG-077), More drawer CLINICAL section (LOG-079)
 
 ---
 
