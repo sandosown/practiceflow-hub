@@ -25,9 +25,9 @@ export function cardStyle(accent: string, opts?: { muted?: boolean }): React.CSS
   return {
     background: 'hsl(var(--card))',
     borderLeft:   `4px solid rgba(${r},${g},${b},${m})`,
-    borderTop:    `1px solid rgba(${r},${g},${b},${0.25 * m})`,
-    borderBottom: `1px solid rgba(${r},${g},${b},${0.25 * m})`,
-    borderRight:  `1px solid rgba(${r},${g},${b},${0.15 * m})`,
+    borderTop:    `1px solid rgba(${r},${g},${b},${0.50 * m})`,
+    borderBottom: `1px solid rgba(${r},${g},${b},${0.50 * m})`,
+    borderRight:  `1px solid rgba(${r},${g},${b},${0.35 * m})`,
     borderRadius: '12px',
     boxShadow: `0 1px 4px rgba(0,0,0,0.06)`,
     opacity: opts?.muted ? 0.55 : 1,
