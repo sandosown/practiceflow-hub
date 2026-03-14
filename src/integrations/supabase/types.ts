@@ -89,6 +89,30 @@ export type Database = {
         }
         Relationships: []
       }
+      finance_custom_categories: {
+        Row: {
+          category_name: string
+          created_at: string
+          id: string
+          modal_type: string
+          user_id: string
+        }
+        Insert: {
+          category_name: string
+          created_at?: string
+          id?: string
+          modal_type: string
+          user_id: string
+        }
+        Update: {
+          category_name?: string
+          created_at?: string
+          id?: string
+          modal_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       finance_due_items: {
         Row: {
           amount: number
