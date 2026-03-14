@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopNavBar from '@/components/TopNavBar';
-import { ChevronRight } from 'lucide-react';
+import { cardStyle } from '@/lib/cardStyle';
 
 /* ─────────────────────────────────────────────────────────── */
 /* HELPERS                                                     */
@@ -9,48 +9,14 @@ import { ChevronRight } from 'lucide-react';
 
 function hexToRgb(hex: string): string {
   const h = hex.replace('#', '');
-  const r = parseInt(h.substring(0, 2), 16);
-  const g = parseInt(h.substring(2, 4), 16);
-  const b = parseInt(h.substring(4, 6), 16);
-  return `${r}, ${g}, ${b}`;
-}
-
-function cardStyle(accent: string): React.CSSProperties {
-  const rgb = hexToRgb(accent);
-  return {
-    background: `linear-gradient(135deg, #1a2a4a 0%, rgba(${rgb}, 0.04) 100%)`,
-    border: `1px solid rgba(${rgb}, 0.25)`,
-    borderLeft: `4px solid ${accent}`,
-    borderRadius: '16px',
-    boxShadow: `0 4px 24px rgba(${rgb}, 0.10), inset 0 1px 0 rgba(255,255,255,0.04)`,
-    padding: '20px',
-  };
+  return `${parseInt(h.substring(0, 2), 16)},${parseInt(h.substring(2, 4), 16)},${parseInt(h.substring(4, 6), 16)}`;
 }
 
 function outlineBtn(accent: string): React.CSSProperties {
   return {
     background: 'transparent',
     color: accent,
-    border: `1px solid ${accent}`,
-    borderRadius: '6px',
-    padding: '6px 16px',
-    fontSize: '12px',
-    fontWeight: 600,
-    textTransform: 'uppercase',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-  };
-}
-
-function priorityBadge(accent: string): React.CSSProperties {
-  return {
-    background: 'transparent',
-    color: accent,
-    border: `1px solid ${accent}`,
-    borderRadius: '9999px',
-    padding: '2px 10px',
-    fontSize: '11px',
-    fontWeight: 600,
+    border: `1px solid rgba(${hexToRgb(accent)},0.5)`,
   };
 }
 
@@ -85,86 +51,103 @@ const InternBusinessDashboard: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0a1628' }}>
+    <div className="min-h-screen bg-background">
       <TopNavBar />
 
-      {/* Breadcrumb */}
-      <div style={{ padding: '12px 24px', display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#94a3b8' }}>
-        <span>Group Practice</span>
-        <ChevronRight size={14} style={{ color: '#64748b' }} />
-        <span style={{ color: '#f1f5f9', fontWeight: 500 }}>My Dashboard</span>
-      </div>
+      <main className="max-w-5xl mx-auto px-6 py-10">
+        {/* Breadcrumb */}
+        <nav className="flex items-center gap-2 text-sm mb-6 text-muted-foreground">
+          <span>Group Practice</span>
+          <span>›</span>
+          <span className="text-foreground font-medium">My Dashboard</span>
+        </nav>
 
-      {/* Page Title */}
-      <div style={{ padding: '0 24px 8px' }}>
-        <h1 style={{ fontSize: 28, fontWeight: 700, color: '#f1f5f9', margin: 0 }}>Group Practice</h1>
-      </div>
-
-      {/* Main Content */}
-      <main style={{ maxWidth: 960, margin: '0 auto', padding: '24px' }}>
+        <h1 className="text-2xl font-bold mb-8 text-foreground">Group Practice</h1>
 
         {/* Section 1 — Radar */}
-        <section style={{ marginBottom: 32 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-            <div style={{ width: 4, height: 24, background: '#2dd4bf', borderRadius: 2 }} />
-            <h2 style={{ fontSize: 14, fontWeight: 700, color: '#f1f5f9', letterSpacing: '0.05em', margin: 0 }}>RADAR</h2>
-          </div>
-          <div style={{ display: 'flex', gap: 16, overflowX: 'auto', paddingBottom: 8 }}>
+        <section className="mb-10">
+          <h2
+            className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3 text-muted-foreground"
+            style={{ borderLeft: '4px solid #2dd4bf' }}
+          >
+            RADAR
+          </h2>
+          <div className="flex gap-4 overflow-x-auto pb-2">
             {RADAR_SIGNALS.map((signal, i) => (
-              <div key={i} style={{ ...cardStyle(signal.accent), minWidth: 280, flex: '0 0 auto' }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: signal.accent, letterSpacing: '0.05em', margin: '0 0 8px' }}>
+              <div key={i} className="min-w-[280px] flex-shrink-0 p-5" style={cardStyle(signal.accent)}>
+                <p className="text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: signal.accent }}>
                   {signal.type}
                 </p>
-                <p style={{ fontSize: 14, fontWeight: 600, color: '#f1f5f9', margin: '0 0 16px', lineHeight: 1.4 }}>
+                <p className="text-sm font-semibold mb-4 text-foreground leading-snug">
                   {signal.detail}
                 </p>
-                <button style={outlineBtn(signal.accent)}>Resolve</button>
+                <button className="text-xs font-semibold uppercase px-4 py-1.5 rounded" style={outlineBtn(signal.accent)}>
+                  Resolve
+                </button>
               </div>
             ))}
           </div>
         </section>
 
         {/* Section 2 — My Tasks */}
-        <section style={{ marginBottom: 32 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-            <div style={{ width: 4, height: 24, background: '#2dd4bf', borderRadius: 2 }} />
-            <h2 style={{ fontSize: 14, fontWeight: 700, color: '#f1f5f9', letterSpacing: '0.05em', margin: 0 }}>MY TASKS</h2>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <section className="mb-10">
+          <h2
+            className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3 text-muted-foreground"
+            style={{ borderLeft: '4px solid #2dd4bf' }}
+          >
+            MY TASKS
+          </h2>
+          <div className="flex flex-col gap-3">
             {TASKS.map((t, i) => (
-              <div key={i} style={cardStyle('#2dd4bf')}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
-                  <div style={{ flex: 1, minWidth: 200 }}>
-                    <p style={{ fontSize: 15, fontWeight: 600, color: '#f1f5f9', margin: '0 0 8px' }}>{t.task}</p>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13 }}>
-                      <span style={{ color: '#94a3b8' }}>Due: <span style={{ color: '#f1f5f9' }}>{t.due}</span></span>
-                      <span style={{ color: t.status === 'OVERDUE' ? '#ea580c' : '#94a3b8' }}>{t.status}</span>
-                    </div>
+              <div key={i} className="p-5 flex items-start justify-between flex-wrap gap-3" style={cardStyle('#2dd4bf')}>
+                <div className="flex-1 min-w-[200px]">
+                  <p className="text-[15px] font-semibold mb-2 text-foreground">{t.task}</p>
+                  <div className="flex items-center gap-4 text-sm">
+                    <span className="text-muted-foreground">Due: <span className="text-foreground">{t.due}</span></span>
+                    <span style={{ color: t.status === 'OVERDUE' ? '#ea580c' : undefined }} className={t.status !== 'OVERDUE' ? 'text-muted-foreground' : ''}>
+                      {t.status}
+                    </span>
                   </div>
-                  <span style={priorityBadge(PRIORITY_COLORS[t.priority])}>{t.priority}</span>
                 </div>
+                <span
+                  className="text-[11px] font-semibold uppercase px-2.5 py-0.5 rounded-full"
+                  style={{
+                    background: 'transparent',
+                    color: PRIORITY_COLORS[t.priority],
+                    border: `1px solid ${PRIORITY_COLORS[t.priority]}`,
+                  }}
+                >
+                  {t.priority}
+                </span>
               </div>
             ))}
           </div>
         </section>
 
-        {/* Section 3 — Office Board */}
+        {/* Section 3 — Message Board */}
         <section>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-            <div style={{ width: 4, height: 24, background: '#0ea5e9', borderRadius: 2 }} />
-            <h2 style={{ fontSize: 14, fontWeight: 700, color: '#f1f5f9', letterSpacing: '0.05em', margin: 0 }}>OFFICE BOARD</h2>
-          </div>
-          <div style={cardStyle('#0ea5e9')}>
-            <p style={{ fontSize: 13, color: '#94a3b8', margin: '0 0 16px' }}>Announcements, safety protocols & updates</p>
+          <h2
+            className="text-xs font-semibold uppercase tracking-widest mb-1 pl-3 text-muted-foreground"
+            style={{ borderLeft: '4px solid #0ea5e9' }}
+          >
+            MESSAGE BOARD
+          </h2>
+          <p className="text-xs mb-4 pl-3 text-muted-foreground">
+            Announcements, safety protocols &amp; updates
+          </p>
+          <div className="p-5" style={cardStyle('#0ea5e9')}>
+            <p className="text-sm mb-3 text-foreground">
+              View announcements, safety protocols, and practice-wide updates.
+            </p>
             <button
               onClick={() => navigate('/dashboard/owner/group-practice/office-board')}
+              className="text-xs font-semibold uppercase px-4 py-1.5 rounded"
               style={outlineBtn('#0ea5e9')}
             >
-              Go to Office Board
+              Go to Message Board
             </button>
           </div>
         </section>
-
       </main>
     </div>
   );
