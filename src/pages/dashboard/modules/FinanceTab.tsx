@@ -338,6 +338,7 @@ function EntryModal({ title, type, categories, onClose, onSaved, userId, isDemoM
     if (!date || !amount || !category) { toast.error('Please fill all required fields.'); return; }
     const parsed = parseFloat(amount);
     if (isNaN(parsed) || parsed <= 0) { toast.error('Enter a valid amount.'); return; }
+    if (isDemoMode) { toast.info('Saving is not available in demo mode.'); onClose(); return; }
     setSaving(true);
     const { error } = await supabase.from('finance_entries').insert({
       hat_id: HAT_ID,
@@ -349,7 +350,7 @@ function EntryModal({ title, type, categories, onClose, onSaved, userId, isDemoM
       notes: notes.trim() || null,
       source: 'manual',
       created_by: userId,
-    });
+    } as any);
     setSaving(false);
     if (error) { toast.error('Failed to save entry.'); console.error(error); return; }
     toast.success(`${type === 'income' ? 'Income' : 'Expense'} added.`);
