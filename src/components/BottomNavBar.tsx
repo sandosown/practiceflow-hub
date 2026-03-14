@@ -1,10 +1,11 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Home, MessageSquare, Briefcase, Calendar, MoreHorizontal,
   LayoutDashboard, Users, CreditCard, Package, ShieldCheck,
   Contact, Award, Mail, Rss, BookOpen, Settings, Sparkles,
 } from 'lucide-react';
+import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { useSessionData } from '@/context/SessionContext';
 
 const NAV_ITEMS = [
@@ -66,7 +67,6 @@ const BottomNavBar: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [moreOpen, setMoreOpen] = useState(false);
-  const touchStartY = useRef<number | null>(null);
 
   let userName = '';
   let userRole = '';
@@ -93,18 +93,6 @@ const BottomNavBar: React.FC = () => {
     if (item.label === 'Home') return location.pathname === item.path;
     return location.pathname.startsWith(item.path);
   };
-
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStartY.current = e.touches[0].clientY;
-  }, []);
-
-  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
-    if (touchStartY.current !== null) {
-      const delta = e.changedTouches[0].clientY - touchStartY.current;
-      if (delta > 60) setMoreOpen(false);
-      touchStartY.current = null;
-    }
-  }, []);
 
   return (
     <>
@@ -157,124 +145,103 @@ const BottomNavBar: React.FC = () => {
         })}
       </nav>
 
-      {/* Custom More drawer */}
-      {moreOpen && (
-        <>
-          {/* Scrim */}
-          <div
-            onClick={() => setMoreOpen(false)}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              background: 'rgba(0,0,0,0.4)',
-              zIndex: 40,
-            }}
-          />
+      <Drawer open={moreOpen} onOpenChange={setMoreOpen}>
+        <DrawerContent
+          className="border-0 md:!max-w-[480px] md:!mx-auto"
+          style={{ background: '#1a2a5e', maxHeight: '75vh', borderRadius: '16px 16px 0 0' }}
+        >
+          {/* Handle */}
+          <div className="flex justify-center" style={{ paddingTop: 8, paddingBottom: 4 }}>
+            <div style={{ width: 32, height: 3, borderRadius: 2, background: 'rgba(255,255,255,0.2)' }} />
+          </div>
 
-          {/* Panel */}
-          <div
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-            className="fixed z-50 bottom-0 left-0 right-0 rounded-t-2xl md:bottom-[64px] md:right-0 md:left-auto md:w-[400px] md:rounded-tl-2xl md:rounded-tr-none md:rounded-bl-none"
-            style={{
-              background: '#1a2a5e',
-              maxHeight: '75vh',
-              overflowY: 'auto',
-            }}
-          >
-            {/* Handle */}
-            <div className="flex justify-center pt-3 pb-2">
-              <div style={{ width: 32, height: 3, borderRadius: 2, background: 'rgba(255,255,255,0.2)' }} />
+          {/* Profile block */}
+          <div className="px-5 flex items-center gap-3" style={{ paddingBottom: 8 }}>
+            <div
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: '50%',
+                background: 'rgba(45,212,191,0.18)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: ACTIVE_COLOR,
+                fontWeight: 700,
+                fontSize: 14,
+              }}
+            >
+              {userName.charAt(0) || '?'}
             </div>
-
-            {/* Profile block */}
-            <div className="px-5 pb-2 flex items-center gap-3">
-              <div
-                style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: '50%',
-                  background: 'rgba(45,212,191,0.18)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: ACTIVE_COLOR,
-                  fontWeight: 700,
-                  fontSize: 14,
-                }}
-              >
-                {userName.charAt(0) || '?'}
-              </div>
-              <div>
-                <p style={{ color: '#e2eaf4', fontSize: 13, fontWeight: 600, lineHeight: 1.2 }}>{userName || 'User'}</p>
-                <p style={{ color: '#5a8ab0', fontSize: 11, lineHeight: 1.2 }}>{roleLabelMap[userRole] ?? userRole}</p>
-              </div>
-            </div>
-
-            {/* Divider */}
-            <div className="mx-5 mb-2" style={{ height: 1, background: 'rgba(255,255,255,0.08)' }} />
-
-            {/* Sections */}
-            <div className="px-5 pb-5" style={{ maxHeight: 'calc(75vh - 90px)' }}>
-              {OWNER_SECTIONS.map((section, sIdx) => (
-                <div key={section.title} style={{ marginTop: sIdx === 0 ? 0 : 12 }}>
-                  <p
-                    style={{
-                      color: '#5a8ab0',
-                      fontSize: 9,
-                      fontWeight: 600,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.1em',
-                      marginBottom: 6,
-                    }}
-                  >
-                    {section.title}
-                  </p>
-                  <div style={{ display: 'grid', gridTemplateColumns: section.title === 'PRACTICE' ? 'repeat(3, 1fr)' : 'repeat(4, 1fr)', gap: 8 }}>
-                    {section.items.map((item) => {
-                      const Icon = item.icon;
-                      const active = location.pathname === item.path;
-                      return (
-                        <button
-                          key={item.label}
-                          onClick={() => {
-                            navigate(item.path);
-                            setMoreOpen(false);
-                          }}
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            minHeight: 64,
-                            minWidth: 64,
-                            background: 'transparent',
-                            border: 'none',
-                            cursor: 'pointer',
-                            padding: '8px 4px',
-                            gap: 6,
-                          }}
-                        >
-                          <Icon size={26} color={active ? ACTIVE_COLOR : 'rgba(255,255,255,0.75)'} strokeWidth={1.8} />
-                          <span style={{
-                            color: active ? ACTIVE_COLOR : '#e2eaf4',
-                            fontSize: 10,
-                            fontWeight: 400,
-                            textAlign: 'center',
-                            lineHeight: 1.2,
-                          }}>
-                            {item.label}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
+            <div>
+              <p style={{ color: '#e2eaf4', fontSize: 13, fontWeight: 600, lineHeight: 1.2 }}>{userName || 'User'}</p>
+              <p style={{ color: '#5a8ab0', fontSize: 11, lineHeight: 1.2 }}>{roleLabelMap[userRole] ?? userRole}</p>
             </div>
           </div>
-        </>
-      )}
+
+          {/* Divider */}
+          <div className="mx-5" style={{ height: 1, background: 'rgba(255,255,255,0.08)', marginBottom: 8 }} />
+
+          {/* Sections */}
+          <div className="px-5 overflow-y-auto" style={{ paddingBottom: 16, maxHeight: 'calc(75vh - 80px)' }}>
+            {OWNER_SECTIONS.map((section, sIdx) => (
+              <div key={section.title} style={{ marginTop: sIdx === 0 ? 0 : 12 }}>
+                <p
+                  style={{
+                    color: '#5a8ab0',
+                    fontSize: 9,
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
+                    marginBottom: 4,
+                  }}
+                >
+                  {section.title}
+                </p>
+                <div style={{ display: 'grid', gridTemplateColumns: section.title === 'PRACTICE' ? 'repeat(3, 1fr)' : 'repeat(4, 1fr)', gap: 8 }}>
+                  {section.items.map((item) => {
+                    const Icon = item.icon;
+                    const active = location.pathname === item.path;
+                    return (
+                      <button
+                        key={item.label}
+                        onClick={() => {
+                          navigate(item.path);
+                          setMoreOpen(false);
+                        }}
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          minHeight: 56,
+                          minWidth: 56,
+                          background: 'transparent',
+                          border: 'none',
+                          cursor: 'pointer',
+                          padding: '8px 4px',
+                          gap: 4,
+                        }}
+                      >
+                        <Icon size={26} color={active ? ACTIVE_COLOR : 'rgba(255,255,255,0.75)'} strokeWidth={1.8} />
+                        <span style={{
+                          color: active ? ACTIVE_COLOR : '#e2eaf4',
+                          fontSize: 10,
+                          fontWeight: 400,
+                          textAlign: 'center',
+                          lineHeight: 1.2,
+                        }}>
+                          {item.label}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </DrawerContent>
+      </Drawer>
     </>
   );
 };
