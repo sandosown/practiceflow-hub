@@ -413,7 +413,9 @@ git push origin main
 | src/dashboards/StaffDashboard.tsx | Staff dashboard | ✅ Approved |
 | src/pages/dashboard/modules/ChartsRequiringAction.tsx | Charts module | ✅ Built |
 | src/pages/dashboard/modules/ClientDatabase.tsx | Client database module | ✅ Built |
-| src/pages/dashboard/modules/CaseloadIntegration.tsx | Caseload module | ✅ Built |
+| src/pages/dashboard/modules/CaseloadIntegration.tsx | Caseload module (→ Referral Pipeline LOG-076) | ✅ Built |
+| ReferralPipeline.tsx | Referral Pipeline module | 🔜 To be built |
+| FinanceTab.tsx | Finance Tab module | 🔜 To be built |
 | src/pages/dashboard/modules/TreatmentPlanTracker.tsx | Treatment plan module | ✅ Built |
 | src/pages/dashboard/modules/SupervisionStructure.tsx | Supervision module | ✅ Built |
 | src/pages/dashboard/modules/ManagementCenter.tsx | Management center module | ✅ Built |
