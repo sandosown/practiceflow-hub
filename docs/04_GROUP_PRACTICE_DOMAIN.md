@@ -49,6 +49,7 @@ First-class workspace. Exemplar implementation of PF structure.
 10. Major Moments
 
 **Note:** Major Moments was added as the 10th canonical module in the 03/08/2026 Phase 6 Pre-Build Canon Update. The previous locked list of 9 is superseded.
+**Note:** Supervision Structure moved to More drawer — CLINICAL section (LOG-078). Finance Tab takes its grid position (LOG-077).
 
 ### Major Moments — Group Practice
 - Accent: `#a78bfa` (soft violet — distinct from all operational module accents)
