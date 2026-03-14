@@ -101,6 +101,78 @@ Pinned cards remain at top until unpinned by Owner or Admin.
 
 ---
 
+## Referral Pipeline — GP
+
+LOG-076 — LOCKED
+
+Replaces Caseload Integration. The Referral Pipeline is a manual kanban workflow tracking potential clients from first contact through to active enrollment.
+
+### Pipeline Stages
+
+1. New Referral
+2. Contact Made
+3. Pre-Screening Complete
+4. Insurance Verified
+5. Assigned
+
+### Outcome Buckets
+
+- Declined
+- No Response
+- Intake Complete (#059669 — Active badge)
+
+### Rules
+
+- Manual workflow only — nothing moves automatically
+- Owner + Admin: full access
+- Supervisor: read only
+- Clinician: own assigned referrals only
+- All other roles: not visible
+- Every stage movement logged with user + timestamp
+
+### Future Phase
+
+- Web form webhook integration
+- Automated client confirmation messaging
+- Insurance verification integration
+- Referral source analytics
+
+---
+
+## Finance Tab — GP
+
+LOG-077 — LOCKED
+
+Financial health snapshot for practice owners and administrators.
+
+Accent: #059669
+
+Access: Owner + Admin only.
+
+### V1 Scope
+
+- Monthly Income total
+- Monthly Expenses total
+- Profit (auto-computed)
+- What's Due (manually entered upcoming payments)
+- Category breakdown for income and expenses
+- Time toggle: Day / Week / Month
+
+### Rules
+
+- All data manually entered — no bank sync
+- Not an accounting system
+- Owner + Admin only — all other roles never see this
+
+### Future Phase
+
+- Vendor-level expense breakdown
+- Revenue by therapist
+- Insurance reimbursement tracking
+- Accountant export
+
+---
+
 ## GP Calendar Layer
 
 **LOG-073 — LOCKED**

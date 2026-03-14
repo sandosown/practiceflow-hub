@@ -490,6 +490,11 @@ git push origin main
 | LOG-073 | GP Calendar layer: Client Session, Supervision Session, Staff Meeting, Intake. Supervisor/supervisee visibility rules. LP compliance linkage. | LOCKED |
 | LOG-074 | Owner Active Workload Flag: per-hat, default No, onboarding question locked, GP supervision structure options locked. | LOCKED |
 | LOG-075 | Calendar replaces Feed in bottom nav. Feed moves to More drawer — not removed, repositioned. | LOCKED |
+| LOG-076 | Referral Pipeline replaces Caseload Integration — kanban, 5 stages, 3 outcome buckets, manual workflow only. | LOCKED |
+| LOG-077 | Finance Tab — Owner + Admin only, replaces Supervision Structure on GP grid, income/expenses/profit/due. | LOCKED |
+| LOG-078 | Supervision Structure moves from GP module grid to More drawer CLINICAL section. | LOCKED |
+| LOG-079 | More drawer CLINICAL section added between PRACTICE and TEAM. | LOCKED |
+| LOG-080 | Guide Center Video Tutorials tab added as second tab alongside Written Guides. | LOCKED |
 
 ---
 

@@ -7,6 +7,100 @@
 
 ---
 
+## 03/14/2026 — Referral Pipeline, Finance Tab, Navigation Restructure Session
+
+### LOG-076 — Referral Pipeline (replaces Caseload Integration) — LOCKED
+Module name: Referral Pipeline
+Replaces: Caseload Integration everywhere — nav, module name, breadcrumbs, code
+Accent: #0ea5e9 (unchanged)
+Access: Owner + Admin full access. Supervisor read-only. Clinician sees own assigned referrals only. All other roles not visible.
+
+Pipeline Stages (in order):
+1. New Referral
+2. Contact Made
+3. Pre-Screening Complete
+4. Insurance Verified
+5. Assigned
+
+Outcome Buckets:
+- Declined — muted/neutral
+- No Response — muted/neutral
+- Intake Complete — #059669 green Active badge
+
+V1 Behavior:
+- Manual workflow only — nothing moves automatically ever
+- Kanban board view — horizontal scrolling columns
+- Each card shows: client name, date submitted, source, days in current stage
+- Tap card → detail view: contact info, notes, activity trail, stage history
+- Quick actions per card: Add Note, Add Task, Move Stage
+- Search bar at top of module
+- Add Referral button — manual entry only
+- All stage movements logged with user + timestamp
+
+Future Phase (not V1):
+- Web form webhook — referral auto-populates from practice website form
+- Automated confirmation message to potential client on submission
+- Insurance verification integration
+- Referral source reporting and analytics
+
+### LOG-077 — Finance Tab — LOCKED
+Module name: Finance Tab
+Accent: #059669
+Access: Owner + Admin only. All other roles not visible.
+Placement: GP module grid — replaces Supervision Structure card position
+
+V1 Scope:
+- Monthly Income total
+- Monthly Expenses total
+- Profit (computed automatically: Income minus Expenses)
+- What's Due (upcoming payments — manually entered)
+- Simple category breakdown for income and expenses
+- Time toggle: Day / Week / Month view
+- All data manually entered — no bank sync, no accounting integration
+
+What Finance Tab is NOT:
+- Not an accounting system
+- Not a payroll system
+- Not a tax system
+- Not a bank sync
+- Not a billing platform
+
+Future Phase (not V1):
+- Vendor-level expense breakdown
+- Revenue by therapist
+- Insurance reimbursement tracking
+- Export to accountant
+
+### LOG-078 — Supervision Structure moves to More drawer — LOCKED
+Supervision Structure removed from GP module grid.
+New placement: More drawer — new CLINICAL section.
+CLINICAL section sits between PRACTICE and TEAM in the drawer.
+Access rules for Supervision Structure unchanged.
+
+### LOG-079 — More Drawer CLINICAL Section — LOCKED
+New section added to More drawer: CLINICAL
+Position: between PRACTICE and TEAM
+V1 contents: Supervision Structure
+Future items: Treatment Plan Tracker (pending decision)
+
+Updated More drawer section order:
+1. PRACTICE: Management Center, Client Database, Insurance Database, Vendor Database, Compliance
+2. CLINICAL: Supervision Structure
+3. TEAM: Directory, Recognition
+4. PERSONAL: Major Moments
+5. COMMUNICATION: Messages, Feed
+6. SYSTEM: Guide Center, Settings
+
+### LOG-080 — Guide Center Video Tutorials — LOCKED
+Guide Center gains a second tab: Video Tutorials
+Tab 1: Written Guides (existing)
+Tab 2: Video Tutorials (new)
+Video Tutorials tab: grid of tutorial cards, each with thumbnail, title, duration
+Content built progressively as modules are completed
+Accessible from More drawer → Guide Center
+
+---
+
 ## 03/08/2026 — Phase 5 Session
 
 ### Phase 5 — Visual Overhaul & Language Doctrine

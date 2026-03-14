@@ -127,23 +127,37 @@ Same nav label for all roles. Content inside is role-scoped:
 
 ### More Drawer Governance
 
-**Visible to ALL roles:**
-- Directory
-- Messages (direct — GP-scoped only)
-- Feed
-- Recognition
-- Guide Center
-- Settings
+#### Drawer Section Order (LOG-079)
 
-**Owner + Admin only:**
+**Section: PRACTICE** (Owner + Admin only)
 - Management Center
+- Client Database
 - Insurance Database
 - Vendor Database
-- Client Database (full)
-- Compliance (full)
+- Compliance
+
+**Section: CLINICAL** (new — LOG-079)
+- Supervision Structure
+
+**Section: TEAM** (visible to all roles)
+- Directory
+- Recognition
+
+**Section: PERSONAL** (visible to all roles)
+- Major Moments
+
+**Section: COMMUNICATION** (visible to all roles)
+- Messages (direct — GP-scoped only)
+- Feed
+
+**Section: SYSTEM** (visible to all roles)
+- Guide Center (two tabs: Written Guides + Video Tutorials — LOG-080)
+- Settings
+
+#### Role-Scoped Visibility Rules
 
 **Supervisor adds:**
-- Supervision Structure
+- Supervision Structure (CLINICAL section)
 - Client Database (own supervisees only)
 - Compliance (own supervisees only)
 - Treatment Plans (own supervisees only)
@@ -154,13 +168,13 @@ Same nav label for all roles. Content inside is role-scoped:
 - Compliance (own records only)
 
 **Business Intern + Staff:**
-- Universal items only — no clinical items visible ever
+- TEAM, PERSONAL, COMMUNICATION, SYSTEM sections only — no PRACTICE or CLINICAL items visible ever
 
 ### Drawer Visual Rules
 - Slides up from bottom
 - Same background color as bottom nav bar
 - User profile + role visible at top of drawer
-- Items grouped by category with section labels
+- Items grouped by section with section labels
 - Role-filtered: items not applicable to role are completely absent — never grayed out, never locked, never visible
 - Dismiss: tap outside drawer or swipe down
 
