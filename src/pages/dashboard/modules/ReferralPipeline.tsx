@@ -369,8 +369,8 @@ const OverlayCard: React.FC<{ referral: Referral }> = ({ referral: r }) => (
 const ReferralPipeline: React.FC = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const { user } = useAuth();
-  const isOwner = user?.role === 'OWNER';
+  const { session } = useSession();
+  const isOwner = session?.role === 'OWNER';
 
   const [search, setSearch] = useState('');
   const [referrals, setReferrals] = useState<Referral[]>(INITIAL_REFERRALS);
