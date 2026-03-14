@@ -425,6 +425,7 @@ function DueModal({ onClose, onSaved, userId, isDemoMode }: { onClose: () => voi
     if (!name.trim() || !amount || !dueDate) { toast.error('Please fill all required fields.'); return; }
     const parsed = parseFloat(amount);
     if (isNaN(parsed) || parsed <= 0) { toast.error('Enter a valid amount.'); return; }
+    if (isDemoMode) { toast.info('Saving is not available in demo mode.'); onClose(); return; }
     setSaving(true);
     const { error } = await supabase.from('finance_due_items').insert({
       hat_id: HAT_ID,
@@ -433,7 +434,7 @@ function DueModal({ onClose, onSaved, userId, isDemoMode }: { onClose: () => voi
       due_date: format(dueDate, 'yyyy-MM-dd'),
       category: category.trim() || null,
       created_by: userId,
-    });
+    } as any);
     setSaving(false);
     if (error) { toast.error('Failed to save item.'); console.error(error); return; }
     toast.success("What's Due item added.");
