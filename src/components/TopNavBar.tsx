@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSessionData, useSession } from '@/context/SessionContext';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { ChevronDown } from 'lucide-react';
 import SympoFloIcon from '@/components/SympoFloIcon';
 
 const TopNavBar: React.FC = () => {
