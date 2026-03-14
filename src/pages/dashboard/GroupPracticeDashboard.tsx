@@ -31,7 +31,7 @@ const GroupPracticeDashboard: React.FC = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   return (
-    <div className="min-h-screen" style={{ background: '#0a1628' }}>
+    <div className="min-h-screen bg-background">
       <TopNavBar />
 
       <div className="max-w-5xl mx-auto px-6 py-6">
