@@ -132,7 +132,7 @@ const Settings: React.FC = () => {
           <SectionHeader title="Preferences" />
           <div className="rounded-xl bg-card p-4">
             <FieldRow label="Dark Mode">
-              <Switch checked={darkMode} onCheckedChange={setDarkMode} />
+              <Switch checked={darkMode} onCheckedChange={handleDarkModeToggle} />
             </FieldRow>
             <FieldRow label="Radar Density">
               <div className="flex rounded-lg overflow-hidden border border-border">
