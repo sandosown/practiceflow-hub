@@ -28,6 +28,7 @@ import OfficeBoard from "./pages/dashboard/OfficeBoard";
 import GPModulePlaceholder from "./pages/dashboard/GPModulePlaceholder";
 import ChartsRequiringAction from "./pages/dashboard/modules/ChartsRequiringAction";
 import ClientDatabase from "./pages/dashboard/modules/ClientDatabase";
+import CaseloadIntegration from "./pages/dashboard/modules/CaseloadIntegration";
 
 const queryClient = new QueryClient();
 
