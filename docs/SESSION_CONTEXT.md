@@ -249,7 +249,7 @@ Each signal type has its own accent (see Radar Signal Accents below).
 | Phase 5 | Landing Energy + Language Doctrine | ✅ COMPLETE |
 | Phase 6 | Role-Specific Dashboard Content | ✅ COMPLETE |
 | Phase 7 | Module Pages — Real Content | ✅ COMPLETE |
-| Phase 8 | Action Mode | 🔜 PENDING |
+| Phase 8 | Action Mode | ✅ COMPLETE |
 | Phase 9 | Navigation System + Light/Dark Mode | 🔜 PENDING — Canon locked, build pending |
 | Phase 10 | Calendar & Appointments | 🔜 PENDING — Canon locked, build pending |
 
@@ -268,7 +268,7 @@ Each signal type has its own accent (see Radar Signal Accents below).
 
 ## NEXT BUILD
 
-**Resume at:** Phase 8 — Action Mode
+**Resume at:** Phase 9 — Navigation System + Light/Dark Mode
 
 ---
 
@@ -419,6 +419,7 @@ git push origin main
 | src/pages/dashboard/modules/VendorDatabase.tsx | Vendor database module | ✅ Built |
 | src/pages/dashboard/modules/MajorMoments.tsx | Major Moments module | ✅ Built |
 | src/pages/dashboard/MessageBoard.tsx | Message Board (renamed from OfficeBoard) | ✅ Built |
+| src/components/BottomNavBar.tsx | Persistent mobile bottom nav | ✅ Built |
 | src/context/SessionContext.tsx | Session + role context | ✅ Built |
 | supabase/ | Supabase RLS config | ✅ Built |
 
