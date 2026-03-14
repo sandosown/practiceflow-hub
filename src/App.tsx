@@ -88,6 +88,7 @@ const AppRoutes = () => (
     <Route path="/dashboard/owner/group-practice/caseload" element={<ProtectedRoute><CaseloadIntegration /></ProtectedRoute>} />
     <Route path="/dashboard/owner/group-practice/treatment" element={<ProtectedRoute><TreatmentPlanTracker /></ProtectedRoute>} />
     <Route path="/dashboard/owner/group-practice/supervision" element={<ProtectedRoute><SupervisionStructure /></ProtectedRoute>} />
+    <Route path="/dashboard/owner/group-practice/finance" element={<ProtectedRoute><GPModulePlaceholder title="Finance Tab" /></ProtectedRoute>} />
     <Route path="/dashboard/owner/group-practice/insurance" element={<ProtectedRoute><InsuranceDatabase /></ProtectedRoute>} />
     <Route path="/dashboard/owner/group-practice/vendors" element={<ProtectedRoute><VendorDatabase /></ProtectedRoute>} />
     <Route path="/dashboard/owner/group-practice/major-moments" element={<ProtectedRoute><MajorMoments /></ProtectedRoute>} />

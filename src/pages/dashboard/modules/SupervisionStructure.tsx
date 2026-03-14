@@ -43,7 +43,7 @@ const SupervisionStructure: React.FC = () => {
         </nav>
         <div className="flex items-center gap-3 mb-6">
           <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/owner/group-practice')} className="text-muted-foreground">
-            <ArrowLeft className="w-4 h-4 mr-1" /> Back
+            <ArrowLeft className="w-4 h-4" />
           </Button>
           <h1 className="text-2xl font-bold text-foreground pl-3" style={{ borderLeft: '4px solid #4f46e5' }}>Supervision Structure</h1>
         </div>

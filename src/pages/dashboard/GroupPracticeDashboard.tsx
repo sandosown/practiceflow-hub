@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopNavBar from '@/components/TopNavBar';
-import { ArrowLeft, ClipboardList, MessageSquare, LayoutDashboard, Users, Briefcase, FileText, Shield, CreditCard, Package, Sparkles } from 'lucide-react';
+import { ArrowLeft, ClipboardList, MessageSquare, LayoutDashboard, Users, Briefcase, FileText, DollarSign, CreditCard, Package, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cardStyle, cardHoverStyle, iconSquareStyle } from '@/lib/cardStyle';
 import BottomNavBar from '@/components/BottomNavBar';
@@ -22,7 +22,7 @@ const MODULES = [
   { id: 'clients', label: 'Client Database', icon: Users, subtitle: 'Client records & status', path: '/dashboard/owner/group-practice/clients', accent: '#0d9488' },
   { id: 'caseload', label: 'Referral Pipeline', icon: Briefcase, subtitle: 'Referral intake to assignment.', path: '/dashboard/owner/group-practice/caseload', accent: '#0ea5e9' },
   { id: 'treatment', label: 'Treatment Plan Tracker', icon: FileText, subtitle: 'Plan cycles & reviews', path: '/dashboard/owner/group-practice/treatment', accent: '#059669' },
-  { id: 'supervision', label: 'Supervision Structure', icon: Shield, subtitle: 'Supervision assignments', path: '/dashboard/owner/group-practice/supervision', accent: '#4f46e5' },
+  { id: 'finance', label: 'Finance Tab', icon: DollarSign, subtitle: 'Income, expenses & practice health.', path: '/dashboard/owner/group-practice/finance', accent: '#059669' },
   { id: 'insurance', label: 'Insurance Database', icon: CreditCard, subtitle: 'Payers & coverage', path: '/dashboard/owner/group-practice/insurance', accent: '#78716c' },
   { id: 'vendors', label: 'Vendor Database', icon: Package, subtitle: 'Vendor contacts & contracts', path: '/dashboard/owner/group-practice/vendors', accent: '#92764a' },
   

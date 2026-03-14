@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Home, MessageSquare, Briefcase, Calendar, MoreHorizontal,
-  LayoutDashboard, Users, CreditCard, Package, ShieldCheck,
+  LayoutDashboard, Users, CreditCard, Package, ShieldCheck, Shield,
   Contact, Award, Mail, Rss, BookOpen, Settings, Sparkles,
 } from 'lucide-react';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
@@ -28,6 +28,12 @@ const OWNER_SECTIONS: DrawerSection[] = [
       { label: 'Insurance Database', icon: CreditCard, path: '/dashboard/owner/group-practice/insurance' },
       { label: 'Vendor Database', icon: Package, path: '/dashboard/owner/group-practice/vendors' },
       { label: 'Compliance', icon: ShieldCheck, path: '/dashboard/owner/group-practice/compliance' },
+    ],
+  },
+  {
+    title: 'CLINICAL',
+    items: [
+      { label: 'Supervision Structure', icon: Shield, path: '/dashboard/owner/group-practice/supervision' },
     ],
   },
   {
@@ -198,7 +204,7 @@ const BottomNavBar: React.FC = () => {
                 >
                   {section.title}
                 </p>
-                <div style={{ display: 'grid', gridTemplateColumns: section.title === 'PRACTICE' ? 'repeat(3, 1fr)' : 'repeat(4, 1fr)', gap: 8 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: (section.title === 'PRACTICE' ? 'repeat(3, 1fr)' : section.title === 'CLINICAL' ? 'repeat(4, 1fr)' : 'repeat(4, 1fr)'), gap: 8 }}>
                   {section.items.map((item) => {
                     const Icon = item.icon;
                     const active = location.pathname === item.path;
