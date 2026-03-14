@@ -105,6 +105,7 @@ const ManagementCenter: React.FC = () => {
           </div>
         </section>
       </div>
+      <BottomNavBar />
     </div>
   );
 };

@@ -80,6 +80,7 @@ const InsuranceDatabase: React.FC = () => {
         {renderSection('ACTIVE PAYERS', '#78716c', ACTIVE)}
         {renderSection('CREDENTIALING IN PROGRESS', '#d97706', IN_PROGRESS)}
       </div>
+      <BottomNavBar />
     </div>
   );
 };

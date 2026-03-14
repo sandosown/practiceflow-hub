@@ -144,6 +144,7 @@ const CaseloadIntegration: React.FC = () => {
           </>
         )}
       </div>
+      <BottomNavBar />
     </div>
   );
 };

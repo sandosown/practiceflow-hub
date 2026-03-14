@@ -127,6 +127,7 @@ const ClientDatabase: React.FC = () => {
           })}
         </div>
       </div>
+      <BottomNavBar />
     </div>
   );
 };

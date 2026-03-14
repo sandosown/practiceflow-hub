@@ -93,6 +93,7 @@ const TreatmentPlanTracker: React.FC = () => {
         {renderSection('PENDING REVIEW', '#d97706', PENDING, 'Approve')}
         {renderSection('UP TO DATE', '#78716c', UP_TO_DATE)}
       </div>
+      <BottomNavBar />
     </div>
   );
 };

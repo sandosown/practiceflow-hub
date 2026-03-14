@@ -80,6 +80,7 @@ const VendorDatabase: React.FC = () => {
         {renderSection('ACTIVE VENDORS', '#92764a', ACTIVE, 'View')}
         {renderSection('CONTRACTS EXPIRING', '#d97706', EXPIRING, 'Renew')}
       </div>
+      <BottomNavBar />
     </div>
   );
 };

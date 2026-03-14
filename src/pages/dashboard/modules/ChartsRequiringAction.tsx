@@ -133,6 +133,7 @@ const ChartsRequiringAction: React.FC = () => {
         {renderSection('TREATMENT PLANS EXPIRING', '#059669', TREATMENT_PLANS)}
         {renderSection('PENDING SIGNATURES', '#4f46e5', PENDING_SIGNATURES)}
       </div>
+      <BottomNavBar />
     </div>
   );
 };

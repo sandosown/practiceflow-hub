@@ -153,6 +153,7 @@ const MajorMoments: React.FC = () => {
           </div>
         </section>
       </div>
+      <BottomNavBar />
     </div>
   );
 };

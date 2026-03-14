@@ -91,6 +91,7 @@ const SupervisionStructure: React.FC = () => {
           </div>
         </section>
       </div>
+      <BottomNavBar />
     </div>
   );
 };
