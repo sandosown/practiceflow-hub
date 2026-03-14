@@ -44,7 +44,6 @@ const CommsSupervision: React.FC = () => {
 
   return (
     <AppLayout title="Supervision" breadcrumbs={[
-      { label: 'Role Hub', path: '/hub' }, { label: 'Group Practice', path: '/practice/radar' },
       { label: 'Comms', path: '/practice/comms' }, { label: 'Supervision' },
     ]}>
       {isOwner && !creating && !editId && (

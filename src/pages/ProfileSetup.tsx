@@ -15,7 +15,7 @@ const ProfileSetup: React.FC = () => {
   });
 
   const isStaff = user?.role === 'THERAPIST' || user?.role === 'INTERN';
-  const continueLabel = isStaff ? 'Continue to Group Practice' : 'Continue to Role Hub';
+  const continueLabel = isStaff ? 'Continue to My Dashboard' : 'Continue';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

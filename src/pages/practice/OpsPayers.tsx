@@ -32,7 +32,6 @@ const OpsPayers: React.FC = () => {
 
   return (
     <AppLayout title="Insurance (Payers)" breadcrumbs={[
-      { label: 'Role Hub', path: '/hub' }, { label: 'Group Practice', path: '/practice/radar' },
       { label: 'Operations', path: '/practice/ops' }, { label: 'Insurance' },
     ]}>
       {isOwner && !creating && !editId && (

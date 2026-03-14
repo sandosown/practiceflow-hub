@@ -67,7 +67,6 @@ const OpsTreatmentPlans: React.FC = () => {
 
   return (
     <AppLayout title={isOwner ? 'Treatment Plan Tracker' : 'My Treatment Plans'} breadcrumbs={[
-      { label: 'Role Hub', path: '/hub' }, { label: 'Group Practice', path: '/practice/radar' },
       { label: 'Operations', path: '/practice/ops' }, { label: 'Treatment Plans' },
     ]}>
       <div className="flex items-center gap-3 mb-4 flex-wrap">

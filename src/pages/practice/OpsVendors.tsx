@@ -55,7 +55,6 @@ const OpsVendors: React.FC = () => {
 
   return (
     <AppLayout title="Vendors" breadcrumbs={[
-      { label: 'Role Hub', path: '/hub' }, { label: 'Group Practice', path: '/practice/radar' },
       { label: 'Operations', path: '/practice/ops' }, { label: 'Vendors' },
     ]}>
       {!creating && !editId && (

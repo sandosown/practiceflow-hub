@@ -44,7 +44,6 @@ const CommsAnnouncements: React.FC = () => {
 
   return (
     <AppLayout title="Announcements" breadcrumbs={[
-      { label: 'Role Hub', path: '/hub' }, { label: 'Group Practice', path: '/practice/radar' },
       { label: 'Comms', path: '/practice/comms' }, { label: 'Announcements' },
     ]}>
       {isOwner && !creating && !editId && (

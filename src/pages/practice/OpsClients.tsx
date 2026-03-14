@@ -46,7 +46,6 @@ const OpsClients: React.FC = () => {
 
   return (
     <AppLayout title="Clients" breadcrumbs={[
-      { label: 'Role Hub', path: '/hub' }, { label: 'Group Practice', path: '/practice/radar' },
       { label: 'Operations', path: '/practice/ops' }, { label: 'Clients' },
     ]}>
       <div className="flex items-center gap-3 mb-4 flex-wrap">

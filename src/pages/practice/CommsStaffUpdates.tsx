@@ -37,7 +37,6 @@ const CommsStaffUpdates: React.FC = () => {
 
   return (
     <AppLayout title="Staff Updates" breadcrumbs={[
-      { label: 'Role Hub', path: '/hub' }, { label: 'Group Practice', path: '/practice/radar' },
       { label: 'Comms', path: '/practice/comms' }, { label: 'Staff Updates' },
     ]}>
       <div className="flex items-center gap-3 mb-4 flex-wrap">

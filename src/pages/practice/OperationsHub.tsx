@@ -27,7 +27,7 @@ const OperationsHub: React.FC = () => {
 
   return (
     <AppLayout title="Operations" breadcrumbs={[
-      { label: 'Role Hub', path: '/hub' }, { label: 'Group Practice', path: '/practice/radar' }, { label: 'Operations' },
+      { label: 'Operations' },
     ]}>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mt-4">
         {sections.map((s, i) => {

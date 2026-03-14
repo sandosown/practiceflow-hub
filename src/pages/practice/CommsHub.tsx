@@ -14,7 +14,7 @@ const CommsHub: React.FC = () => {
   const navigate = useNavigate();
   return (
     <AppLayout title="Comms" breadcrumbs={[
-      { label: 'Role Hub', path: '/hub' }, { label: 'Group Practice', path: '/practice/radar' }, { label: 'Comms' },
+      { label: 'Comms' },
     ]}>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mt-4">
         {sections.map(s => {

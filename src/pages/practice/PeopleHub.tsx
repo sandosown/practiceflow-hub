@@ -28,7 +28,7 @@ const PeopleHub: React.FC = () => {
 
   return (
     <AppLayout title="People" breadcrumbs={[
-      { label: 'Role Hub', path: '/hub' }, { label: 'Group Practice', path: '/practice/radar' }, { label: 'People' },
+      { label: 'People' },
     ]}>
       {isOwner && (
         <div className="mb-4">
