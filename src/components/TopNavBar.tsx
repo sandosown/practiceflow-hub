@@ -49,9 +49,9 @@ const TopNavBar: React.FC = () => {
         <button
           onClick={handleLogout}
           className="flex items-center gap-1.5 text-sm transition-colors"
-          style={{ color: '#64748b' }}
-          onMouseEnter={e => (e.currentTarget.style.color = '#f1f5f9')}
-          onMouseLeave={e => (e.currentTarget.style.color = '#64748b')}
+          style={{ color: 'rgba(255,255,255,0.5)' }}
+          onMouseEnter={e => (e.currentTarget.style.color = '#ffffff')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.5)')}
         >
           <LogOut className="w-4 h-4" />
           <span>Log out</span>
