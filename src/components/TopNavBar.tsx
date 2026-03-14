@@ -12,6 +12,7 @@ const TopNavBar: React.FC = () => {
   const location = useLocation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   const handleLogout = async () => {
     setDropdownOpen(false);
