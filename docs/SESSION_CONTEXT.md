@@ -260,9 +260,9 @@ Each signal type has its own accent (see Radar Signal Accents below).
 | 1 | CLINICIAN | ✅ APPROVED |
 | 2 | ADMIN | ✅ APPROVED |
 | 3 | SUPERVISOR | ✅ APPROVED |
-| 4 | INTERN CLINICAL | 🔄 NEXT |
-| 5 | INTERN BUSINESS | 🔜 PENDING |
-| 6 | STAFF | 🔜 PENDING |
+| 4 | INTERN CLINICAL | ✅ APPROVED |
+| 5 | INTERN BUSINESS | ✅ APPROVED |
+| 6 | STAFF | ✅ APPROVED |
 
 ---
 
