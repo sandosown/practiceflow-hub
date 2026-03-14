@@ -362,21 +362,7 @@ Interior stays clean — color lives in border only. No colored card fills. Ever
 
 ## NEXT BUILD
 
-**Resume at:** Phase 9 — Navigation System + Light/Dark Mode (IN PROGRESS)
-
-**Pending items to verify and complete in next session:**
-
-1. Verify Add Referral modal source dropdown fix landed correctly — screenshot needed
-
-2. Verify Finance module page — screenshot needed for full review
-
-3. Build drag and drop on Referral Pipeline cards
-
-4. Build asymmetric border system (LOG-071) — not yet applied to module cards and radar cards
-
-5. Build Dark Mode toggle in Settings page
-
-6. Build role-filtered More drawer — currently shows Owner view only, needs role filtering for all roles
+**Resume at:** Phase 10 — Calendar & Appointments (PENDING)
 
 ---
 
