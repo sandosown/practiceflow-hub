@@ -406,9 +406,19 @@ git push origin main
 | src/dashboards/ClinicianDashboard.tsx | Clinician role dashboard | ✅ Approved |
 | src/dashboards/AdminDashboard.tsx | Admin role dashboard | ✅ Approved |
 | src/dashboards/SupervisorDashboard.tsx | Supervisor role dashboard | ✅ Approved |
-| src/dashboards/InternClinicalDashboard.tsx | Clinical Intern dashboard | 🔄 NEXT |
-| src/dashboards/InternBusinessDashboard.tsx | Business Intern dashboard | 🔜 Pending |
-| src/dashboards/StaffDashboard.tsx | Staff dashboard | 🔜 Pending |
+| src/dashboards/InternClinicalDashboard.tsx | Clinical Intern dashboard | ✅ Approved |
+| src/dashboards/InternBusinessDashboard.tsx | Business Intern dashboard | ✅ Approved |
+| src/dashboards/StaffDashboard.tsx | Staff dashboard | ✅ Approved |
+| src/pages/dashboard/modules/ChartsRequiringAction.tsx | Charts module | ✅ Built |
+| src/pages/dashboard/modules/ClientDatabase.tsx | Client database module | ✅ Built |
+| src/pages/dashboard/modules/CaseloadIntegration.tsx | Caseload module | ✅ Built |
+| src/pages/dashboard/modules/TreatmentPlanTracker.tsx | Treatment plan module | ✅ Built |
+| src/pages/dashboard/modules/SupervisionStructure.tsx | Supervision module | ✅ Built |
+| src/pages/dashboard/modules/ManagementCenter.tsx | Management center module | ✅ Built |
+| src/pages/dashboard/modules/InsuranceDatabase.tsx | Insurance module | ✅ Built |
+| src/pages/dashboard/modules/VendorDatabase.tsx | Vendor database module | ✅ Built |
+| src/pages/dashboard/modules/MajorMoments.tsx | Major Moments module | ✅ Built |
+| src/pages/dashboard/MessageBoard.tsx | Message Board (renamed from OfficeBoard) | ✅ Built |
 | src/context/SessionContext.tsx | Session + role context | ✅ Built |
 | supabase/ | Supabase RLS config | ✅ Built |
 
