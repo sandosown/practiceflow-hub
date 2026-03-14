@@ -204,7 +204,7 @@ const ReferralPipeline: React.FC = () => {
       stage: 'New Referral',
     };
     setReferrals(prev => [newRef, ...prev]);
-    setForm({ firstName: '', lastName: '', phone: '', email: '', source: 'Web Form', notes: '' });
+    setForm({ firstName: '', lastName: '', phone: '', email: '', source: '', notes: '' });
     setModalOpen(false);
   };
 
