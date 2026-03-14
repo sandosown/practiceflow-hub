@@ -41,14 +41,15 @@ First-class workspace. Exemplar implementation of PF structure.
 2. Message Board (formerly Office Board — LOG-065)
 3. Management Center
 4. Client Database
-5. Caseload Integration
+5. Referral Pipeline (formerly Caseload Integration — LOG-076)
 6. Treatment Plan Tracker
-7. Supervision Structure
+7. Finance Tab (LOG-077 — replaces Supervision Structure on grid)
 8. Insurance Database
 9. Vendor Database
 10. Major Moments
 
 **Note:** Major Moments was added as the 10th canonical module in the 03/08/2026 Phase 6 Pre-Build Canon Update. The previous locked list of 9 is superseded.
+**Note:** Supervision Structure moved to More drawer — CLINICAL section (LOG-078). Finance Tab takes its grid position (LOG-077).
 
 ### Major Moments — Group Practice
 - Accent: `#a78bfa` (soft violet — distinct from all operational module accents)
@@ -97,6 +98,78 @@ Pinned cards remain at top until unpinned by Owner or Admin.
 ### Posting Rules
 - Owner / Admin: post any type, pin any post, remove any post
 - All other roles: post freely, cannot pin or remove others' posts
+
+---
+
+## Referral Pipeline — GP
+
+LOG-076 — LOCKED
+
+Replaces Caseload Integration. The Referral Pipeline is a manual kanban workflow tracking potential clients from first contact through to active enrollment.
+
+### Pipeline Stages
+
+1. New Referral
+2. Contact Made
+3. Pre-Screening Complete
+4. Insurance Verified
+5. Assigned
+
+### Outcome Buckets
+
+- Declined
+- No Response
+- Intake Complete (#059669 — Active badge)
+
+### Rules
+
+- Manual workflow only — nothing moves automatically
+- Owner + Admin: full access
+- Supervisor: read only
+- Clinician: own assigned referrals only
+- All other roles: not visible
+- Every stage movement logged with user + timestamp
+
+### Future Phase
+
+- Web form webhook integration
+- Automated client confirmation messaging
+- Insurance verification integration
+- Referral source analytics
+
+---
+
+## Finance Tab — GP
+
+LOG-077 — LOCKED
+
+Financial health snapshot for practice owners and administrators.
+
+Accent: #059669
+
+Access: Owner + Admin only.
+
+### V1 Scope
+
+- Monthly Income total
+- Monthly Expenses total
+- Profit (auto-computed)
+- What's Due (manually entered upcoming payments)
+- Category breakdown for income and expenses
+- Time toggle: Day / Week / Month
+
+### Rules
+
+- All data manually entered — no bank sync
+- Not an accounting system
+- Owner + Admin only — all other roles never see this
+
+### Future Phase
+
+- Vendor-level expense breakdown
+- Revenue by therapist
+- Insurance reimbursement tracking
+- Accountant export
 
 ---
 

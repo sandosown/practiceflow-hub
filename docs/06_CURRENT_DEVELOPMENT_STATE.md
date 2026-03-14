@@ -129,6 +129,9 @@
 - Insurance/Vendor databases
 - "Need a Tool?" assist panel
 - Engine activation guided setup wizard
+- Referral Pipeline — **canon locked (LOG-076)**
+- Finance Tab — **canon locked (LOG-077)**
+- Guide Center Video Tutorials tab — **canon locked (LOG-080)**
 
 ---
 
@@ -203,6 +206,11 @@
 | LOG-073 | GP Calendar layer: GP appointment types, supervisor/supervisee visibility rules |
 | LOG-074 | Owner Active Workload Flag: per-hat, onboarding question locked, supervision structure options |
 | LOG-075 | Calendar replaces Feed in bottom nav — Feed moves to More drawer |
+| LOG-076 | Referral Pipeline replaces Caseload Integration — kanban, 5 stages, 3 outcome buckets, manual workflow only |
+| LOG-077 | Finance Tab — Owner + Admin only, replaces Supervision Structure on GP grid, income/expenses/profit/due |
+| LOG-078 | Supervision Structure moves from GP grid to More drawer CLINICAL section |
+| LOG-079 | More drawer CLINICAL section added between PRACTICE and TEAM |
+| LOG-080 | Guide Center Video Tutorials tab added as second tab alongside Written Guides |
 
 ---
 
@@ -265,8 +273,9 @@ No red, rose, pink anywhere — ever
 | Message Board (formerly Office Board) | #0ea5e9 |
 | Management Center | #7c3aed |
 | Client Database | #0d9488 |
-| Caseload Integration | #3b82f6 |
+| Referral Pipeline | #0ea5e9 |
 | Treatment Plan Tracker | #059669 |
+| Finance Tab | #059669 |
 | Supervision Structure | #4f46e5 |
 | Insurance Database | #78716c |
 | Vendor Database | #92764a |

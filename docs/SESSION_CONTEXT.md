@@ -218,8 +218,9 @@ Each signal type has its own accent (see Radar Signal Accents below).
 | Message Board (formerly Office Board) | #0ea5e9 |
 | Management Center | #7c3aed |
 | Client Database | #0d9488 |
-| Caseload Integration | #3b82f6 |
+| Referral Pipeline | #0ea5e9 |
 | Treatment Plan Tracker | #059669 |
+| Finance Tab | #059669 |
 | Supervision Structure | #4f46e5 |
 | Insurance Database | #78716c |
 | Vendor Database | #92764a |
@@ -250,7 +251,7 @@ Each signal type has its own accent (see Radar Signal Accents below).
 | Phase 6 | Role-Specific Dashboard Content | ✅ COMPLETE |
 | Phase 7 | Module Pages — Real Content | ✅ COMPLETE |
 | Phase 8 | Action Mode | ✅ COMPLETE |
-| Phase 9 | Navigation System + Light/Dark Mode | 🔜 PENDING — Canon locked, build pending |
+| Phase 9 | Navigation System + Light/Dark Mode | 🔄 IN PROGRESS |
 | Phase 10 | Calendar & Appointments | 🔜 PENDING — Canon locked, build pending |
 
 ### Phase 6 Build Order
@@ -268,7 +269,9 @@ Each signal type has its own accent (see Radar Signal Accents below).
 
 ## NEXT BUILD
 
-**Resume at:** Phase 9 — Navigation System + Light/Dark Mode
+**Resume at:** Phase 9 — Navigation System + Light/Dark Mode (IN PROGRESS)
+
+Pending canon additions ready to build: Referral Pipeline (LOG-076), Finance Tab (LOG-077), More drawer CLINICAL section (LOG-079)
 
 ---
 
@@ -411,7 +414,9 @@ git push origin main
 | src/dashboards/StaffDashboard.tsx | Staff dashboard | ✅ Approved |
 | src/pages/dashboard/modules/ChartsRequiringAction.tsx | Charts module | ✅ Built |
 | src/pages/dashboard/modules/ClientDatabase.tsx | Client database module | ✅ Built |
-| src/pages/dashboard/modules/CaseloadIntegration.tsx | Caseload module | ✅ Built |
+| src/pages/dashboard/modules/CaseloadIntegration.tsx | Caseload module (→ Referral Pipeline LOG-076) | ✅ Built |
+| ReferralPipeline.tsx | Referral Pipeline module | 🔜 To be built |
+| FinanceTab.tsx | Finance Tab module | 🔜 To be built |
 | src/pages/dashboard/modules/TreatmentPlanTracker.tsx | Treatment plan module | ✅ Built |
 | src/pages/dashboard/modules/SupervisionStructure.tsx | Supervision module | ✅ Built |
 | src/pages/dashboard/modules/ManagementCenter.tsx | Management center module | ✅ Built |
@@ -485,6 +490,11 @@ git push origin main
 | LOG-073 | GP Calendar layer: Client Session, Supervision Session, Staff Meeting, Intake. Supervisor/supervisee visibility rules. LP compliance linkage. | LOCKED |
 | LOG-074 | Owner Active Workload Flag: per-hat, default No, onboarding question locked, GP supervision structure options locked. | LOCKED |
 | LOG-075 | Calendar replaces Feed in bottom nav. Feed moves to More drawer — not removed, repositioned. | LOCKED |
+| LOG-076 | Referral Pipeline replaces Caseload Integration — kanban, 5 stages, 3 outcome buckets, manual workflow only. | LOCKED |
+| LOG-077 | Finance Tab — Owner + Admin only, replaces Supervision Structure on GP grid, income/expenses/profit/due. | LOCKED |
+| LOG-078 | Supervision Structure moves from GP module grid to More drawer CLINICAL section. | LOCKED |
+| LOG-079 | More drawer CLINICAL section added between PRACTICE and TEAM. | LOCKED |
+| LOG-080 | Guide Center Video Tutorials tab added as second tab alongside Written Guides. | LOCKED |
 
 ---
 
