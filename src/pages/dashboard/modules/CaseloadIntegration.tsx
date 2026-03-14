@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopNavBar from '@/components/TopNavBar';
 import BottomNavBar from '@/components/BottomNavBar';
-import { ArrowLeft, Search, Plus, Pencil, CheckSquare, ArrowRight } from 'lucide-react';
+import { ArrowLeft, Search, Plus, Pencil, CheckSquare, ArrowRight, ArrowLeft as ArrowLeftIcon, X, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cardStyle } from '@/lib/cardStyle';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useAuth } from '@/context/AuthContext';
 import {
   DndContext,
   DragOverlay,
@@ -22,15 +24,14 @@ import { useDraggable, useDroppable } from '@dnd-kit/core';
 
 const ACCENT = '#0ea5e9';
 
-const STAGES = [
+const DEFAULT_STAGES = [
   'New Referral',
   'Contact Made',
   'Pre-Screening Complete',
   'Insurance Verified',
   'Assigned',
-] as const;
+];
 
-type Stage = typeof STAGES[number];
 type Outcome = 'Declined' | 'No Response' | 'Intake Complete';
 
 interface Referral {
@@ -43,8 +44,16 @@ interface Referral {
   notes: string;
   dateSubmitted: string;
   daysInStage: number;
-  stage: Stage;
+  stage: string;
   outcome?: Outcome;
+}
+
+interface MovementLog {
+  referralId: string;
+  from: string;
+  to: string;
+  user: string;
+  timestamp: string;
 }
 
 const INITIAL_REFERRALS: Referral[] = [
@@ -61,9 +70,45 @@ function hexToRgb(hex: string): string {
   return `${parseInt(h.substring(0, 2), 16)},${parseInt(h.substring(2, 4), 16)},${parseInt(h.substring(4, 6), 16)}`;
 }
 
+/* ── Outcome Bucket Popover ── */
+const OutcomePopover: React.FC<{
+  children: React.ReactNode;
+  onSelect: (outcome: Outcome) => void;
+}> = ({ children, onSelect }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverContent className="w-44 p-1" align="end" sideOffset={4}>
+        <p className="text-[10px] uppercase tracking-wider text-muted-foreground px-2 py-1 font-semibold">Move to outcome</p>
+        {(['Declined', 'No Response', 'Intake Complete'] as Outcome[]).map(o => (
+          <button
+            key={o}
+            onClick={() => { onSelect(o); setOpen(false); }}
+            className="w-full text-left text-sm px-2 py-1.5 rounded hover:bg-muted transition-colors"
+            style={{ color: o === 'Intake Complete' ? '#059669' : 'hsl(var(--muted-foreground))' }}
+          >
+            {o}
+          </button>
+        ))}
+      </PopoverContent>
+    </Popover>
+  );
+};
+
 /* ── Draggable Card ── */
-const DraggableCard: React.FC<{ referral: Referral; isMobile: boolean; onMoveStage: (id: string, dir: 1 | -1) => void }> = ({ referral: r, isMobile, onMoveStage }) => {
+const DraggableCard: React.FC<{
+  referral: Referral;
+  isMobile: boolean;
+  stages: string[];
+  onMoveStage: (id: string, dir: 1 | -1) => void;
+  onMoveToOutcome: (id: string, outcome: Outcome) => void;
+}> = ({ referral: r, isMobile, stages, onMoveStage, onMoveToOutcome }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id: r.id });
+  const stageIdx = stages.indexOf(r.stage);
+  const isFirst = stageIdx === 0;
+  const isLast = stageIdx === stages.length - 1;
+
   const style: React.CSSProperties = {
     ...cardStyle(ACCENT),
     borderRadius: 10,
@@ -90,16 +135,39 @@ const DraggableCard: React.FC<{ referral: Referral; isMobile: boolean; onMoveSta
         <button className="p-1 rounded hover:bg-muted transition-colors" title="Add Task" onPointerDown={e => e.stopPropagation()}>
           <CheckSquare className="w-3.5 h-3.5 text-muted-foreground" />
         </button>
-        {isMobile && (
+        <div className="flex items-center gap-0.5 ml-auto">
+          {/* Back arrow */}
           <button
-            className="p-1 rounded hover:bg-muted transition-colors ml-auto"
-            title="Move to next stage"
+            className="p-1 rounded hover:bg-muted transition-colors"
+            title="Move to previous stage"
+            disabled={isFirst}
             onPointerDown={e => e.stopPropagation()}
-            onClick={() => onMoveStage(r.id, 1)}
+            onClick={() => onMoveStage(r.id, -1)}
           >
-            <ArrowRight className="w-3.5 h-3.5" style={{ color: ACCENT }} />
+            <ArrowLeftIcon className="w-3.5 h-3.5" style={{ color: isFirst ? 'hsl(var(--muted-foreground) / 0.35)' : ACCENT }} />
           </button>
-        )}
+          {/* Forward arrow — last stage triggers outcome popover */}
+          {isLast ? (
+            <OutcomePopover onSelect={(o) => onMoveToOutcome(r.id, o)}>
+              <button
+                className="p-1 rounded hover:bg-muted transition-colors"
+                title="Move to outcome"
+                onPointerDown={e => e.stopPropagation()}
+              >
+                <ArrowRight className="w-3.5 h-3.5" style={{ color: ACCENT }} />
+              </button>
+            </OutcomePopover>
+          ) : (
+            <button
+              className="p-1 rounded hover:bg-muted transition-colors"
+              title="Move to next stage"
+              onPointerDown={e => e.stopPropagation()}
+              onClick={() => onMoveStage(r.id, 1)}
+            >
+              <ArrowRight className="w-3.5 h-3.5" style={{ color: ACCENT }} />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -108,7 +176,17 @@ const DraggableCard: React.FC<{ referral: Referral; isMobile: boolean; onMoveSta
 /* ── Droppable Column with collapse ── */
 const MAX_VISIBLE = 2;
 
-const DroppableColumn: React.FC<{ stage: Stage; cards: Referral[]; isMobile: boolean; onMoveStage: (id: string, dir: 1 | -1) => void }> = ({ stage, cards, isMobile, onMoveStage }) => {
+const DroppableColumn: React.FC<{
+  stage: string;
+  cards: Referral[];
+  isMobile: boolean;
+  stages: string[];
+  isOwner: boolean;
+  isCustom: boolean;
+  onMoveStage: (id: string, dir: 1 | -1) => void;
+  onMoveToOutcome: (id: string, outcome: Outcome) => void;
+  onDeleteStage?: () => void;
+}> = ({ stage, cards, isMobile, stages, isOwner, isCustom, onMoveStage, onMoveToOutcome, onDeleteStage }) => {
   const { setNodeRef, isOver } = useDroppable({ id: stage });
   const [expanded, setExpanded] = useState(false);
 
@@ -119,9 +197,20 @@ const DroppableColumn: React.FC<{ stage: Stage; cards: Referral[]; isMobile: boo
     <div ref={setNodeRef} className="flex-shrink-0 flex flex-col" style={{ minWidth: 240, width: 240 }}>
       <div className="flex items-center justify-between mb-3 px-1">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{stage}</h3>
-        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: `rgba(${hexToRgb(ACCENT)},0.12)`, color: ACCENT }}>
-          {cards.length}
-        </span>
+        <div className="flex items-center gap-1">
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: `rgba(${hexToRgb(ACCENT)},0.12)`, color: ACCENT }}>
+            {cards.length}
+          </span>
+          {isOwner && isCustom && (
+            <button
+              onClick={onDeleteStage}
+              className="p-0.5 rounded hover:bg-muted transition-colors"
+              title="Delete custom stage"
+            >
+              <X className="w-3 h-3 text-muted-foreground" />
+            </button>
+          )}
+        </div>
       </div>
       <div
         className="flex flex-col gap-3 overflow-y-auto pr-1"
@@ -140,7 +229,7 @@ const DroppableColumn: React.FC<{ stage: Stage; cards: Referral[]; isMobile: boo
           </div>
         )}
         {visibleCards.map(r => (
-          <DraggableCard key={r.id} referral={r} isMobile={isMobile} onMoveStage={onMoveStage} />
+          <DraggableCard key={r.id} referral={r} isMobile={isMobile} stages={stages} onMoveStage={onMoveStage} onMoveToOutcome={onMoveToOutcome} />
         ))}
         {hiddenCount > 0 && !expanded && (
           <button
@@ -164,6 +253,105 @@ const DroppableColumn: React.FC<{ stage: Stage; cards: Referral[]; isMobile: boo
   );
 };
 
+/* ── Droppable Outcome Bucket ── */
+const DroppableOutcomeBucket: React.FC<{ outcome: Outcome; items: Referral[] }> = ({ outcome, items }) => {
+  const { setNodeRef, isOver } = useDroppable({ id: `outcome:${outcome}` });
+  const isComplete = outcome === 'Intake Complete';
+
+  return (
+    <div
+      ref={setNodeRef}
+      className="p-4 rounded-xl transition-all"
+      style={{
+        background: isComplete ? 'rgba(5,150,105,0.1)' : 'rgba(148,163,184,0.1)',
+        outline: isOver ? `2px solid ${isComplete ? '#059669' : 'hsl(var(--muted-foreground))'}` : 'none',
+        outlineOffset: -2,
+      }}
+    >
+      <div className="flex items-center gap-2 mb-2">
+        <h3 className="text-xs font-semibold uppercase tracking-wider" style={{ color: isComplete ? '#059669' : 'hsl(var(--muted-foreground))' }}>
+          {outcome}
+        </h3>
+        {isComplete && (
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ border: '1px solid #059669', color: '#059669' }}>
+            Active
+          </span>
+        )}
+      </div>
+      {items.length === 0 ? (
+        <p className="text-sm text-muted-foreground">No referrals</p>
+      ) : (
+        <div className="space-y-2">
+          {items.map(r => (
+            <div key={r.id} className="text-sm text-foreground">
+              {r.firstName} {r.lastName}
+              <span className="text-xs text-muted-foreground ml-2">{r.dateSubmitted}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* ── Add Stage Button ── */
+const AddStageButton: React.FC<{ onAdd: (name: string) => void }> = ({ onAdd }) => {
+  const [adding, setAdding] = useState(false);
+  const [name, setName] = useState('');
+
+  const confirm = () => {
+    const trimmed = name.trim();
+    if (trimmed) {
+      onAdd(trimmed);
+      setName('');
+      setAdding(false);
+    }
+  };
+
+  if (!adding) {
+    return (
+      <button
+        onClick={() => setAdding(true)}
+        className="flex-shrink-0 flex items-center justify-center rounded-lg hover:bg-muted transition-colors self-start"
+        style={{ width: 32, height: 32, border: `1px dashed rgba(${hexToRgb(ACCENT)},0.4)` }}
+        title="Add custom stage"
+      >
+        <Plus className="w-4 h-4" style={{ color: ACCENT }} />
+      </button>
+    );
+  }
+
+  return (
+    <div className="flex-shrink-0 flex flex-col gap-2 self-start p-3 rounded-xl" style={{ width: 200, background: 'hsl(var(--card))', border: `1px solid rgba(${hexToRgb(ACCENT)},0.3)` }}>
+      <Input
+        placeholder="Stage name"
+        maxLength={30}
+        value={name}
+        onChange={e => setName(e.target.value)}
+        onKeyDown={e => { if (e.key === 'Enter') confirm(); if (e.key === 'Escape') { setAdding(false); setName(''); } }}
+        autoFocus
+        className="text-sm h-8"
+      />
+      <div className="flex gap-2">
+        <button
+          onClick={confirm}
+          disabled={!name.trim()}
+          className="text-xs font-semibold px-3 py-1 rounded-md"
+          style={{ color: ACCENT, border: `1px solid rgba(${hexToRgb(ACCENT)},0.5)`, opacity: name.trim() ? 1 : 0.5 }}
+        >
+          Add
+        </button>
+        <button
+          onClick={() => { setAdding(false); setName(''); }}
+          className="text-xs text-muted-foreground px-3 py-1 rounded-md hover:bg-muted"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
+};
+
 /* ── Overlay Card (shown while dragging) ── */
 const OverlayCard: React.FC<{ referral: Referral }> = ({ referral: r }) => (
   <div className="p-3 space-y-2" style={{ ...cardStyle(ACCENT), borderRadius: 10, width: 232, background: 'hsl(var(--card))', opacity: 0.8 }}>
@@ -181,11 +369,20 @@ const OverlayCard: React.FC<{ referral: Referral }> = ({ referral: r }) => (
 const ReferralPipeline: React.FC = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const { user } = useAuth();
+  const isOwner = user?.role === 'OWNER';
+
   const [search, setSearch] = useState('');
   const [referrals, setReferrals] = useState<Referral[]>(INITIAL_REFERRALS);
+  const [customStages, setCustomStages] = useState<string[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [form, setForm] = useState({ firstName: '', lastName: '', phone: '', email: '', source: '', notes: '' });
+  const [movementLog, setMovementLog] = useState<MovementLog[]>([]);
+
+  // All stages = defaults + custom appended
+  const stages = [...DEFAULT_STAGES.slice(0, -1), ...customStages, DEFAULT_STAGES[DEFAULT_STAGES.length - 1]];
+  // Custom stages inserted before "Assigned" (the last default)
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
@@ -194,17 +391,36 @@ const ReferralPipeline: React.FC = () => {
     r => !r.outcome && (`${r.firstName} ${r.lastName}`.toLowerCase().includes(q) || r.source.toLowerCase().includes(q))
   );
 
-  const stageReferrals = (stage: Stage) => filtered.filter(r => r.stage === stage);
+  const stageReferrals = (stage: string) => filtered.filter(r => r.stage === stage);
 
-  const moveStage = (id: string, direction: 1 | -1) => {
+  const logMovement = useCallback((referralId: string, from: string, to: string) => {
+    setMovementLog(prev => [...prev, {
+      referralId,
+      from,
+      to,
+      user: user?.full_name ?? 'Unknown',
+      timestamp: new Date().toISOString(),
+    }]);
+  }, [user?.full_name]);
+
+  const moveStage = useCallback((id: string, direction: 1 | -1) => {
     setReferrals(prev => prev.map(r => {
       if (r.id !== id || r.outcome) return r;
-      const idx = STAGES.indexOf(r.stage);
+      const idx = stages.indexOf(r.stage);
       const next = idx + direction;
-      if (next < 0 || next >= STAGES.length) return r;
-      return { ...r, stage: STAGES[next], daysInStage: 0 };
+      if (next < 0 || next >= stages.length) return r;
+      logMovement(r.id, r.stage, stages[next]);
+      return { ...r, stage: stages[next], daysInStage: 0 };
     }));
-  };
+  }, [stages, logMovement]);
+
+  const moveToOutcome = useCallback((id: string, outcome: Outcome) => {
+    setReferrals(prev => prev.map(r => {
+      if (r.id !== id) return r;
+      logMovement(r.id, r.stage, outcome);
+      return { ...r, outcome };
+    }));
+  }, [logMovement]);
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id as string);
@@ -214,11 +430,25 @@ const ReferralPipeline: React.FC = () => {
     setActiveId(null);
     const { active, over } = event;
     if (!over) return;
-    const targetStage = over.id as Stage;
-    if (!STAGES.includes(targetStage)) return;
-    setReferrals(prev => prev.map(r =>
-      r.id === active.id && r.stage !== targetStage ? { ...r, stage: targetStage, daysInStage: 0 } : r
-    ));
+    const targetId = over.id as string;
+
+    // Check if dropped on outcome bucket
+    if (targetId.startsWith('outcome:')) {
+      const outcome = targetId.replace('outcome:', '') as Outcome;
+      moveToOutcome(active.id as string, outcome);
+      return;
+    }
+
+    // Dropped on a stage column
+    if (stages.includes(targetId)) {
+      const ref = referrals.find(r => r.id === active.id);
+      if (ref && ref.stage !== targetId) {
+        logMovement(ref.id, ref.stage, targetId);
+        setReferrals(prev => prev.map(r =>
+          r.id === active.id ? { ...r, stage: targetId, daysInStage: 0 } : r
+        ));
+      }
+    }
   };
 
   const handleAddReferral = () => {
@@ -239,6 +469,21 @@ const ReferralPipeline: React.FC = () => {
     setForm({ firstName: '', lastName: '', phone: '', email: '', source: '', notes: '' });
     setModalOpen(false);
   };
+
+  const addCustomStage = useCallback((name: string) => {
+    if (customStages.includes(name)) return;
+    setCustomStages(prev => [...prev, name]);
+  }, [customStages]);
+
+  const deleteCustomStage = useCallback((name: string) => {
+    // Move any cards in this stage to the previous stage
+    const idx = stages.indexOf(name);
+    const fallback = idx > 0 ? stages[idx - 1] : stages[0];
+    setReferrals(prev => prev.map(r =>
+      r.stage === name ? { ...r, stage: fallback, daysInStage: 0 } : r
+    ));
+    setCustomStages(prev => prev.filter(s => s !== name));
+  }, [stages]);
 
   const outcomeReferrals = referrals.filter(r => r.outcome);
   const activeReferral = activeId ? referrals.find(r => r.id === activeId) : null;
@@ -278,45 +523,69 @@ const ReferralPipeline: React.FC = () => {
 
         {/* Kanban Board */}
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-          <div className="flex gap-4 overflow-x-auto pb-4">
-            {STAGES.map(stage => (
-              <DroppableColumn key={stage} stage={stage} cards={stageReferrals(stage)} isMobile={isMobile} onMoveStage={moveStage} />
+          <div className="flex gap-4 overflow-x-auto pb-4 items-start">
+            {stages.map((stage, idx) => (
+              <React.Fragment key={stage}>
+                {/* Add stage button before each column (Owner only) */}
+                {isOwner && idx > 0 && (
+                  <div className="flex-shrink-0 self-start mt-8">
+                    <AddStageButton onAdd={(name) => {
+                      // Insert at this position
+                      const defaultIdx = DEFAULT_STAGES.indexOf(stage);
+                      if (defaultIdx >= 0) {
+                        // Insert before this default stage — add to custom stages
+                        setCustomStages(prev => [...prev, name]);
+                      } else {
+                        setCustomStages(prev => {
+                          const ci = prev.indexOf(stage);
+                          const next = [...prev];
+                          next.splice(ci, 0, name);
+                          return next;
+                        });
+                      }
+                    }} />
+                  </div>
+                )}
+                <DroppableColumn
+                  stage={stage}
+                  cards={stageReferrals(stage)}
+                  isMobile={isMobile}
+                  stages={stages}
+                  isOwner={isOwner}
+                  isCustom={!DEFAULT_STAGES.includes(stage)}
+                  onMoveStage={moveStage}
+                  onMoveToOutcome={moveToOutcome}
+                  onDeleteStage={() => deleteCustomStage(stage)}
+                />
+              </React.Fragment>
             ))}
+            {/* Add stage button at end (Owner only) */}
+            {isOwner && (
+              <div className="flex-shrink-0 self-start mt-8">
+                <AddStageButton onAdd={addCustomStage} />
+              </div>
+            )}
           </div>
           <DragOverlay>
             {activeReferral ? <OverlayCard referral={activeReferral} /> : null}
           </DragOverlay>
-        </DndContext>
 
-        {/* Outcome Buckets */}
-        <section className="mt-8">
-          <h2 className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3 text-muted-foreground" style={{ borderLeft: `4px solid ${ACCENT}` }}>
-            OUTCOMES
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {(['Declined', 'No Response', 'Intake Complete'] as Outcome[]).map(outcome => {
-              const isComplete = outcome === 'Intake Complete';
-              const items = outcomeReferrals.filter(r => r.outcome === outcome);
-              return (
-                <div key={outcome} className="p-4 rounded-xl" style={{ background: isComplete ? 'rgba(5,150,105,0.1)' : 'rgba(148,163,184,0.1)' }}>
-                  <div className="flex items-center gap-2 mb-2">
-                    <h3 className="text-xs font-semibold uppercase tracking-wider" style={{ color: isComplete ? '#059669' : 'hsl(var(--muted-foreground))' }}>
-                      {outcome}
-                    </h3>
-                    {isComplete && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ border: '1px solid #059669', color: '#059669' }}>
-                        Active
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    {items.length === 0 ? 'No referrals' : `${items.length} referral${items.length !== 1 ? 's' : ''}`}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </section>
+          {/* Outcome Buckets — now droppable */}
+          <section className="mt-8">
+            <h2 className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3 text-muted-foreground" style={{ borderLeft: `4px solid ${ACCENT}` }}>
+              OUTCOMES
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {(['Declined', 'No Response', 'Intake Complete'] as Outcome[]).map(outcome => (
+                <DroppableOutcomeBucket
+                  key={outcome}
+                  outcome={outcome}
+                  items={outcomeReferrals.filter(r => r.outcome === outcome)}
+                />
+              ))}
+            </div>
+          </section>
+        </DndContext>
       </div>
 
       {/* Add Referral Modal */}
