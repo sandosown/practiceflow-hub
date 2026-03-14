@@ -480,7 +480,13 @@ function DueModal({ onClose, onSaved, userId, isDemoMode }: { onClose: () => voi
           {/* Category */}
           <div>
             <Label className="text-sm font-medium">Category</Label>
-            <Input placeholder="Optional" value={category} onChange={e => setCategory(e.target.value)} className="mt-1" />
+            <CategorySelect
+              defaults={[]}
+              custom={customCategories}
+              value={category}
+              onChange={setCategory}
+              onAddCustom={addCategory}
+            />
           </div>
           {/* Save */}
           <Button
