@@ -11,13 +11,15 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { format, startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { toast } from 'sonner';
+import { useCustomCategories } from './finance/useCustomCategories';
+import { CategorySelect } from './finance/CategorySelect';
 
 const ACCENT = '#059669';
 const HAT_ID = 'w1';
@@ -43,7 +45,7 @@ interface DueItem {
   category: string | null;
 }
 
-const INCOME_CATEGORIES = ['Insurance Reimbursements', 'Private Pay Sessions', 'Group Sessions', 'Other'];
+const INCOME_CATEGORIES = ['Insurance', 'Private / Out of Pocket', 'Group Sessions', 'Workshops', 'Other'];
 const EXPENSE_CATEGORIES = ['Payroll & Contractors', 'Office Lease', 'Software Subscriptions', 'Insurance', 'Other'];
 
 function fmt(n: number): string {
@@ -333,6 +335,7 @@ function EntryModal({ title, type, categories, onClose, onSaved, userId, isDemoM
   const [category, setCategory] = useState('');
   const [notes, setNotes] = useState('');
   const [saving, setSaving] = useState(false);
+  const { customCategories, addCategory } = useCustomCategories(userId, type, isDemoMode);
 
   const handleSave = async () => {
     if (!date || !amount || !category) { toast.error('Please fill all required fields.'); return; }
@@ -386,12 +389,13 @@ function EntryModal({ title, type, categories, onClose, onSaved, userId, isDemoM
           {/* Category */}
           <div>
             <Label className="text-sm font-medium">Category *</Label>
-            <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="mt-1"><SelectValue placeholder="Select category" /></SelectTrigger>
-              <SelectContent>
-                {categories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-              </SelectContent>
-            </Select>
+            <CategorySelect
+              defaults={categories}
+              custom={customCategories}
+              value={category}
+              onChange={setCategory}
+              onAddCustom={addCategory}
+            />
           </div>
           {/* Notes */}
           <div>
@@ -420,6 +424,7 @@ function DueModal({ onClose, onSaved, userId, isDemoMode }: { onClose: () => voi
   const [dueDate, setDueDate] = useState<Date | undefined>(new Date());
   const [category, setCategory] = useState('');
   const [saving, setSaving] = useState(false);
+  const { customCategories, addCategory } = useCustomCategories(userId, 'due', isDemoMode);
 
   const handleSave = async () => {
     if (!name.trim() || !amount || !dueDate) { toast.error('Please fill all required fields.'); return; }
@@ -475,7 +480,13 @@ function DueModal({ onClose, onSaved, userId, isDemoMode }: { onClose: () => voi
           {/* Category */}
           <div>
             <Label className="text-sm font-medium">Category</Label>
-            <Input placeholder="Optional" value={category} onChange={e => setCategory(e.target.value)} className="mt-1" />
+            <CategorySelect
+              defaults={[]}
+              custom={customCategories}
+              value={category}
+              onChange={setCategory}
+              onAddCustom={addCategory}
+            />
           </div>
           {/* Save */}
           <Button
