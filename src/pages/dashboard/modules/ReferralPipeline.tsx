@@ -9,7 +9,7 @@ import { cardStyle } from '@/lib/cardStyle';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useAuth } from '@/context/AuthContext';
+import { useSession } from '@/context/SessionContext';
 import {
   DndContext,
   DragOverlay,
@@ -369,8 +369,8 @@ const OverlayCard: React.FC<{ referral: Referral }> = ({ referral: r }) => (
 const ReferralPipeline: React.FC = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const { user } = useAuth();
-  const isOwner = user?.role === 'OWNER';
+  const { session } = useSession();
+  const isOwner = session?.role === 'OWNER';
 
   const [search, setSearch] = useState('');
   const [referrals, setReferrals] = useState<Referral[]>(INITIAL_REFERRALS);
@@ -398,10 +398,10 @@ const ReferralPipeline: React.FC = () => {
       referralId,
       from,
       to,
-      user: user?.full_name ?? 'Unknown',
+      user: session?.full_name ?? 'Unknown',
       timestamp: new Date().toISOString(),
     }]);
-  }, [user?.full_name]);
+  }, [session?.full_name]);
 
   const moveStage = useCallback((id: string, direction: 1 | -1) => {
     setReferrals(prev => prev.map(r => {
