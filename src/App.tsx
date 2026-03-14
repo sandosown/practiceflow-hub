@@ -95,6 +95,9 @@ const AppRoutes = () => (
     <Route path="/dashboard/owner/group-practice/vendors" element={<ProtectedRoute><VendorDatabase /></ProtectedRoute>} />
     <Route path="/dashboard/owner/group-practice/major-moments" element={<ProtectedRoute><MajorMoments /></ProtectedRoute>} />
 
+    {/* Settings */}
+    <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+
     {/* Onboarding placeholder */}
     <Route path="/onboarding" element={<ProtectedRoute><div className="min-h-screen bg-background flex items-center justify-center"><p className="text-muted-foreground">Onboarding — Phase 3</p></div></ProtectedRoute>} />
 
