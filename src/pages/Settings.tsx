@@ -81,8 +81,8 @@ const Settings: React.FC = () => {
             </FieldRow>
             <FieldRow label="Password">
               <button
-                className="text-xs font-semibold px-3 py-1.5 rounded-md bg-transparent hover:bg-transparent"
-                style={{ color: ACCENT, border: `1px solid ${ACCENT}` }}
+                className="text-xs font-semibold px-3 py-1.5 rounded-md"
+                style={{ color: ACCENT, border: `1px solid ${ACCENT}`, background: 'transparent' }}
               >
                 Change Password
               </button>

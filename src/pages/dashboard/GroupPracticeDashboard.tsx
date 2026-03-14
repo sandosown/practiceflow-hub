@@ -51,7 +51,7 @@ const GroupPracticeDashboard: React.FC = () => {
 
         {/* Contextual greeting */}
         <div style={{
-          background: '#ffffff',
+          background: 'hsl(var(--card))',
           borderRadius: 12,
           borderLeft: '4px solid #2dd4bf',
           borderTop: '1px solid rgba(45,212,191,0.25)',

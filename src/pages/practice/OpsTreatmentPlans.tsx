@@ -145,7 +145,8 @@ const OpsTreatmentPlans: React.FC = () => {
                     ))}
                     {isOwner && c.state === 'sent_for_approval' && (
                       <button onClick={() => updateState(c.id, 'approved')}
-                        className="text-[10px] px-2 py-0.5 rounded-full bg-green-100 text-green-800 hover:bg-green-200 transition">
+                        className="text-[10px] px-2 py-0.5 rounded-full transition"
+                        style={{ color: '#d97706', border: '1px solid rgba(217,119,6,0.5)', background: 'transparent' }}>
                         Approve
                       </button>
                     )}
