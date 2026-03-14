@@ -389,12 +389,13 @@ function EntryModal({ title, type, categories, onClose, onSaved, userId, isDemoM
           {/* Category */}
           <div>
             <Label className="text-sm font-medium">Category *</Label>
-            <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="mt-1"><SelectValue placeholder="Select category" /></SelectTrigger>
-              <SelectContent>
-                {categories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-              </SelectContent>
-            </Select>
+            <CategorySelect
+              defaults={categories}
+              custom={customCategories}
+              value={category}
+              onChange={setCategory}
+              onAddCustom={addCategory}
+            />
           </div>
           {/* Notes */}
           <div>
