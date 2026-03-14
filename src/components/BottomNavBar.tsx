@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Home, MessageSquare, Briefcase, Calendar, MoreHorizontal,
   LayoutDashboard, Users, CreditCard, Package, ShieldCheck,
-  Contact, Award, Mail, Rss, BookOpen, Settings,
+  Contact, Award, Mail, Rss, BookOpen, Settings, Sparkles,
 } from 'lucide-react';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { useSessionData } from '@/context/SessionContext';
