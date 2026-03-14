@@ -584,47 +584,27 @@ const ReferralPipeline: React.FC = () => {
         {/* Kanban Board */}
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
           <div className="flex gap-4 overflow-x-auto pb-4 items-start">
-            {stages.map((stage, idx) => (
-              <React.Fragment key={stage}>
-                {/* Add stage button before each column (Owner only) */}
-                {isOwner && idx > 0 && (
-                  <div className="flex-shrink-0 self-start mt-8">
-                    <AddStageButton onAdd={(name) => {
-                      // Insert at this position
-                      const defaultIdx = DEFAULT_STAGES.indexOf(stage);
-                      if (defaultIdx >= 0) {
-                        // Insert before this default stage — add to custom stages
-                        setCustomStages(prev => [...prev, name]);
-                      } else {
-                        setCustomStages(prev => {
-                          const ci = prev.indexOf(stage);
-                          const next = [...prev];
-                          next.splice(ci, 0, name);
-                          return next;
-                        });
-                      }
-                    }} />
-                  </div>
-                )}
-                <DroppableColumn
-                  stage={stage}
-                  cards={stageReferrals(stage)}
-                  isMobile={isMobile}
-                  stages={stages}
-                  isOwner={isOwner}
-                  isCustom={!DEFAULT_STAGES.includes(stage)}
-                  onMoveStage={moveStage}
-                  onMoveToOutcome={moveToOutcome}
-                  onDeleteStage={() => deleteCustomStage(stage)}
-                />
-              </React.Fragment>
-            ))}
-            {/* Add stage button at end (Owner only) */}
+            {/* Add Stage button at the front (Owner only) */}
             {isOwner && (
               <div className="flex-shrink-0 self-start mt-8">
                 <AddStageButton onAdd={addCustomStage} />
               </div>
             )}
+            {stages.map((stage) => (
+              <DroppableColumn
+                key={stage}
+                stage={getDisplayName(stage)}
+                cards={stageReferrals(stage)}
+                isMobile={isMobile}
+                stages={stages}
+                isOwner={isOwner}
+                isCustom={!DEFAULT_STAGES.includes(stage)}
+                onMoveStage={moveStage}
+                onMoveToOutcome={moveToOutcome}
+                onDeleteStage={() => deleteCustomStage(stage)}
+                onRenameStage={(newName) => renameStage(stage, newName)}
+              />
+            ))}
           </div>
           <DragOverlay>
             {activeReferral ? <OverlayCard referral={activeReferral} /> : null}
