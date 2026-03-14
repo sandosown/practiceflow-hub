@@ -198,9 +198,9 @@ const BottomNavBar: React.FC = () => {
           background: '#1a2a5e',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-around',
           zIndex: 50,
           overflow: 'hidden',
+          pointerEvents: 'none',
         }}
       >
         {NAV_ITEMS.map((item) => {
