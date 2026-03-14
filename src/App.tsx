@@ -36,6 +36,7 @@ import InsuranceDatabase from "./pages/dashboard/modules/InsuranceDatabase";
 import VendorDatabase from "./pages/dashboard/modules/VendorDatabase";
 import FinanceTab from "./pages/dashboard/modules/FinanceTab";
 import MajorMoments from "./pages/dashboard/modules/MajorMoments";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -93,6 +94,9 @@ const AppRoutes = () => (
     <Route path="/dashboard/owner/group-practice/insurance" element={<ProtectedRoute><InsuranceDatabase /></ProtectedRoute>} />
     <Route path="/dashboard/owner/group-practice/vendors" element={<ProtectedRoute><VendorDatabase /></ProtectedRoute>} />
     <Route path="/dashboard/owner/group-practice/major-moments" element={<ProtectedRoute><MajorMoments /></ProtectedRoute>} />
+
+    {/* Settings */}
+    <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
 
     {/* Onboarding placeholder */}
     <Route path="/onboarding" element={<ProtectedRoute><div className="min-h-screen bg-background flex items-center justify-center"><p className="text-muted-foreground">Onboarding — Phase 3</p></div></ProtectedRoute>} />
