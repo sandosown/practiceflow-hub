@@ -32,6 +32,8 @@ import CaseloadIntegration from "./pages/dashboard/modules/CaseloadIntegration";
 import TreatmentPlanTracker from "./pages/dashboard/modules/TreatmentPlanTracker";
 import SupervisionStructure from "./pages/dashboard/modules/SupervisionStructure";
 import ManagementCenter from "./pages/dashboard/modules/ManagementCenter";
+import InsuranceDatabase from "./pages/dashboard/modules/InsuranceDatabase";
+import VendorDatabase from "./pages/dashboard/modules/VendorDatabase";
 
 const queryClient = new QueryClient();
 
