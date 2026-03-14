@@ -12,6 +12,7 @@ const MODULE_ACCENTS: Record<string, string> = {
   'Management Center': '#7c3aed',
   'Client Database': '#0d9488',
   'Referral Pipeline': '#0ea5e9',
+  'Finance Tab': '#059669',
   'Treatment Plan Tracker': '#059669',
   'Supervision Structure': '#4f46e5',
   'Insurance Database': '#78716c',
