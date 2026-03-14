@@ -64,7 +64,7 @@ const MajorMoments: React.FC = () => {
     <div className="min-h-screen bg-background">
       <TopNavBar />
 
-      <div className="max-w-5xl mx-auto px-6 py-6">
+      <div className="max-w-5xl mx-auto px-6 py-6 pb-20">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm mb-6 text-muted-foreground">
           <button onClick={() => navigate('/dashboard/owner')} className="hover:text-primary transition-colors">Workspaces</button>
