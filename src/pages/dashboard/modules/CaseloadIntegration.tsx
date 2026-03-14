@@ -153,7 +153,7 @@ const ReferralPipeline: React.FC = () => {
   const [referrals, setReferrals] = useState<Referral[]>(INITIAL_REFERRALS);
   const [modalOpen, setModalOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [form, setForm] = useState({ firstName: '', lastName: '', phone: '', email: '', source: 'Web Form', notes: '' });
+  const [form, setForm] = useState({ firstName: '', lastName: '', phone: '', email: '', source: '', notes: '' });
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
