@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopNavBar from '@/components/TopNavBar';
+import BottomNavBar from '@/components/BottomNavBar';
 import { ArrowLeft, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -79,6 +80,7 @@ const InsuranceDatabase: React.FC = () => {
         {renderSection('ACTIVE PAYERS', '#78716c', ACTIVE)}
         {renderSection('CREDENTIALING IN PROGRESS', '#d97706', IN_PROGRESS)}
       </div>
+      <BottomNavBar />
     </div>
   );
 };
