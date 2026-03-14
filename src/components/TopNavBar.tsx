@@ -97,7 +97,6 @@ const TopNavBar: React.FC = () => {
             </>
           )}
         </button>
-        </button>
 
         {dropdownOpen && (
           <div style={{
