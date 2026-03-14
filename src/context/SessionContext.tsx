@@ -1,7 +1,8 @@
-import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useIsMobile } from '@/hooks/use-mobile';
-import type { SessionContext as SessionData, AppMode, DemoUser } from '@/types/session';
+import type { SessionContext as SessionData, AppMode } from '@/types/session';
+import type { Session } from '@supabase/supabase-js';
 import { DEMO_USERS } from '@/data/demoUsers';
 
 interface SessionAPI {
@@ -17,6 +18,39 @@ interface SessionAPI {
 
 const Ctx = createContext<SessionAPI | null>(null);
 
+const THEME_CACHE_KEY = 'pf_theme_preference';
+const DEMO_THEME_CACHE_PREFIX = 'pf_demo_theme_preference_';
+
+type ThemePreference = 'light' | 'dark';
+
+function normalizeThemePreference(value: unknown): ThemePreference {
+  return value === 'dark' ? 'dark' : 'light';
+}
+
+function applyThemePreference(pref: ThemePreference): void {
+  if (pref === 'dark') {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
+}
+
+function cacheThemePreference(pref: ThemePreference, demoUserId?: string): void {
+  localStorage.setItem(THEME_CACHE_KEY, pref);
+  if (demoUserId) {
+    localStorage.setItem(`${DEMO_THEME_CACHE_PREFIX}${demoUserId}`, pref);
+  }
+}
+
+function getCachedThemePreference(demoUserId?: string): ThemePreference {
+  if (demoUserId) {
+    const demoStored = localStorage.getItem(`${DEMO_THEME_CACHE_PREFIX}${demoUserId}`);
+    if (demoStored === 'dark' || demoStored === 'light') return demoStored;
+  }
+  const stored = localStorage.getItem(THEME_CACHE_KEY);
+  return normalizeThemePreference(stored);
+}
+
 /** Resolves device mode — must be called inside component tree */
 function useDeviceMode(): AppMode {
   const isMobile = useIsMobile();
@@ -28,95 +62,115 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [isBooting, setIsBooting] = useState(true);
   const [isDemoMode, setIsDemoMode] = useState(false);
   const mode = useDeviceMode();
-  const bootedRef = useRef(false);
 
   // ── Boot sequence (real auth) ──
   useEffect(() => {
-    if (isDemoMode) return; // skip if demo
+    if (isDemoMode) return;
 
     let mounted = true;
+    let requestId = 0;
 
-    const boot = async () => {
+    const hydrateFromAuth = async (authSession: Session | null) => {
+      const currentRequest = ++requestId;
       setIsBooting(true);
 
-      // STEP 1 — Auth check
-      const { data: { session: authSession } } = await supabase.auth.getSession();
-      if (!mounted) return;
-
       if (!authSession) {
+        if (!mounted || currentRequest !== requestId) return;
         setSession(null);
         setIsBooting(false);
         return;
       }
 
       // STEP 2-4 — Role resolve from profiles table
-      const { data: profile, error } = await supabase
+      const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('*')
         .eq('user_id', authSession.user.id)
         .maybeSingle();
 
-      if (!mounted) return;
+      if (!mounted || currentRequest !== requestId) return;
 
-      if (error || !profile) {
-        // Profile doesn't exist yet — treat as new user
+      if (profileError) {
         setSession(null);
         setIsBooting(false);
         return;
       }
 
-      // STEP 5 — Mode (handled by useDeviceMode hook, injected below)
+      let resolvedProfile = profile;
+
+      // Backfill profile when legacy users don't have one yet
+      if (!resolvedProfile) {
+        const fallbackTheme = getCachedThemePreference();
+        const { data: createdProfile, error: createError } = await supabase
+          .from('profiles')
+          .upsert(
+            {
+              user_id: authSession.user.id,
+              email: authSession.user.email ?? null,
+              full_name: (authSession.user.user_metadata?.full_name as string | undefined) ?? null,
+              theme_preference: fallbackTheme,
+            } as any,
+            { onConflict: 'user_id' }
+          )
+          .select('*')
+          .maybeSingle();
+
+        if (!mounted || currentRequest !== requestId) return;
+
+        if (createError || !createdProfile) {
+          setSession(null);
+          setIsBooting(false);
+          return;
+        }
+
+        resolvedProfile = createdProfile;
+      }
+
       // STEP 6 — Workspace load
       let workspaceName: string | null = null;
-      if (profile.practice_id) {
+      if (resolvedProfile.practice_id) {
         const { data: practice } = await supabase
           .from('practices')
           .select('name')
-          .eq('id', profile.practice_id)
+          .eq('id', resolvedProfile.practice_id)
           .maybeSingle();
         if (practice) workspaceName = practice.name;
       }
 
-      if (!mounted) return;
+      if (!mounted || currentRequest !== requestId) return;
 
-      const themePref = (profile.theme_preference as 'light' | 'dark') ?? 'light';
+      const themePref = normalizeThemePreference(resolvedProfile.theme_preference);
 
-      // Apply theme immediately before setting state
-      if (themePref === 'dark') {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
+      // Apply theme before rendering dashboard content
+      applyThemePreference(themePref);
+      cacheThemePreference(themePref);
 
       setSession({
-        user_id: profile.user_id,
-        practice_id: profile.practice_id,
-        role: profile.role as SessionData['role'],
-        clinician_subtype: (profile.clinician_subtype as SessionData['clinician_subtype']) ?? null,
-        intern_subtype: (profile.intern_subtype as SessionData['intern_subtype']) ?? null,
+        user_id: resolvedProfile.user_id,
+        practice_id: resolvedProfile.practice_id,
+        role: resolvedProfile.role as SessionData['role'],
+        clinician_subtype: (resolvedProfile.clinician_subtype as SessionData['clinician_subtype']) ?? null,
+        intern_subtype: (resolvedProfile.intern_subtype as SessionData['intern_subtype']) ?? null,
         mode,
         visibility_scope: [],
         workflow_scope: [],
-        onboarding_complete: profile.onboarding_complete ?? false,
+        onboarding_complete: resolvedProfile.onboarding_complete ?? false,
         workspace_name: workspaceName,
-        full_name: profile.full_name,
-        email: profile.email,
+        full_name: resolvedProfile.full_name,
+        email: resolvedProfile.email,
         theme_preference: themePref,
       });
       setIsBooting(false);
     };
 
-    boot();
-
     const { data: sub } = supabase.auth.onAuthStateChange((_event, authSession) => {
       if (!mounted || isDemoMode) return;
-      if (!authSession) {
-        setSession(null);
-        setIsBooting(false);
-        return;
-      }
-      // Re-boot on auth change
-      boot();
+      void hydrateFromAuth(authSession);
+    });
+
+    void supabase.auth.getSession().then(({ data: { session: authSession } }) => {
+      if (!mounted || isDemoMode) return;
+      void hydrateFromAuth(authSession);
     });
 
     return () => {
@@ -129,6 +183,10 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const loginDemo = useCallback((demoUserId: string) => {
     const demo = DEMO_USERS.find(u => u.id === demoUserId);
     if (!demo) return;
+
+    const demoTheme = getCachedThemePreference(demo.id);
+    applyThemePreference(demoTheme);
+    cacheThemePreference(demoTheme, demo.id);
 
     setIsDemoMode(true);
     setSession({
@@ -144,7 +202,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
       workspace_name: demo.workspace_name,
       full_name: demo.full_name,
       email: demo.email,
-      theme_preference: 'light',
+      theme_preference: demoTheme,
     });
     setIsBooting(false);
   }, [mode]);
@@ -171,25 +229,38 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   // ── Theme preference ──
   const setThemePreference = useCallback(async (pref: 'light' | 'dark') => {
-    if (pref === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    setSession(prev => prev ? { ...prev, theme_preference: pref } : prev);
+    const normalized = normalizeThemePreference(pref);
 
-    if (!isDemoMode && session?.user_id) {
-      await supabase
-        .from('profiles')
-        .update({ theme_preference: pref } as any)
-        .eq('user_id', session.user_id);
+    applyThemePreference(normalized);
+    cacheThemePreference(normalized, isDemoMode ? session?.user_id : undefined);
+    setSession(prev => (prev ? { ...prev, theme_preference: normalized } : prev));
+
+    if (isDemoMode) return;
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { error } = await supabase
+      .from('profiles')
+      .upsert(
+        {
+          user_id: user.id,
+          email: session?.email ?? user.email ?? null,
+          full_name: session?.full_name ?? (user.user_metadata?.full_name as string | undefined) ?? null,
+          theme_preference: normalized,
+        } as any,
+        { onConflict: 'user_id' }
+      );
+
+    if (error) {
+      console.error('Failed to persist theme preference:', error.message);
     }
-  }, [isDemoMode, session?.user_id]);
+  }, [isDemoMode, session?.email, session?.full_name, session?.user_id]);
 
   // Keep mode in sync when device changes
   useEffect(() => {
     if (session && session.mode !== mode) {
-      setSession(prev => prev ? { ...prev, mode } : prev);
+      setSession(prev => (prev ? { ...prev, mode } : prev));
     }
   }, [mode, session]);
 
