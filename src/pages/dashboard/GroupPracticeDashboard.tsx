@@ -4,6 +4,7 @@ import TopNavBar from '@/components/TopNavBar';
 import { ArrowLeft, ClipboardList, MessageSquare, LayoutDashboard, Users, Briefcase, FileText, Shield, CreditCard, Package, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cardStyle, cardHoverStyle, iconSquareStyle } from '@/lib/cardStyle';
+import BottomNavBar from '@/components/BottomNavBar';
 
 const SIGNALS = [
   { type: 'LICENSE EXPIRING', name: 'James Rivera, LCSW', detail: '14 days remaining', accent: '#d97706' },
