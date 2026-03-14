@@ -1,7 +1,7 @@
 # SESSION_CONTEXT.md — SympoFlo / PracticeFlow
 
 **App:** SympoFlo / PracticeFlow
-**Last Updated:** 03/13/2026
+**Last Updated:** 03/14/2026
 **Repo:** github.com/sandosount/practiceflow-hub
 **Build Tool:** Lovable (lovable.dev)
 **Canon Location:** /docs folder in repo
@@ -247,8 +247,8 @@ Each signal type has its own accent (see Radar Signal Accents below).
 | Phase 3 | Structural Fixes | ✅ COMPLETE |
 | Phase 4 | Visual Overhaul | ✅ COMPLETE |
 | Phase 5 | Landing Energy + Language Doctrine | ✅ COMPLETE |
-| Phase 6 | Role-Specific Dashboard Content | 🔄 IN PROGRESS |
-| Phase 7 | Module Pages — Real Content | 🔜 PENDING |
+| Phase 6 | Role-Specific Dashboard Content | ✅ COMPLETE |
+| Phase 7 | Module Pages — Real Content | ✅ COMPLETE |
 | Phase 8 | Action Mode | 🔜 PENDING |
 | Phase 9 | Navigation System + Light/Dark Mode | 🔜 PENDING — Canon locked, build pending |
 | Phase 10 | Calendar & Appointments | 🔜 PENDING — Canon locked, build pending |
@@ -260,29 +260,15 @@ Each signal type has its own accent (see Radar Signal Accents below).
 | 1 | CLINICIAN | ✅ APPROVED |
 | 2 | ADMIN | ✅ APPROVED |
 | 3 | SUPERVISOR | ✅ APPROVED |
-| 4 | INTERN CLINICAL | 🔄 NEXT |
-| 5 | INTERN BUSINESS | 🔜 PENDING |
-| 6 | STAFF | 🔜 PENDING |
+| 4 | INTERN CLINICAL | ✅ APPROVED |
+| 5 | INTERN BUSINESS | ✅ APPROVED |
+| 6 | STAFF | ✅ APPROVED |
 
 ---
 
 ## NEXT BUILD
 
-**Resume at:** Phase 6 — INTERN CLINICAL dashboard
-
-**Task:** Build the Clinical Intern dashboard shell with:
-- Radar section (relevant intern signals)
-- My Caseload section (scoped to intern's assigned clients)
-- Supervision Hours tracker (hours logged toward requirements)
-- Local search on caseload
-- Office Board access (now: Message Board)
-- All cards using domain accent + asymmetric border system
-- Bottom nav (Phase 9 — not yet, placeholder for now)
-
-**Build order after INTERN CLINICAL:**
-1. INTERN BUSINESS dashboard
-2. STAFF dashboard
-3. Then move to Phase 7 — Module Pages with real data
+**Resume at:** Phase 8 — Action Mode
 
 ---
 
@@ -420,9 +406,19 @@ git push origin main
 | src/dashboards/ClinicianDashboard.tsx | Clinician role dashboard | ✅ Approved |
 | src/dashboards/AdminDashboard.tsx | Admin role dashboard | ✅ Approved |
 | src/dashboards/SupervisorDashboard.tsx | Supervisor role dashboard | ✅ Approved |
-| src/dashboards/InternClinicalDashboard.tsx | Clinical Intern dashboard | 🔄 NEXT |
-| src/dashboards/InternBusinessDashboard.tsx | Business Intern dashboard | 🔜 Pending |
-| src/dashboards/StaffDashboard.tsx | Staff dashboard | 🔜 Pending |
+| src/dashboards/InternClinicalDashboard.tsx | Clinical Intern dashboard | ✅ Approved |
+| src/dashboards/InternBusinessDashboard.tsx | Business Intern dashboard | ✅ Approved |
+| src/dashboards/StaffDashboard.tsx | Staff dashboard | ✅ Approved |
+| src/pages/dashboard/modules/ChartsRequiringAction.tsx | Charts module | ✅ Built |
+| src/pages/dashboard/modules/ClientDatabase.tsx | Client database module | ✅ Built |
+| src/pages/dashboard/modules/CaseloadIntegration.tsx | Caseload module | ✅ Built |
+| src/pages/dashboard/modules/TreatmentPlanTracker.tsx | Treatment plan module | ✅ Built |
+| src/pages/dashboard/modules/SupervisionStructure.tsx | Supervision module | ✅ Built |
+| src/pages/dashboard/modules/ManagementCenter.tsx | Management center module | ✅ Built |
+| src/pages/dashboard/modules/InsuranceDatabase.tsx | Insurance module | ✅ Built |
+| src/pages/dashboard/modules/VendorDatabase.tsx | Vendor database module | ✅ Built |
+| src/pages/dashboard/modules/MajorMoments.tsx | Major Moments module | ✅ Built |
+| src/pages/dashboard/MessageBoard.tsx | Message Board (renamed from OfficeBoard) | ✅ Built |
 | src/context/SessionContext.tsx | Session + role context | ✅ Built |
 | supabase/ | Supabase RLS config | ✅ Built |
 
