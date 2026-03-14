@@ -335,6 +335,7 @@ function EntryModal({ title, type, categories, onClose, onSaved, userId, isDemoM
   const [category, setCategory] = useState('');
   const [notes, setNotes] = useState('');
   const [saving, setSaving] = useState(false);
+  const { customCategories, addCategory } = useCustomCategories(userId, type, isDemoMode);
 
   const handleSave = async () => {
     if (!date || !amount || !category) { toast.error('Please fill all required fields.'); return; }
