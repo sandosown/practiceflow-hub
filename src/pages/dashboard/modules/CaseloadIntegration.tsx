@@ -166,7 +166,7 @@ const DroppableColumn: React.FC<{ stage: Stage; cards: Referral[]; isMobile: boo
 
 /* ── Overlay Card (shown while dragging) ── */
 const OverlayCard: React.FC<{ referral: Referral }> = ({ referral: r }) => (
-  <div className="p-3 space-y-2 shadow-lg" style={{ ...cardStyle(ACCENT), borderRadius: 10, width: 232, background: 'hsl(var(--card))' }}>
+  <div className="p-3 space-y-2" style={{ ...cardStyle(ACCENT), borderRadius: 10, width: 232, background: 'hsl(var(--card))', opacity: 0.8 }}>
     <p className="font-semibold text-sm text-foreground">{r.firstName} {r.lastName}</p>
     <p className="text-[11px] text-muted-foreground">Submitted {r.dateSubmitted}</p>
     <div className="flex items-center gap-2">
