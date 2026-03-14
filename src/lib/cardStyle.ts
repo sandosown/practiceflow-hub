@@ -1,5 +1,6 @@
-/** Phase 4 — 5-layer card system helper */
+import React from 'react';
 
+/** Shared hex → rgb helper */
 function hexToRgb(hex: string): [number, number, number] {
   const h = hex.replace('#', '');
   return [
@@ -9,41 +10,59 @@ function hexToRgb(hex: string): [number, number, number] {
   ];
 }
 
-export function cardStyle(accent: string, opts?: { muted?: boolean }) {
+/**
+ * LOG-071 — Asymmetric Accent Border card system
+ * Left: 4px solid accent (full opacity)
+ * Top/Bottom: 1px accent at 25%
+ * Right: 1px accent at 15%
+ * Interior: clean — no colored fills ever
+ * Surface color: responds to light/dark via CSS var
+ */
+export function cardStyle(accent: string, opts?: { muted?: boolean }): React.CSSProperties {
   const [r, g, b] = hexToRgb(accent);
   const m = opts?.muted ? 0.45 : 1;
 
   return {
-    background: `linear-gradient(135deg, rgba(${r},${g},${b},${0.08 * m}) 0%, #1a2a4a 60%)`,
-    border: `1px solid rgba(${r},${g},${b},${0.45 * m})`,
-    borderLeft: `4px solid rgba(${r},${g},${b},${m})`,
+    background: 'hsl(var(--card))',
+    borderLeft:   `4px solid rgba(${r},${g},${b},${m})`,
+    borderTop:    `1px solid rgba(${r},${g},${b},${0.25 * m})`,
+    borderBottom: `1px solid rgba(${r},${g},${b},${0.25 * m})`,
+    borderRight:  `1px solid rgba(${r},${g},${b},${0.15 * m})`,
     borderRadius: '12px',
-    boxShadow: `0 0 16px rgba(${r},${g},${b},${0.18 * m}), inset 0 1px 0 rgba(255,255,255,${0.04 * m})`,
-    opacity: m,
+    boxShadow: `0 1px 4px rgba(0,0,0,0.06)`,
+    opacity: opts?.muted ? 0.55 : 1,
     transition: 'all 0.2s ease',
-  } as React.CSSProperties;
+  };
 }
 
-export function cardHoverStyle(accent: string) {
+/**
+ * Hover state — border intensifies, subtle lift
+ */
+export function cardHoverStyle(accent: string): React.CSSProperties {
   const [r, g, b] = hexToRgb(accent);
   return {
-    background: `linear-gradient(135deg, rgba(${r},${g},${b},0.13) 0%, #1a2a4a 60%)`,
-    border: `1px solid rgba(${r},${g},${b},0.7)`,
-    borderLeft: `4px solid rgb(${r},${g},${b})`,
+    background: 'hsl(var(--card))',
+    borderLeft:   `4px solid rgb(${r},${g},${b})`,
+    borderTop:    `1px solid rgba(${r},${g},${b},0.45)`,
+    borderBottom: `1px solid rgba(${r},${g},${b},0.45)`,
+    borderRight:  `1px solid rgba(${r},${g},${b},0.25)`,
     borderRadius: '12px',
-    boxShadow: `0 0 24px rgba(${r},${g},${b},0.32), inset 0 1px 0 rgba(255,255,255,0.06)`,
+    boxShadow: `0 4px 16px rgba(${r},${g},${b},0.18), 0 1px 4px rgba(0,0,0,0.08)`,
     transition: 'all 0.2s ease',
-  } as React.CSSProperties;
+  };
 }
 
-export function iconSquareStyle(accent: string) {
+/**
+ * Icon square — unchanged, mode-aware background
+ */
+export function iconSquareStyle(accent: string): React.CSSProperties {
   const [r, g, b] = hexToRgb(accent);
   return {
-    background: `rgba(${r},${g},${b},0.18)`,
+    background: `rgba(${r},${g},${b},0.15)`,
     borderRadius: '10px',
-    boxShadow: `0 0 8px rgba(${r},${g},${b},0.25)`,
+    boxShadow: `0 0 8px rgba(${r},${g},${b},0.2)`,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-  } as React.CSSProperties;
+  };
 }
