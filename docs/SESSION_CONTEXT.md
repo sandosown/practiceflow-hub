@@ -658,6 +658,18 @@ If ignored, disappears on next navigation.
 
 | LOG-087 | "Group Practice" and "Workspaces" permanently banned from all UI surfaces. Breadcrumbs show page name only. Top bar center shows owner's company name only. | LOCKED |
 
+| LOG-089 | Partner role — co-owner level, full access by default, self-configures visible tabs per hat, hat-scoped, universal across all engines | LOCKED |
+
+| LOG-090 | Permission Grant System — Owner grants View Only or Full Access to any module for any staff member, per-hat, revocable | LOCKED |
+
+| LOG-091 | Invitation System — only entry point for staff, Owner/Admin/designated roles can invite, single-use link expires 72hrs, hat-scoped | LOCKED |
+
+| LOG-092 | Custom Pipeline Stages — Owner adds stages anywhere in chain, drag-reorderable, default stages cannot be removed | LOCKED |
+
+| LOG-093 | Referral Pipeline outcome bucket entry — drag or forward/back arrows, desktop and mobile, all movements logged | LOCKED |
+
+| LOG-094 | Staff Deactivation — INACTIVE status, never hard delete, immediate or date-set removal, blocked if active assignments exist | LOCKED |
+
 ---
 
 ## OUTSTANDING DECISIONS

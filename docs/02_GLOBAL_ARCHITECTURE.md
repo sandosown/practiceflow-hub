@@ -99,8 +99,53 @@ White screen during auth load is unacceptable. Loading state must be visible —
 | CLINICIAN | Licensed therapist — has caseload |
 | INTERN | Clinical or Business subtype |
 | STAFF | Non-clinical operational staff |
+| PARTNER | Co-owner level — full system access by default, self-configures visible tabs per hat |
 
 **Tier 2 — Display Labels:** Configurable per workspace. Not locked in Canon.
+
+### Partner Role (LOG-089)
+
+- PARTNER is a co-owner level system role with full access by default
+- Each Partner self-manages their own visible tabs per hat — they choose what they want to see
+- Hat-scoped — Partner configuration is independent per hat, no cross-hat bleed
+- Applies universally across all engines — GP, Coaching, Home, and all future hats
+- Stored in Operating Profile per hat
+- Multiple Partners supported per hat
+- Partners are invited via the Invitation System (LOG-091)
+
+### Permission Grant System (LOG-090)
+
+- Owner can grant any staff member access to any module outside their default role scope
+- Grant types: View Only or Full Access — Owner chooses at time of granting
+- Grants are per-person, per-module, per-hat
+- Revocable at any time by Owner
+- Grant access surface lives in More drawer — visible to Owner only
+- Applies across all engines and all hats
+- Granted access appears on the recipient's dashboard automatically
+- Grants are stored in a permission_grants table: grant_id, hat_id, granted_by, granted_to, module, access_type (view | full), created_at, revoked_at
+
+### Invitation System (LOG-091)
+
+- Invitations are the only entry point for staff into the system — no self-signup ever
+- Who can invite: Owner, Admin, or any role the Owner explicitly designates as an inviter
+- Invitation flow: inviter enters first name, last name, email, role → system sends invitation link → recipient clicks link → completes onboarding for their role
+- Invitation is hat-scoped — recipient joins the specific hat they were invited to
+- Invitation link is single-use and expires after 72 hours
+- Invitation status tracked: PENDING / ACCEPTED / EXPIRED / REVOKED
+- Owner and Admin can revoke pending invitations at any time
+- Invitation management surface lives in Management Center
+
+### Staff Deactivation / Removal (LOG-094)
+
+- Owner and Admin can remove a staff member from a hat
+- Removal is never a hard delete — status changes to INACTIVE
+- INACTIVE staff disappear from all active views, dashboards, and directories
+- INACTIVE staff records are retained permanently for audit trail and historical assignment purposes
+- Removal flow: Owner/Admin navigates to person's profile → "Remove from Practice" button (border-only accent, never red) → confirmation dialog: "Are you sure you want to remove [Name] from this practice? This cannot be undone without contacting support." → Owner chooses: Remove Immediately or Set End Date → confirm → access revokes on chosen date
+- If staff member has active clients, active supervision assignments, or open compliance records — system blocks removal and displays what must be resolved before removal can proceed
+- No hard deletes ever — all data preserved
+- Reinstatement in V1 requires Owner to contact support
+- Access revocation is automatic on the chosen date — no manual follow-up required
 
 ### Clinician Subtypes
 - **LICENSED** — full licensure, standard clinical routing
