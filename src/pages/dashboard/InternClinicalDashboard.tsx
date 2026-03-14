@@ -39,12 +39,10 @@ const InternClinicalDashboard: React.FC = () => {
       <TopNavBar />
       <div className="max-w-5xl mx-auto px-6 py-6 pb-20">
         <div className="flex items-center gap-2 text-sm mb-6 text-muted-foreground">
-          <span>Group Practice</span>
-          <span>›</span>
           <span className="font-medium text-foreground">My Dashboard</span>
         </div>
 
-        <h1 className="text-2xl font-bold text-foreground border-l-4 border-primary pl-3 mb-8">Group Practice</h1>
+        <h1 className="text-2xl font-bold text-foreground border-l-4 border-primary pl-3 mb-8">My Dashboard</h1>
 
         {/* Radar */}
         <section className="mb-10">
