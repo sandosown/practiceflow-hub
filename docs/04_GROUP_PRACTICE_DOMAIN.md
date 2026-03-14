@@ -164,12 +164,50 @@ Access: Owner + Admin only.
 - Not an accounting system
 - Owner + Admin only — all other roles never see this
 
+### Finance Data Architecture (Future-Proof Pipeline)
+
+All finance entries — regardless of source — feed the same data pipeline and produce the same entry object structure. The display layer and computation logic never change based on source.
+
+Every income and expense entry must store:
+
+- entry_id
+- hat_id (required — all objects are workspace-scoped)
+- engine_source: revenue
+- type: income | expense
+- amount
+- category
+- date
+- notes (optional)
+- source: manual | spreadsheet_import | bank_sync | api_pull | other
+
+V1 source is manual only. Future sources write to the identical entry object structure.
+
+Pipeline rule:
+
+```
+Manual entry       → entry object → Finance totals → Display
+Spreadsheet import → entry object → Finance totals → Display
+Bank sync          → entry object → Finance totals → Display
+API pull           → entry object → Finance totals → Display
+```
+
+This means:
+
+- No restructuring of the data model when new sources are added
+- No changes to display layer or computation logic when new sources are added
+- Source field is present from V1 even though only manual is active
+- Future phases add new source ingestion methods only — the pipeline is unchanged
+
 ### Future Phase
 
 - Vendor-level expense breakdown
 - Revenue by therapist
 - Insurance reimbursement tracking
 - Accountant export
+- Spreadsheet import (CSV, XLSX)
+- Bank sync integration
+- API pull from external accounting tools
+- Multi-source reconciliation view
 
 ---
 

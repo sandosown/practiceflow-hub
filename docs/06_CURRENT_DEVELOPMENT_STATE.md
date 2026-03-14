@@ -212,6 +212,7 @@
 | LOG-079 | More drawer CLINICAL section added between PRACTICE and TEAM |
 | LOG-080 | Guide Center Video Tutorials tab added as second tab alongside Written Guides |
 | LOG-087 | "Group Practice" and "Workspaces" are permanently banned from all UI surfaces. Breadcrumbs show page name only. Top bar center shows owner's company name only. |
+| LOG-088 | Finance data pipeline future-proofed — source field on all entries from V1, manual is first source only |
 
 ---
 
