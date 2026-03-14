@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopNavBar from '@/components/TopNavBar';
 import { cardStyle } from '@/lib/cardStyle';
+import BottomNavBar from '@/components/BottomNavBar';
 
 /* ─────────────────────────────────────────────────────────── */
 /* HELPERS                                                     */
