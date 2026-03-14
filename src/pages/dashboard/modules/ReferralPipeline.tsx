@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopNavBar from '@/components/TopNavBar';
 import BottomNavBar from '@/components/BottomNavBar';
-import { ArrowLeft, Search, Plus, Pencil, CheckSquare, ArrowRight, ArrowLeft as ArrowLeftIcon, X, GripVertical } from 'lucide-react';
+import { ArrowLeft, Search, Plus, Pencil, CheckSquare, ArrowRight, ArrowLeft as ArrowLeftIcon, X, GripVertical, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cardStyle } from '@/lib/cardStyle';
@@ -186,18 +186,70 @@ const DroppableColumn: React.FC<{
   onMoveStage: (id: string, dir: 1 | -1) => void;
   onMoveToOutcome: (id: string, outcome: Outcome) => void;
   onDeleteStage?: () => void;
-}> = ({ stage, cards, isMobile, stages, isOwner, isCustom, onMoveStage, onMoveToOutcome, onDeleteStage }) => {
+  onRenameStage?: (newName: string) => void;
+}> = ({ stage, cards, isMobile, stages, isOwner, isCustom, onMoveStage, onMoveToOutcome, onDeleteStage, onRenameStage }) => {
   const { setNodeRef, isOver } = useDroppable({ id: stage });
   const [expanded, setExpanded] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [editName, setEditName] = useState(stage);
 
   const visibleCards = expanded ? cards : cards.slice(0, MAX_VISIBLE);
   const hiddenCount = cards.length - MAX_VISIBLE;
 
+  const confirmRename = () => {
+    const trimmed = editName.trim();
+    if (trimmed && trimmed !== stage && onRenameStage) {
+      onRenameStage(trimmed);
+    }
+    setEditing(false);
+  };
+
+  const cancelRename = () => {
+    setEditName(stage);
+    setEditing(false);
+  };
+
   return (
     <div ref={setNodeRef} className="flex-shrink-0 flex flex-col" style={{ minWidth: 240, width: 240 }}>
       <div className="flex items-center justify-between mb-3 px-1">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{stage}</h3>
-        <div className="flex items-center gap-1">
+        {editing ? (
+          <div className="flex items-center gap-1 flex-1 mr-1">
+            <Input
+              value={editName}
+              maxLength={30}
+              onChange={e => setEditName(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') confirmRename(); if (e.key === 'Escape') cancelRename(); }}
+              autoFocus
+              className="h-6 text-xs font-semibold uppercase tracking-wider px-1 py-0"
+            />
+            <button onClick={confirmRename} className="p-0.5 rounded hover:bg-muted transition-colors" title="Confirm">
+              <Check className="w-3 h-3" style={{ color: ACCENT }} />
+            </button>
+            <button onClick={cancelRename} className="p-0.5 rounded hover:bg-muted transition-colors" title="Cancel">
+              <X className="w-3 h-3 text-muted-foreground" />
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1 flex-1 min-w-0">
+            <h3
+              className="text-xs font-semibold uppercase tracking-wider text-muted-foreground truncate"
+              onDoubleClick={() => { if (isOwner) { setEditName(stage); setEditing(true); } }}
+            >
+              {stage}
+            </h3>
+            {isOwner && (
+              <button
+                onClick={() => { setEditName(stage); setEditing(true); }}
+                className="p-0.5 rounded hover:bg-muted transition-colors opacity-0 group-hover:opacity-100 flex-shrink-0"
+                style={{ opacity: 0.5 }}
+                title="Rename stage"
+              >
+                <Pencil className="w-2.5 h-2.5 text-muted-foreground" />
+              </button>
+            )}
+          </div>
+        )}
+        <div className="flex items-center gap-1 flex-shrink-0">
           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: `rgba(${hexToRgb(ACCENT)},0.12)`, color: ACCENT }}>
             {cards.length}
           </span>
@@ -375,14 +427,18 @@ const ReferralPipeline: React.FC = () => {
   const [search, setSearch] = useState('');
   const [referrals, setReferrals] = useState<Referral[]>(INITIAL_REFERRALS);
   const [customStages, setCustomStages] = useState<string[]>([]);
+  const [stageRenames, setStageRenames] = useState<Record<string, string>>({});
   const [modalOpen, setModalOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [form, setForm] = useState({ firstName: '', lastName: '', phone: '', email: '', source: '', notes: '' });
   const [movementLog, setMovementLog] = useState<MovementLog[]>([]);
 
-  // All stages = defaults + custom appended
-  const stages = [...DEFAULT_STAGES.slice(0, -1), ...customStages, DEFAULT_STAGES[DEFAULT_STAGES.length - 1]];
-  // Custom stages inserted before "Assigned" (the last default)
+  // All stages use internal keys; display names resolved via stageRenames
+  const stageKeys = [...DEFAULT_STAGES.slice(0, -1), ...customStages, DEFAULT_STAGES[DEFAULT_STAGES.length - 1]];
+  // For backward compat, stages used throughout still reference keys
+  const stages = stageKeys;
+
+  const getDisplayName = (key: string) => stageRenames[key] ?? key;
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
@@ -475,15 +531,19 @@ const ReferralPipeline: React.FC = () => {
     setCustomStages(prev => [...prev, name]);
   }, [customStages]);
 
-  const deleteCustomStage = useCallback((name: string) => {
-    // Move any cards in this stage to the previous stage
-    const idx = stages.indexOf(name);
+  const deleteCustomStage = useCallback((stageKey: string) => {
+    const idx = stages.indexOf(stageKey);
     const fallback = idx > 0 ? stages[idx - 1] : stages[0];
     setReferrals(prev => prev.map(r =>
-      r.stage === name ? { ...r, stage: fallback, daysInStage: 0 } : r
+      r.stage === stageKey ? { ...r, stage: fallback, daysInStage: 0 } : r
     ));
-    setCustomStages(prev => prev.filter(s => s !== name));
+    setCustomStages(prev => prev.filter(s => s !== stageKey));
+    setStageRenames(prev => { const next = { ...prev }; delete next[stageKey]; return next; });
   }, [stages]);
+
+  const renameStage = useCallback((stageKey: string, newName: string) => {
+    setStageRenames(prev => ({ ...prev, [stageKey]: newName }));
+  }, []);
 
   const outcomeReferrals = referrals.filter(r => r.outcome);
   const activeReferral = activeId ? referrals.find(r => r.id === activeId) : null;
@@ -524,47 +584,27 @@ const ReferralPipeline: React.FC = () => {
         {/* Kanban Board */}
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
           <div className="flex gap-4 overflow-x-auto pb-4 items-start">
-            {stages.map((stage, idx) => (
-              <React.Fragment key={stage}>
-                {/* Add stage button before each column (Owner only) */}
-                {isOwner && idx > 0 && (
-                  <div className="flex-shrink-0 self-start mt-8">
-                    <AddStageButton onAdd={(name) => {
-                      // Insert at this position
-                      const defaultIdx = DEFAULT_STAGES.indexOf(stage);
-                      if (defaultIdx >= 0) {
-                        // Insert before this default stage — add to custom stages
-                        setCustomStages(prev => [...prev, name]);
-                      } else {
-                        setCustomStages(prev => {
-                          const ci = prev.indexOf(stage);
-                          const next = [...prev];
-                          next.splice(ci, 0, name);
-                          return next;
-                        });
-                      }
-                    }} />
-                  </div>
-                )}
-                <DroppableColumn
-                  stage={stage}
-                  cards={stageReferrals(stage)}
-                  isMobile={isMobile}
-                  stages={stages}
-                  isOwner={isOwner}
-                  isCustom={!DEFAULT_STAGES.includes(stage)}
-                  onMoveStage={moveStage}
-                  onMoveToOutcome={moveToOutcome}
-                  onDeleteStage={() => deleteCustomStage(stage)}
-                />
-              </React.Fragment>
-            ))}
-            {/* Add stage button at end (Owner only) */}
+            {/* Add Stage button at the front (Owner only) */}
             {isOwner && (
               <div className="flex-shrink-0 self-start mt-8">
                 <AddStageButton onAdd={addCustomStage} />
               </div>
             )}
+            {stages.map((stage) => (
+              <DroppableColumn
+                key={stage}
+                stage={getDisplayName(stage)}
+                cards={stageReferrals(stage)}
+                isMobile={isMobile}
+                stages={stages}
+                isOwner={isOwner}
+                isCustom={!DEFAULT_STAGES.includes(stage)}
+                onMoveStage={moveStage}
+                onMoveToOutcome={moveToOutcome}
+                onDeleteStage={() => deleteCustomStage(stage)}
+                onRenameStage={(newName) => renameStage(stage, newName)}
+              />
+            ))}
           </div>
           <DragOverlay>
             {activeReferral ? <OverlayCard referral={activeReferral} /> : null}
