@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useIsMobile } from '@/hooks/use-mobile';
 import type { SessionContext as SessionData, AppMode } from '@/types/session';
@@ -62,6 +62,11 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [isBooting, setIsBooting] = useState(true);
   const [isDemoMode, setIsDemoMode] = useState(false);
   const mode = useDeviceMode();
+  const isDemoModeRef = useRef(false);
+
+  useEffect(() => {
+    isDemoModeRef.current = isDemoMode;
+  }, [isDemoMode]);
 
   // ── Boot sequence (real auth) ──
   useEffect(() => {
@@ -71,11 +76,13 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     let requestId = 0;
 
     const hydrateFromAuth = async (authSession: Session | null) => {
+      if (isDemoModeRef.current) return;
+
       const currentRequest = ++requestId;
       setIsBooting(true);
 
       if (!authSession) {
-        if (!mounted || currentRequest !== requestId) return;
+        if (!mounted || currentRequest !== requestId || isDemoModeRef.current) return;
         setSession(null);
         setIsBooting(false);
         return;
@@ -88,7 +95,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
         .eq('user_id', authSession.user.id)
         .maybeSingle();
 
-      if (!mounted || currentRequest !== requestId) return;
+      if (!mounted || currentRequest !== requestId || isDemoModeRef.current) return;
 
       if (profileError) {
         setSession(null);
@@ -115,7 +122,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
           .select('*')
           .maybeSingle();
 
-        if (!mounted || currentRequest !== requestId) return;
+        if (!mounted || currentRequest !== requestId || isDemoModeRef.current) return;
 
         if (createError || !createdProfile) {
           setSession(null);
@@ -137,7 +144,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
         if (practice) workspaceName = practice.name;
       }
 
-      if (!mounted || currentRequest !== requestId) return;
+      if (!mounted || currentRequest !== requestId || isDemoModeRef.current) return;
 
       const themePref = normalizeThemePreference(resolvedProfile.theme_preference);
 
@@ -164,12 +171,12 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     };
 
     const { data: sub } = supabase.auth.onAuthStateChange((_event, authSession) => {
-      if (!mounted || isDemoMode) return;
+      if (!mounted || isDemoModeRef.current) return;
       void hydrateFromAuth(authSession);
     });
 
     void supabase.auth.getSession().then(({ data: { session: authSession } }) => {
-      if (!mounted || isDemoMode) return;
+      if (!mounted || isDemoModeRef.current) return;
       void hydrateFromAuth(authSession);
     });
 
@@ -188,6 +195,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     applyThemePreference(demoTheme);
     cacheThemePreference(demoTheme, demo.id);
 
+    isDemoModeRef.current = true;
     setIsDemoMode(true);
     setSession({
       user_id: demo.id,
@@ -221,6 +229,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (!isDemoMode) {
       await supabase.auth.signOut();
     }
+    isDemoModeRef.current = false;
     document.documentElement.classList.remove('dark');
     setSession(null);
     setIsDemoMode(false);
