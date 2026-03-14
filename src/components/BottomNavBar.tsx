@@ -223,12 +223,16 @@ const BottomNavBar: React.FC = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: 2,
-                flex: 1,
+                width: '20%',
+                flex: '0 0 20%',
+                maxWidth: '20%',
+                position: 'relative',
                 height: '100%',
                 background: isActive ? ACTIVE_BG : 'transparent',
                 border: 'none',
                 cursor: item.path || (item as any).action === 'drawer' ? 'pointer' : 'default',
                 padding: 0,
+                pointerEvents: 'auto',
               }}
             >
               <item.icon size={22} color={color} strokeWidth={2} />
