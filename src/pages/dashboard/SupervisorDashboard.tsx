@@ -44,7 +44,7 @@ const SupervisorDashboard: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       <TopNavBar />
-      <main className="max-w-5xl mx-auto px-6 py-10">
+      <main className="max-w-5xl mx-auto px-6 py-10 pb-20">
         <nav className="flex items-center gap-2 text-sm mb-6 text-muted-foreground">
           <span>Group Practice</span>
           <span>›</span>
