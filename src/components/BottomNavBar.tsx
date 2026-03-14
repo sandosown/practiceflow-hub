@@ -148,7 +148,7 @@ const BottomNavBar: React.FC = () => {
       <Drawer open={moreOpen} onOpenChange={setMoreOpen}>
         <DrawerContent
           className="border-0"
-          style={{ background: '#1a2a5e', maxHeight: '75vh' }}
+          style={{ background: '#1a2a5e', maxHeight: '75vh', borderRadius: '20px 20px 0 0' }}
         >
           {/* Handle */}
           <div className="flex justify-center pt-3 pb-2">
@@ -156,7 +156,7 @@ const BottomNavBar: React.FC = () => {
           </div>
 
           {/* Profile block */}
-          <div className="px-5 pb-3 flex items-center gap-3">
+          <div className="px-5 pb-2 flex items-center gap-3">
             <div
               style={{
                 width: 36,
@@ -179,10 +179,13 @@ const BottomNavBar: React.FC = () => {
             </div>
           </div>
 
+          {/* Divider */}
+          <div className="mx-5 mb-2" style={{ height: 1, background: 'rgba(255,255,255,0.08)' }} />
+
           {/* Sections */}
-          <div className="px-5 pb-5 overflow-y-auto" style={{ maxHeight: 'calc(75vh - 80px)' }}>
-            {OWNER_SECTIONS.map((section) => (
-              <div key={section.title} className="mb-4">
+          <div className="px-5 pb-5 overflow-y-auto" style={{ maxHeight: 'calc(75vh - 90px)' }}>
+            {OWNER_SECTIONS.map((section, sIdx) => (
+              <div key={section.title} style={{ marginTop: sIdx === 0 ? 0 : 12 }}>
                 <p
                   style={{
                     color: '#5a8ab0',
@@ -195,8 +198,8 @@ const BottomNavBar: React.FC = () => {
                 >
                   {section.title}
                 </p>
-                <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 12, padding: '4px 0' }}>
-                  {section.items.map((item, idx) => {
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+                  {section.items.map((item) => {
                     const Icon = item.icon;
                     const active = location.pathname === item.path;
                     return (
@@ -206,18 +209,28 @@ const BottomNavBar: React.FC = () => {
                           navigate(item.path);
                           setMoreOpen(false);
                         }}
-                        className="flex items-center gap-3 w-full text-left"
                         style={{
-                          height: 44,
-                          padding: '0 14px',
-                          background: active ? ACTIVE_BG : 'transparent',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          minHeight: 64,
+                          minWidth: 64,
+                          background: 'transparent',
                           border: 'none',
-                          borderBottom: idx < section.items.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none',
                           cursor: 'pointer',
+                          padding: '8px 4px',
+                          gap: 6,
                         }}
                       >
-                        <Icon size={18} color={active ? ACTIVE_COLOR : 'rgba(255,255,255,0.6)'} strokeWidth={2} />
-                        <span style={{ color: active ? ACTIVE_COLOR : '#e2eaf4', fontSize: 14, fontWeight: 400 }}>
+                        <Icon size={26} color={active ? ACTIVE_COLOR : 'rgba(255,255,255,0.75)'} strokeWidth={1.8} />
+                        <span style={{
+                          color: active ? ACTIVE_COLOR : '#e2eaf4',
+                          fontSize: 10,
+                          fontWeight: 400,
+                          textAlign: 'center',
+                          lineHeight: 1.2,
+                        }}>
                           {item.label}
                         </span>
                       </button>
