@@ -15,7 +15,7 @@ interface OwnerOnboardingProps {
 const BUILTIN_DOMAINS = [
   {
     key: 'GROUP_PRACTICE',
-    label: 'Group Practice',
+    label: 'Your Practice',
     description: 'Manage referrals, staff, and intake workflows',
     icon: Briefcase,
     required: true,
