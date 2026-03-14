@@ -129,6 +129,9 @@
 - Insurance/Vendor databases
 - "Need a Tool?" assist panel
 - Engine activation guided setup wizard
+- Referral Pipeline — **canon locked (LOG-076)**
+- Finance Tab — **canon locked (LOG-077)**
+- Guide Center Video Tutorials tab — **canon locked (LOG-080)**
 
 ---
 
