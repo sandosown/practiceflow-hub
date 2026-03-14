@@ -59,13 +59,13 @@ const GroupPracticeDashboard: React.FC = () => {
           borderRight: '1px solid rgba(45,212,191,0.15)',
           padding: '14px 20px',
           display: 'flex',
-          justifyContent: 'space-between',
           alignItems: 'center',
           marginBottom: 16,
         }}>
           <span style={{ color: '#1a2a5e', fontSize: 14, fontWeight: 400 }}>
             {(() => { const h = new Date().getHours(); return h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening'; })()}, Dr. Sarah.
           </span>
+          <span style={{ color: '#94a3b8', fontSize: 14, margin: '0 6px' }}> — </span>
           <span style={{ color: '#2dd4bf', fontSize: 14, fontWeight: 500 }}>
             {SIGNALS.length} signal{SIGNALS.length !== 1 ? 's' : ''} requiring attention
           </span>
