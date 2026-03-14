@@ -71,25 +71,32 @@ const TopNavBar: React.FC = () => {
           onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.07)')}
           onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
         >
-          <div style={{
-            width: 32,
-            height: 32,
-            borderRadius: '50%',
-            background: '#2dd4bf',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#0f172a',
-            fontWeight: 600,
-            fontSize: 12,
-            flexShrink: 0,
-          }}>
-            {(session.full_name ?? '?').split(' ').map(w => w.charAt(0)).join('').slice(0, 2)}
-          </div>
-          {session.full_name && (
-            <span className="hidden md:inline">{session.full_name}</span>
+          {isMobile ? (
+            <Menu size={24} color="#e2eaf4" />
+          ) : (
+            <>
+              <div style={{
+                width: 32,
+                height: 32,
+                borderRadius: '50%',
+                background: '#2dd4bf',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#0f172a',
+                fontWeight: 600,
+                fontSize: 12,
+                flexShrink: 0,
+              }}>
+                {(session.full_name ?? '?').split(' ').map(w => w.charAt(0)).join('').slice(0, 2)}
+              </div>
+              {session.full_name && (
+                <span>{session.full_name}</span>
+              )}
+              <ChevronDown size={12} color="rgba(255,255,255,0.6)" />
+            </>
           )}
-          <ChevronDown size={12} color="rgba(255,255,255,0.6)" className="hidden md:block" />
+        </button>
         </button>
 
         {dropdownOpen && (
