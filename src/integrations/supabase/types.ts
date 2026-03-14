@@ -89,6 +89,81 @@ export type Database = {
         }
         Relationships: []
       }
+      finance_due_items: {
+        Row: {
+          amount: number
+          category: string | null
+          created_at: string
+          created_by: string | null
+          due_date: string
+          due_id: string
+          hat_id: string
+          name: string
+        }
+        Insert: {
+          amount: number
+          category?: string | null
+          created_at?: string
+          created_by?: string | null
+          due_date: string
+          due_id?: string
+          hat_id?: string
+          name: string
+        }
+        Update: {
+          amount?: number
+          category?: string | null
+          created_at?: string
+          created_by?: string | null
+          due_date?: string
+          due_id?: string
+          hat_id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      finance_entries: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string
+          created_by: string | null
+          date: string
+          engine_source: string
+          entry_id: string
+          hat_id: string
+          notes: string | null
+          source: string
+          type: string
+        }
+        Insert: {
+          amount: number
+          category: string
+          created_at?: string
+          created_by?: string | null
+          date: string
+          engine_source?: string
+          entry_id?: string
+          hat_id?: string
+          notes?: string | null
+          source?: string
+          type: string
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          date?: string
+          engine_source?: string
+          entry_id?: string
+          hat_id?: string
+          notes?: string | null
+          source?: string
+          type?: string
+        }
+        Relationships: []
+      }
       gp_announcements: {
         Row: {
           body: string
