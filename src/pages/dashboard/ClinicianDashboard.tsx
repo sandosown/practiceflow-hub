@@ -101,6 +101,7 @@ const ClinicianDashboard: React.FC = () => {
           </div>
         </section>
       </main>
+      <BottomNavBar />
     </div>
   );
 };

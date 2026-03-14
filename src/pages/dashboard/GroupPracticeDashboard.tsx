@@ -112,6 +112,7 @@ const GroupPracticeDashboard: React.FC = () => {
           })}
         </div>
       </div>
+      <BottomNavBar />
     </div>
   );
 };

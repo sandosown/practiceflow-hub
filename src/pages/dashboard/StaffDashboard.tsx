@@ -137,6 +137,7 @@ const StaffDashboard: React.FC = () => {
           </div>
         </section>
       </main>
+      <BottomNavBar />
     </div>
   );
 };

@@ -122,6 +122,7 @@ const AdminDashboard: React.FC = () => {
           </div>
         </section>
       </main>
+      <BottomNavBar />
     </div>
   );
 };

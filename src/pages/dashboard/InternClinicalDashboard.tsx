@@ -132,6 +132,7 @@ const InternClinicalDashboard: React.FC = () => {
           </div>
         </section>
       </div>
+      <BottomNavBar />
     </div>
   );
 };

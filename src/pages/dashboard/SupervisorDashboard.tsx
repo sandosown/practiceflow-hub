@@ -131,6 +131,7 @@ const SupervisorDashboard: React.FC = () => {
           </div>
         </section>
       </main>
+      <BottomNavBar />
     </div>
   );
 };
