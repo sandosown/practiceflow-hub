@@ -297,6 +297,7 @@ const FinanceTab: React.FC = () => {
           onClose={() => setModal(null)}
           onSaved={fetchData}
           userId={session.user_id}
+          isDemoMode={isDemoMode}
         />
       )}
       {modal === 'expense' && (
@@ -307,6 +308,7 @@ const FinanceTab: React.FC = () => {
           onClose={() => setModal(null)}
           onSaved={fetchData}
           userId={session.user_id}
+          isDemoMode={isDemoMode}
         />
       )}
       {modal === 'due' && (
@@ -314,6 +316,7 @@ const FinanceTab: React.FC = () => {
           onClose={() => setModal(null)}
           onSaved={fetchData}
           userId={session.user_id}
+          isDemoMode={isDemoMode}
         />
       )}
     </div>
