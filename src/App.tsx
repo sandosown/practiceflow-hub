@@ -34,6 +34,7 @@ import SupervisionStructure from "./pages/dashboard/modules/SupervisionStructure
 import ManagementCenter from "./pages/dashboard/modules/ManagementCenter";
 import InsuranceDatabase from "./pages/dashboard/modules/InsuranceDatabase";
 import VendorDatabase from "./pages/dashboard/modules/VendorDatabase";
+import FinanceTab from "./pages/dashboard/modules/FinanceTab";
 import MajorMoments from "./pages/dashboard/modules/MajorMoments";
 
 const queryClient = new QueryClient();
@@ -88,7 +89,7 @@ const AppRoutes = () => (
     <Route path="/dashboard/owner/group-practice/caseload" element={<ProtectedRoute><CaseloadIntegration /></ProtectedRoute>} />
     <Route path="/dashboard/owner/group-practice/treatment" element={<ProtectedRoute><TreatmentPlanTracker /></ProtectedRoute>} />
     <Route path="/dashboard/owner/group-practice/supervision" element={<ProtectedRoute><SupervisionStructure /></ProtectedRoute>} />
-    <Route path="/dashboard/owner/group-practice/finance" element={<ProtectedRoute><GPModulePlaceholder title="Finance Tab" /></ProtectedRoute>} />
+    <Route path="/dashboard/owner/group-practice/finance" element={<ProtectedRoute><FinanceTab /></ProtectedRoute>} />
     <Route path="/dashboard/owner/group-practice/insurance" element={<ProtectedRoute><InsuranceDatabase /></ProtectedRoute>} />
     <Route path="/dashboard/owner/group-practice/vendors" element={<ProtectedRoute><VendorDatabase /></ProtectedRoute>} />
     <Route path="/dashboard/owner/group-practice/major-moments" element={<ProtectedRoute><MajorMoments /></ProtectedRoute>} />
