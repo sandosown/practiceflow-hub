@@ -102,8 +102,8 @@ const GroupPracticeDashboard: React.FC = () => {
                   <m.icon className="w-5 h-5" style={{ color: m.accent }} />
                 </div>
                 <div>
-                  <p className="font-semibold text-base" style={{ color: '#f1f5f9' }}>{m.label}</p>
-                  <p className="text-xs mt-0.5" style={{ color: '#64748b' }}>{m.subtitle}</p>
+                  <p className="font-semibold text-base text-foreground">{m.label}</p>
+                  <p className="text-xs mt-0.5 text-muted-foreground">{m.subtitle}</p>
                 </div>
               </button>
             );
