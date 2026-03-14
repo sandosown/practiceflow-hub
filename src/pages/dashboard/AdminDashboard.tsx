@@ -1,6 +1,7 @@
 import React from 'react';
 import TopNavBar from '@/components/TopNavBar';
 import { cardStyle } from '@/lib/cardStyle';
+import BottomNavBar from '@/components/BottomNavBar';
 
 const radarSignals = [
   { type: 'ONBOARDING STUCK', detail: 'Alex Nguyen — Step 2 of 4', accent: '#3b82f6' },
