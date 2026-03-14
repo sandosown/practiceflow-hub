@@ -218,7 +218,7 @@ const FinanceTab: React.FC = () => {
           </div>
           <div className="p-5" style={cardStyle('#1a2a5e')}>
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Expenses</p>
-            <p className="text-2xl font-bold" style={{ color: '#1a2a5e' }}>{fmt(expenseTotal)}</p>
+            <p className="text-2xl font-bold" style={{ color: '#2dd4bf' }}>{fmt(expenseTotal)}</p>
           </div>
           <div className="p-5" style={cardStyle('#2dd4bf')}>
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Profit</p>
