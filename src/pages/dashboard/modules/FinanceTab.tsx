@@ -324,9 +324,9 @@ const FinanceTab: React.FC = () => {
 };
 
 /* ─── Income / Expense Modal ─── */
-function EntryModal({ title, type, categories, onClose, onSaved, userId }: {
+function EntryModal({ title, type, categories, onClose, onSaved, userId, isDemoMode }: {
   title: string; type: 'income' | 'expense'; categories: string[];
-  onClose: () => void; onSaved: () => void; userId: string;
+  onClose: () => void; onSaved: () => void; userId: string; isDemoMode: boolean;
 }) {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [amount, setAmount] = useState('');
