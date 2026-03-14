@@ -42,7 +42,6 @@ const CommsResources: React.FC = () => {
 
   return (
     <AppLayout title="Resources" breadcrumbs={[
-      { label: 'Role Hub', path: '/hub' }, { label: 'Group Practice', path: '/practice/radar' },
       { label: 'Comms', path: '/practice/comms' }, { label: 'Resources' },
     ]}>
       <div className="flex gap-6 flex-col md:flex-row">

@@ -23,11 +23,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, title, breadcrumbs }) =
   const normalizedBreadcrumbs = React.useMemo(() => {
     const crumbs = breadcrumbs ?? [];
     if (!isStaffRole(user?.role)) return crumbs;
-    return crumbs.map((c) => {
-      if (c.label === 'Role Hub' || c.path === '/hub') {
-        return { label: 'Group Practice', path: '/practice/my-radar' };
-      }
-      return c;
+    return crumbs.filter((c) => {
+      if (c.label === 'Role Hub' || c.path === '/hub') return false;
+      if (c.label === 'Group Practice' || c.path === '/practice/radar') return false;
+      return true;
     });
   }, [breadcrumbs, user?.role]);
 

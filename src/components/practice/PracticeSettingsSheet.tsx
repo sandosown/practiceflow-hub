@@ -42,7 +42,7 @@ const PracticeSettingsSheet: React.FC<PracticeSettingsSheetProps> = ({ open, onO
       <SheetContent side="right" className="pf-app-bg border-l border-white/20 w-full sm:max-w-md overflow-y-auto">
         <SheetHeader className="mb-6">
           <SheetTitle className="text-xl">Practice Settings</SheetTitle>
-          <SheetDescription>Configure your group practice preferences.</SheetDescription>
+          <SheetDescription>Configure your practice preferences.</SheetDescription>
         </SheetHeader>
 
         <div className="space-y-5">

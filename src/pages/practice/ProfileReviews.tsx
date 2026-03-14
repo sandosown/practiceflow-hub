@@ -94,7 +94,6 @@ const ProfileReviews: React.FC = () => {
 
   return (
     <AppLayout title="Profile Reviews" breadcrumbs={[
-      { label: 'Role Hub', path: '/hub' }, { label: 'Group Practice', path: '/practice/radar' },
       { label: 'People', path: '/practice/people' }, { label: 'Profile Reviews' },
     ]}>
       <div className="pf-tabbar mb-6">

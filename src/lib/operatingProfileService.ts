@@ -3,7 +3,7 @@ import { OperatingProfile } from '@/types/operatingProfile';
 
 const DEFAULT_VALUES = {
   domains: ['GROUP_PRACTICE'] as string[],
-  domain_labels: { GROUP_PRACTICE: 'Group Practice', COACHING: 'Coaching Business', HOME: 'Home' },
+  domain_labels: { GROUP_PRACTICE: 'Your Practice', COACHING: 'Coaching Business', HOME: 'Home' },
   domain_priority: ['GROUP_PRACTICE'] as string[],
   practice_mode: 'group' as const,
   uses_referrals: true,

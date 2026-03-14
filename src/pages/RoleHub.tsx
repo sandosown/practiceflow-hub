@@ -9,7 +9,7 @@ import { Briefcase, GraduationCap, Home, Sparkles, Settings } from 'lucide-react
 const BUILTIN_TILES = [
   {
     type: 'GROUP_PRACTICE',
-    label: 'Group Practice',
+    label: 'Your Practice',
     description: 'Manage referrals, staff, and intake workflows',
     icon: Briefcase,
     path: '/practice/radar',

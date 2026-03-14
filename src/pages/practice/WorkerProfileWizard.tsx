@@ -79,7 +79,6 @@ const WorkerProfileWizard: React.FC = () => {
   if (hook.loading) {
     return (
       <AppLayout title="My Onboarding Profile" breadcrumbs={[
-        { label: 'Role Hub', path: '/hub' }, { label: 'Group Practice', path: '/practice/radar' },
         { label: 'People', path: '/practice/people' }, { label: 'My Profile' },
       ]}>
         <p className="text-muted-foreground p-4">Loading your draft…</p>
@@ -92,7 +91,6 @@ const WorkerProfileWizard: React.FC = () => {
 
   return (
     <AppLayout title="My Onboarding Profile" breadcrumbs={[
-      { label: 'Role Hub', path: '/hub' }, { label: 'Group Practice', path: '/practice/radar' },
       { label: 'People', path: '/practice/people' }, { label: 'My Profile' },
     ]}>
       {legacy?.status === 'changes_requested' && legacy.review_note && (

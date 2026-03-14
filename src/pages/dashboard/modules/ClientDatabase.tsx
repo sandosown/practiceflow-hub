@@ -63,10 +63,6 @@ const ClientDatabase: React.FC = () => {
       <div className="max-w-5xl mx-auto px-6 py-6 pb-20">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm mb-6 text-muted-foreground">
-          <button onClick={() => navigate('/dashboard/owner')} className="hover:text-primary transition-colors">Workspaces</button>
-          <span>›</span>
-          <button onClick={() => navigate('/dashboard/owner/group-practice')} className="hover:text-primary transition-colors">Group Practice</button>
-          <span>›</span>
           <span className="text-foreground font-medium">Client Database</span>
         </nav>
 

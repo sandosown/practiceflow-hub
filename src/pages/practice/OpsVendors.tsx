@@ -46,7 +46,6 @@ const OpsVendors: React.FC = () => {
   if (!isOwner) {
     return (
       <AppLayout title="Vendors" breadcrumbs={[
-        { label: 'Role Hub', path: '/hub' }, { label: 'Group Practice', path: '/practice/radar' },
         { label: 'Operations', path: '/practice/ops' }, { label: 'Vendors' },
       ]}>
         <p className="text-muted-foreground p-4">Vendor database is only accessible to administrators.</p>
@@ -56,7 +55,6 @@ const OpsVendors: React.FC = () => {
 
   return (
     <AppLayout title="Vendors" breadcrumbs={[
-      { label: 'Role Hub', path: '/hub' }, { label: 'Group Practice', path: '/practice/radar' },
       { label: 'Operations', path: '/practice/ops' }, { label: 'Vendors' },
     ]}>
       {!creating && !editId && (

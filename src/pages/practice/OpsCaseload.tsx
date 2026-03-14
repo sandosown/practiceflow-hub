@@ -10,7 +10,6 @@ const OpsCaseload: React.FC = () => {
 
   return (
     <AppLayout title="My Caseload" breadcrumbs={[
-      { label: 'Role Hub', path: '/hub' }, { label: 'Group Practice', path: '/practice/radar' },
       { label: 'Operations', path: '/practice/ops' }, { label: 'My Caseload' },
     ]}>
       <div className="pf-glass pf-table-wrap">

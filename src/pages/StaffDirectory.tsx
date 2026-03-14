@@ -39,8 +39,6 @@ const StaffDirectory: React.FC = () => {
     <AppLayout
       title="Staff Directory"
       breadcrumbs={[
-        { label: 'Role Hub', path: '/hub' },
-        { label: 'Group Practice', path: '/practice/radar' },
         { label: 'Staff Directory' },
       ]}
     >
