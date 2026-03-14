@@ -60,7 +60,7 @@ const GroupPracticeDashboard: React.FC = () => {
           padding: '14px 20px',
           display: 'flex',
           alignItems: 'center',
-          width: 'fit-content',
+          textAlign: 'center',
           marginBottom: 16,
         }}>
           <span style={{ color: '#1a2a5e', fontSize: 16, fontWeight: 400 }}>
