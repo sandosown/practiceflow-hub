@@ -16,6 +16,7 @@ export interface SessionContext {
   workspace_name: string | null;
   full_name: string | null;
   email: string | null;
+  theme_preference: 'light' | 'dark';
 }
 
 export interface DemoUser {

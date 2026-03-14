@@ -12,6 +12,7 @@ interface SessionAPI {
   login: (email: string, password: string) => Promise<{ error: string | null }>;
   loginDemo: (demoUserId: string) => void;
   logout: () => Promise<void>;
+  setThemePreference: (pref: 'light' | 'dark') => Promise<void>;
 }
 
 const Ctx = createContext<SessionAPI | null>(null);
