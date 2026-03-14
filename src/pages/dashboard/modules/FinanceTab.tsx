@@ -413,7 +413,7 @@ function EntryModal({ title, type, categories, onClose, onSaved, userId, isDemoM
 }
 
 /* ─── What's Due Modal ─── */
-function DueModal({ onClose, onSaved, userId }: { onClose: () => void; onSaved: () => void; userId: string }) {
+function DueModal({ onClose, onSaved, userId, isDemoMode }: { onClose: () => void; onSaved: () => void; userId: string; isDemoMode: boolean }) {
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
   const [dueDate, setDueDate] = useState<Date | undefined>(new Date());
