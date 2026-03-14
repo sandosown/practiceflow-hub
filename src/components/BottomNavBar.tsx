@@ -198,7 +198,7 @@ const BottomNavBar: React.FC = () => {
                 >
                   {section.title}
                 </p>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: section.title === 'PRACTICE' ? 'repeat(3, 1fr)' : 'repeat(4, 1fr)', gap: 8 }}>
                   {section.items.map((item) => {
                     const Icon = item.icon;
                     const active = location.pathname === item.path;
