@@ -80,7 +80,7 @@ const AppRoutes = () => (
     <Route path="/dashboard/owner/group-practice" element={<ProtectedRoute><GroupPracticeDashboard /></ProtectedRoute>} />
     <Route path="/dashboard/owner/group-practice/office-board" element={<ProtectedRoute><OfficeBoard /></ProtectedRoute>} />
     <Route path="/dashboard/owner/group-practice/charts" element={<ProtectedRoute><ChartsRequiringAction /></ProtectedRoute>} />
-    <Route path="/dashboard/owner/group-practice/management" element={<ProtectedRoute><GPModulePlaceholder title="Management Center" /></ProtectedRoute>} />
+    <Route path="/dashboard/owner/group-practice/management" element={<ProtectedRoute><ManagementCenter /></ProtectedRoute>} />
     <Route path="/dashboard/owner/group-practice/clients" element={<ProtectedRoute><ClientDatabase /></ProtectedRoute>} />
     <Route path="/dashboard/owner/group-practice/caseload" element={<ProtectedRoute><CaseloadIntegration /></ProtectedRoute>} />
     <Route path="/dashboard/owner/group-practice/treatment" element={<ProtectedRoute><GPModulePlaceholder title="Treatment Plan Tracker" /></ProtectedRoute>} />
