@@ -49,6 +49,15 @@ const GroupPracticeDashboard: React.FC = () => {
           </Button>
         </div>
 
+        {/* Contextual greeting */}
+        <p style={{ color: '#1a2a5e', fontSize: 14, fontWeight: 400, marginTop: 16, marginBottom: 8 }}>
+          {(() => {
+            const h = new Date().getHours();
+            const greeting = h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
+            return `${greeting}, Dr. Sarah. You have ${SIGNALS.length} signal${SIGNALS.length !== 1 ? 's' : ''} requiring attention.`;
+          })()}
+        </p>
+
         {/* Radar */}
         <section className="mb-10">
           <h2
