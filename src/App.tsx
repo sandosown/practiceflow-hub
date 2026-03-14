@@ -28,7 +28,7 @@ import OfficeBoard from "./pages/dashboard/OfficeBoard";
 import GPModulePlaceholder from "./pages/dashboard/GPModulePlaceholder";
 import ChartsRequiringAction from "./pages/dashboard/modules/ChartsRequiringAction";
 import ClientDatabase from "./pages/dashboard/modules/ClientDatabase";
-import CaseloadIntegration from "./pages/dashboard/modules/CaseloadIntegration";
+import ReferralPipeline from "./pages/dashboard/modules/ReferralPipeline";
 import TreatmentPlanTracker from "./pages/dashboard/modules/TreatmentPlanTracker";
 import SupervisionStructure from "./pages/dashboard/modules/SupervisionStructure";
 import ManagementCenter from "./pages/dashboard/modules/ManagementCenter";
