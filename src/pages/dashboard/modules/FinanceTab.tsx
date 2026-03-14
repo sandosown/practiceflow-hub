@@ -43,7 +43,7 @@ interface DueItem {
   category: string | null;
 }
 
-const INCOME_CATEGORIES = ['Insurance Reimbursements', 'Private Pay Sessions', 'Group Sessions', 'Other'];
+const INCOME_CATEGORIES = ['Insurance', 'Private / Out of Pocket', 'Group Sessions', 'Workshops', 'Other'];
 const EXPENSE_CATEGORIES = ['Payroll & Contractors', 'Office Lease', 'Software Subscriptions', 'Insurance', 'Other'];
 
 function fmt(n: number): string {
