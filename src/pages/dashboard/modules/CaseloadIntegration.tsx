@@ -103,7 +103,7 @@ const CaseloadIntegration: React.FC = () => {
           <Input placeholder="Search by clinician or status…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
         </div>
 
-        {renderSection('CLINICIAN CAPACITY', '#3b82f6',
+        {renderSection('CLINICIAN CAPACITY', '#0ea5e9',
           <>
             {filteredClinicians.length === 0 && <p className="text-sm text-muted-foreground pl-3">No matching clinicians.</p>}
             {filteredClinicians.map((c, i) => {
