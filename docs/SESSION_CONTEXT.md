@@ -656,6 +656,8 @@ If ignored, disappears on next navigation.
 
 | LOG-086 | Add Referral modal — source field is dropdown: Web Form, Phone Call, Email, Walk-in, Referral from provider, Other | LOCKED |
 
+| LOG-087 | "Group Practice" and "Workspaces" permanently banned from all UI surfaces. Breadcrumbs show page name only. Top bar center shows owner's company name only. | LOCKED |
+
 ---
 
 ## OUTSTANDING DECISIONS
