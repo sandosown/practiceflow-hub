@@ -186,18 +186,70 @@ const DroppableColumn: React.FC<{
   onMoveStage: (id: string, dir: 1 | -1) => void;
   onMoveToOutcome: (id: string, outcome: Outcome) => void;
   onDeleteStage?: () => void;
-}> = ({ stage, cards, isMobile, stages, isOwner, isCustom, onMoveStage, onMoveToOutcome, onDeleteStage }) => {
+  onRenameStage?: (newName: string) => void;
+}> = ({ stage, cards, isMobile, stages, isOwner, isCustom, onMoveStage, onMoveToOutcome, onDeleteStage, onRenameStage }) => {
   const { setNodeRef, isOver } = useDroppable({ id: stage });
   const [expanded, setExpanded] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [editName, setEditName] = useState(stage);
 
   const visibleCards = expanded ? cards : cards.slice(0, MAX_VISIBLE);
   const hiddenCount = cards.length - MAX_VISIBLE;
 
+  const confirmRename = () => {
+    const trimmed = editName.trim();
+    if (trimmed && trimmed !== stage && onRenameStage) {
+      onRenameStage(trimmed);
+    }
+    setEditing(false);
+  };
+
+  const cancelRename = () => {
+    setEditName(stage);
+    setEditing(false);
+  };
+
   return (
     <div ref={setNodeRef} className="flex-shrink-0 flex flex-col" style={{ minWidth: 240, width: 240 }}>
       <div className="flex items-center justify-between mb-3 px-1">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{stage}</h3>
-        <div className="flex items-center gap-1">
+        {editing ? (
+          <div className="flex items-center gap-1 flex-1 mr-1">
+            <Input
+              value={editName}
+              maxLength={30}
+              onChange={e => setEditName(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') confirmRename(); if (e.key === 'Escape') cancelRename(); }}
+              autoFocus
+              className="h-6 text-xs font-semibold uppercase tracking-wider px-1 py-0"
+            />
+            <button onClick={confirmRename} className="p-0.5 rounded hover:bg-muted transition-colors" title="Confirm">
+              <Check className="w-3 h-3" style={{ color: ACCENT }} />
+            </button>
+            <button onClick={cancelRename} className="p-0.5 rounded hover:bg-muted transition-colors" title="Cancel">
+              <X className="w-3 h-3 text-muted-foreground" />
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1 flex-1 min-w-0">
+            <h3
+              className="text-xs font-semibold uppercase tracking-wider text-muted-foreground truncate"
+              onDoubleClick={() => { if (isOwner) { setEditName(stage); setEditing(true); } }}
+            >
+              {stage}
+            </h3>
+            {isOwner && (
+              <button
+                onClick={() => { setEditName(stage); setEditing(true); }}
+                className="p-0.5 rounded hover:bg-muted transition-colors opacity-0 group-hover:opacity-100 flex-shrink-0"
+                style={{ opacity: 0.5 }}
+                title="Rename stage"
+              >
+                <Pencil className="w-2.5 h-2.5 text-muted-foreground" />
+              </button>
+            )}
+          </div>
+        )}
+        <div className="flex items-center gap-1 flex-shrink-0">
           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: `rgba(${hexToRgb(ACCENT)},0.12)`, color: ACCENT }}>
             {cards.length}
           </span>
