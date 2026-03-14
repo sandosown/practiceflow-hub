@@ -44,14 +44,14 @@ const GroupPracticeDashboard: React.FC = () => {
         <div className="flex items-center gap-2 text-sm mb-6" style={{ color: '#94a3b8' }}>
           <button onClick={() => navigate('/dashboard/owner')} className="hover:text-primary transition-colors">Workspaces</button>
           <span>›</span>
-          <span className="font-medium" style={{ color: '#f1f5f9' }}>Group Practice</span>
+          <span className="font-medium text-foreground">Group Practice</span>
         </div>
 
         <div className="flex items-center gap-3 mb-8">
           <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/owner')} className="text-muted-foreground">
             <ArrowLeft className="w-4 h-4 mr-1" /> Back
           </Button>
-          <h1 className="text-2xl font-bold" style={{ color: '#f1f5f9' }}>Group Practice</h1>
+          <h1 className="text-2xl font-bold text-foreground">Group Practice</h1>
         </div>
 
         {/* Radar */}
@@ -69,8 +69,8 @@ const GroupPracticeDashboard: React.FC = () => {
                 style={{ ...cardStyle(s.accent), minWidth: 260 }}
               >
                 <span className="font-bold tracking-wider uppercase" style={{ fontSize: 11, color: s.accent }}>{s.type}</span>
-                <p className="font-bold text-base" style={{ color: '#f1f5f9' }}>{s.name}</p>
-                <p className="text-sm" style={{ color: '#64748b' }}>{s.detail}</p>
+                <p className="font-bold text-base text-foreground">{s.name}</p>
+                <p className="text-sm text-muted-foreground">{s.detail}</p>
                 <button
                   className="h-7 text-xs font-semibold px-3 rounded-full mt-1"
                   style={{ background: 'transparent', color: s.accent, border: `1px solid rgba(${hexToRgb(s.accent)},0.45)` }}
@@ -102,8 +102,8 @@ const GroupPracticeDashboard: React.FC = () => {
                   <m.icon className="w-5 h-5" style={{ color: m.accent }} />
                 </div>
                 <div>
-                  <p className="font-semibold text-base" style={{ color: '#f1f5f9' }}>{m.label}</p>
-                  <p className="text-xs mt-0.5" style={{ color: '#64748b' }}>{m.subtitle}</p>
+                  <p className="font-semibold text-base text-foreground">{m.label}</p>
+                  <p className="text-xs mt-0.5 text-muted-foreground">{m.subtitle}</p>
                 </div>
               </button>
             );
