@@ -18,6 +18,8 @@ import { cn } from '@/lib/utils';
 import { format, startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { toast } from 'sonner';
+import { useCustomCategories } from './finance/useCustomCategories';
+import { CategorySelect } from './finance/CategorySelect';
 
 const ACCENT = '#059669';
 const HAT_ID = 'w1';
