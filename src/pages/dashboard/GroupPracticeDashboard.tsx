@@ -60,15 +60,21 @@ const GroupPracticeDashboard: React.FC = () => {
           padding: '14px 20px',
           display: 'flex',
           alignItems: 'center',
+          width: 'fit-content',
           marginBottom: 16,
         }}>
-          <span style={{ color: '#1a2a5e', fontSize: 14, fontWeight: 400 }}>
+          <span style={{ color: '#1a2a5e', fontSize: 16, fontWeight: 400 }}>
             {(() => { const h = new Date().getHours(); return h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening'; })()}, Dr. Sarah.
           </span>
-          <span style={{ color: '#94a3b8', fontSize: 14, margin: '0 6px' }}> — </span>
-          <span style={{ color: '#2dd4bf', fontSize: 14, fontWeight: 500 }}>
-            {SIGNALS.length} signal{SIGNALS.length !== 1 ? 's' : ''} requiring attention
+          <span style={{ color: '#94a3b8', fontSize: 16 }}> — </span>
+          <span style={{ color: '#1a2a5e', fontSize: 16, fontWeight: 400 }}>
+            {SIGNALS.length === 0 ? 'You currently have no signals requiring your attention.' : 'You currently have '}
           </span>
+          {SIGNALS.length > 0 && (
+            <span style={{ color: '#2dd4bf', fontSize: 16, fontWeight: 600 }}>
+              {SIGNALS.length} signal{SIGNALS.length !== 1 ? 's' : ''} requiring your attention.
+            </span>
+          )}
         </div>
 
         {/* Radar */}
