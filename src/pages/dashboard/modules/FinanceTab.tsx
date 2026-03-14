@@ -424,6 +424,7 @@ function DueModal({ onClose, onSaved, userId, isDemoMode }: { onClose: () => voi
   const [dueDate, setDueDate] = useState<Date | undefined>(new Date());
   const [category, setCategory] = useState('');
   const [saving, setSaving] = useState(false);
+  const { customCategories, addCategory } = useCustomCategories(userId, 'due', isDemoMode);
 
   const handleSave = async () => {
     if (!name.trim() || !amount || !dueDate) { toast.error('Please fill all required fields.'); return; }
