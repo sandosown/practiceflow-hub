@@ -74,13 +74,10 @@ const MessageBoard: React.FC = () => {
 
       <div className="max-w-5xl mx-auto px-6 py-6 pb-20">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm mb-6 text-muted-foreground">
-          <span className="font-medium text-foreground">Message Board</span>
-        </div>
-
         <div className="flex items-center gap-3 mb-8">
           <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/owner/group-practice')} className="text-muted-foreground">
-            <ArrowLeft className="w-4 h-4 mr-1" /> Back
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
           </Button>
           <h1 className="text-2xl font-bold text-foreground border-l-4 border-primary pl-3">
             Message Board
