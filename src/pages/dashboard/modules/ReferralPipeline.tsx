@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopNavBar from '@/components/TopNavBar';
 import BottomNavBar from '@/components/BottomNavBar';
-import { ArrowLeft, Search, Plus, Pencil, CheckSquare, ArrowRight, ArrowLeft as ArrowLeftIcon, X, GripVertical } from 'lucide-react';
+import { ArrowLeft, Search, Plus, Pencil, CheckSquare, ArrowRight, ArrowLeft as ArrowLeftIcon, X, GripVertical, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cardStyle } from '@/lib/cardStyle';
