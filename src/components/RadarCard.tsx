@@ -3,29 +3,28 @@ import { Referral, RadarBucket } from '@/types/models';
 import { Circle, Pause, CalendarClock, User, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { MOCK_USERS } from '@/data/mockData';
+import { cardStyle } from '@/lib/cardStyle';
 
 interface RadarCardProps {
   referral: Referral;
   bucket: RadarBucket;
   basePath: string;
+  accent?: string;
   isSelected?: boolean;
   onSelect?: (id: string) => void;
 }
 
-const bucketConfig: Record<RadarBucket, { label: string; cardClass: string; icon: React.ReactNode }> = {
+const bucketConfig: Record<RadarBucket, { label: string; icon: React.ReactNode }> = {
   do_now: {
     label: 'Do Now',
-    cardClass: 'pf-card pf-card-now',
     icon: <Circle className="w-4 h-4 text-pf-focus" />,
   },
   waiting: {
     label: 'Waiting',
-    cardClass: 'pf-card pf-card-wait',
     icon: <Pause className="w-4 h-4 text-pf-waiting" />,
   },
   coming_up: {
     label: 'Coming Up',
-    cardClass: 'pf-card pf-card-up',
     icon: <CalendarClock className="w-4 h-4 text-pf-upcoming" />,
   },
 };
@@ -39,7 +38,7 @@ const statusLabels: Record<string, string> = {
   INTAKE_READY: 'Intake Ready',
 };
 
-const RadarCard: React.FC<RadarCardProps> = ({ referral, bucket, basePath, isSelected, onSelect }) => {
+const RadarCard: React.FC<RadarCardProps> = ({ referral, bucket, basePath, accent = '#0ea5e9', isSelected, onSelect }) => {
   const navigate = useNavigate();
   const config = bucketConfig[bucket];
   const assignee = MOCK_USERS.find(u => u.id === referral.assigned_to_profile_id);
@@ -55,7 +54,8 @@ const RadarCard: React.FC<RadarCardProps> = ({ referral, bucket, basePath, isSel
   return (
     <button
       onClick={handleClick}
-      className={`w-full text-left ${config.cardClass} group ${isSelected ? 'pf-card-selected' : ''}`}
+      className={`w-full text-left p-4 group ${isSelected ? 'ring-2 ring-primary' : ''}`}
+      style={cardStyle(accent)}
     >
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-2">
