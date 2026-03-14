@@ -79,19 +79,29 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
       if (!mounted) return;
 
+      const themePref = (profile.theme_preference as 'light' | 'dark') ?? 'light';
+
+      // Apply theme immediately before setting state
+      if (themePref === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+
       setSession({
         user_id: profile.user_id,
         practice_id: profile.practice_id,
         role: profile.role as SessionData['role'],
         clinician_subtype: (profile.clinician_subtype as SessionData['clinician_subtype']) ?? null,
         intern_subtype: (profile.intern_subtype as SessionData['intern_subtype']) ?? null,
-        mode, // injected from hook
+        mode,
         visibility_scope: [],
         workflow_scope: [],
         onboarding_complete: profile.onboarding_complete ?? false,
         workspace_name: workspaceName,
         full_name: profile.full_name,
         email: profile.email,
+        theme_preference: themePref,
       });
       setIsBooting(false);
     };
