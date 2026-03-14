@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { useSessionData } from '@/context/SessionContext';
+import type { AppRole, InternSubtype } from '@/types/session';
 
 const NAV_ITEMS = [
   { label: 'Home', icon: Home, path: '/dashboard/owner/group-practice' },
@@ -16,54 +17,134 @@ const NAV_ITEMS = [
   { label: 'More', icon: MoreHorizontal, path: null as string | null, action: 'drawer' },
 ];
 
-interface DrawerItem { label: string; icon: React.FC<any>; path: string; }
-interface DrawerSection { title: string; items: DrawerItem[]; }
+interface DrawerItem { id: string; label: string; icon: React.FC<any>; path: string; }
+interface DrawerSection { id: string; title: string; cols: number; items: DrawerItem[]; }
 
-const OWNER_SECTIONS: DrawerSection[] = [
+const ALL_SECTIONS: DrawerSection[] = [
   {
-    title: 'PRACTICE',
+    id: 'PRACTICE', title: 'PRACTICE', cols: 3,
     items: [
-      { label: 'Management Center', icon: LayoutDashboard, path: '/dashboard/owner/group-practice/management' },
-      { label: 'Client Database', icon: Users, path: '/dashboard/owner/group-practice/clients' },
-      { label: 'Insurance Database', icon: CreditCard, path: '/dashboard/owner/group-practice/insurance' },
-      { label: 'Vendor Database', icon: Package, path: '/dashboard/owner/group-practice/vendors' },
-      { label: 'Compliance', icon: ShieldCheck, path: '/dashboard/owner/group-practice/compliance' },
+      { id: 'management', label: 'Management Center', icon: LayoutDashboard, path: '/dashboard/owner/group-practice/management' },
+      { id: 'clients', label: 'Client Database', icon: Users, path: '/dashboard/owner/group-practice/clients' },
+      { id: 'insurance', label: 'Insurance Database', icon: CreditCard, path: '/dashboard/owner/group-practice/insurance' },
+      { id: 'vendors', label: 'Vendor Database', icon: Package, path: '/dashboard/owner/group-practice/vendors' },
+      { id: 'compliance', label: 'Compliance', icon: ShieldCheck, path: '/dashboard/owner/group-practice/compliance' },
     ],
   },
   {
-    title: 'CLINICAL',
+    id: 'CLINICAL', title: 'CLINICAL', cols: 4,
     items: [
-      { label: 'Supervision Structure', icon: Shield, path: '/dashboard/owner/group-practice/supervision' },
+      { id: 'supervision', label: 'Supervision Structure', icon: Shield, path: '/dashboard/owner/group-practice/supervision' },
     ],
   },
   {
-    title: 'TEAM',
+    id: 'TEAM', title: 'TEAM', cols: 4,
     items: [
-      { label: 'Directory', icon: Contact, path: '/dashboard/owner/group-practice/directory' },
-      { label: 'Recognition', icon: Award, path: '/dashboard/owner/group-practice/major-moments' },
+      { id: 'directory', label: 'Directory', icon: Contact, path: '/dashboard/owner/group-practice/directory' },
+      { id: 'recognition', label: 'Recognition', icon: Award, path: '/dashboard/owner/group-practice/major-moments' },
     ],
   },
   {
-    title: 'PERSONAL',
+    id: 'PERSONAL', title: 'PERSONAL', cols: 4,
     items: [
-      { label: 'Major Moments', icon: Sparkles, path: '/dashboard/owner/group-practice/major-moments' },
+      { id: 'moments', label: 'Major Moments', icon: Sparkles, path: '/dashboard/owner/group-practice/major-moments' },
     ],
   },
   {
-    title: 'COMMUNICATION',
+    id: 'COMMUNICATION', title: 'COMMUNICATION', cols: 4,
     items: [
-      { label: 'Messages', icon: Mail, path: '/dashboard/owner/group-practice/office-board' },
-      { label: 'Feed', icon: Rss, path: '/dashboard/owner/group-practice/feed' },
+      { id: 'messages', label: 'Messages', icon: Mail, path: '/dashboard/owner/group-practice/office-board' },
+      { id: 'feed', label: 'Feed', icon: Rss, path: '/dashboard/owner/group-practice/feed' },
     ],
   },
   {
-    title: 'SYSTEM',
+    id: 'SYSTEM', title: 'SYSTEM', cols: 4,
     items: [
-      { label: 'Guide Center', icon: BookOpen, path: '/dashboard/owner/group-practice/guide' },
-      { label: 'Settings', icon: Settings, path: '/dashboard/owner/group-practice/settings' },
+      { id: 'guide', label: 'Guide Center', icon: BookOpen, path: '/dashboard/owner/group-practice/guide' },
+      { id: 'settings', label: 'Settings', icon: Settings, path: '/settings' },
     ],
   },
 ];
+
+// Effective role key that distinguishes intern subtypes
+type EffectiveRole = 'OWNER' | 'ADMIN' | 'SUPERVISOR' | 'CLINICIAN' | 'INTERN_CLINICAL' | 'INTERN_BUSINESS' | 'STAFF';
+
+function getEffectiveRole(role: AppRole, internSubtype: InternSubtype): EffectiveRole {
+  if (role === 'INTERN') {
+    return internSubtype === 'BUSINESS' ? 'INTERN_BUSINESS' : 'INTERN_CLINICAL';
+  }
+  return role as EffectiveRole;
+}
+
+// Map of section → item IDs visible per role
+const ROLE_VISIBILITY: Record<EffectiveRole, Record<string, string[]>> = {
+  OWNER: {
+    PRACTICE: ['management', 'clients', 'insurance', 'vendors', 'compliance'],
+    CLINICAL: ['supervision'],
+    TEAM: ['directory', 'recognition'],
+    PERSONAL: ['moments'],
+    COMMUNICATION: ['messages', 'feed'],
+    SYSTEM: ['guide', 'settings'],
+  },
+  ADMIN: {
+    PRACTICE: ['management', 'clients', 'insurance', 'vendors', 'compliance'],
+    TEAM: ['directory', 'recognition'],
+    PERSONAL: ['moments'],
+    COMMUNICATION: ['messages', 'feed'],
+    SYSTEM: ['guide', 'settings'],
+  },
+  SUPERVISOR: {
+    PRACTICE: ['clients', 'compliance'],
+    CLINICAL: ['supervision'],
+    TEAM: ['directory', 'recognition'],
+    PERSONAL: ['moments'],
+    COMMUNICATION: ['messages', 'feed'],
+    SYSTEM: ['guide', 'settings'],
+  },
+  CLINICIAN: {
+    CLINICAL: ['supervision'],
+    TEAM: ['directory', 'recognition'],
+    PERSONAL: ['moments'],
+    COMMUNICATION: ['messages', 'feed'],
+    SYSTEM: ['guide', 'settings'],
+  },
+  INTERN_CLINICAL: {
+    CLINICAL: ['supervision'],
+    TEAM: ['directory', 'recognition'],
+    PERSONAL: ['moments'],
+    COMMUNICATION: ['messages', 'feed'],
+    SYSTEM: ['guide', 'settings'],
+  },
+  INTERN_BUSINESS: {
+    TEAM: ['directory', 'recognition'],
+    PERSONAL: ['moments'],
+    COMMUNICATION: ['messages', 'feed'],
+    SYSTEM: ['guide', 'settings'],
+  },
+  STAFF: {
+    TEAM: ['directory', 'recognition'],
+    PERSONAL: ['moments'],
+    COMMUNICATION: ['messages', 'feed'],
+    SYSTEM: ['guide', 'settings'],
+  },
+};
+
+function getFilteredSections(effectiveRole: EffectiveRole): DrawerSection[] {
+  const visibility = ROLE_VISIBILITY[effectiveRole] ?? ROLE_VISIBILITY.STAFF;
+  const result: DrawerSection[] = [];
+
+  for (const section of ALL_SECTIONS) {
+    const allowedIds = visibility[section.id];
+    if (!allowedIds || allowedIds.length === 0) continue;
+
+    const filteredItems = section.items.filter(item => allowedIds.includes(item.id));
+    if (filteredItems.length === 0) continue;
+
+    result.push({ ...section, items: filteredItems });
+  }
+
+  return result;
+}
 
 const ACTIVE_COLOR = '#2dd4bf';
 const ACTIVE_BG = 'rgba(45,212,191,0.12)';
@@ -75,14 +156,19 @@ const BottomNavBar: React.FC = () => {
   const [moreOpen, setMoreOpen] = useState(false);
 
   let userName = '';
-  let userRole = '';
+  let userRole: AppRole = 'STAFF';
+  let internSubtype: InternSubtype = null;
   try {
     const session = useSessionData();
     userName = session.full_name ?? '';
-    userRole = session.role ?? '';
+    userRole = session.role ?? 'STAFF';
+    internSubtype = session.intern_subtype ?? null;
   } catch {
     // not authenticated yet
   }
+
+  const effectiveRole = getEffectiveRole(userRole, internSubtype);
+  const sections = getFilteredSections(effectiveRole);
 
   const roleLabelMap: Record<string, string> = {
     OWNER: 'Owner',
@@ -181,7 +267,7 @@ const BottomNavBar: React.FC = () => {
             </div>
             <div>
               <p style={{ color: '#e2eaf4', fontSize: 13, fontWeight: 600, lineHeight: 1.2 }}>{userName || 'User'}</p>
-              <p style={{ color: '#5a8ab0', fontSize: 11, lineHeight: 1.2 }}>{roleLabelMap[userRole] ?? userRole}</p>
+              <p style={{ color: '#5a8ab0', fontSize: 11, lineHeight: 1.2 }}>{roleLabelMap[effectiveRole] ?? effectiveRole}</p>
             </div>
           </div>
 
@@ -190,8 +276,8 @@ const BottomNavBar: React.FC = () => {
 
           {/* Sections */}
           <div className="px-5 overflow-y-auto" style={{ paddingBottom: 16, maxHeight: 'calc(75vh - 80px)' }}>
-            {OWNER_SECTIONS.map((section, sIdx) => (
-              <div key={section.title} style={{ marginTop: sIdx === 0 ? 0 : 12 }}>
+            {sections.map((section, sIdx) => (
+              <div key={section.id} style={{ marginTop: sIdx === 0 ? 0 : 12 }}>
                 <p
                   style={{
                     color: '#5a8ab0',
@@ -204,13 +290,13 @@ const BottomNavBar: React.FC = () => {
                 >
                   {section.title}
                 </p>
-                <div style={{ display: 'grid', gridTemplateColumns: (section.title === 'PRACTICE' ? 'repeat(3, 1fr)' : section.title === 'CLINICAL' ? 'repeat(4, 1fr)' : 'repeat(4, 1fr)'), gap: 8 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: `repeat(${section.cols}, 1fr)`, gap: 8 }}>
                   {section.items.map((item) => {
                     const Icon = item.icon;
                     const active = location.pathname === item.path;
                     return (
                       <button
-                        key={item.label}
+                        key={item.id}
                         onClick={() => {
                           navigate(item.path);
                           setMoreOpen(false);
