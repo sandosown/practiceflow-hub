@@ -42,10 +42,6 @@ const GroupPracticeDashboard: React.FC = () => {
       <TopNavBar />
 
       <div className="max-w-5xl mx-auto px-6 py-6 pb-20">
-        {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm mb-6">
-          <span className="font-medium text-foreground">Group Practice</span>
-        </div>
 
         <div className="flex items-center gap-3 mb-8">
           <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/owner')} className="text-muted-foreground">
