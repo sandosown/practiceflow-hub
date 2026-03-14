@@ -60,7 +60,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: '#0a1628' }}>
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: '#f1f4f8' }}>
       <div className="w-full max-w-md">
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
@@ -70,13 +70,13 @@ const Login: React.FC = () => {
           <div style={{
             fontFamily: 'Georgia, serif',
             fontSize: '28px',
-            color: '#FFFFFF',
+            color: '#1a2a5e',
             marginTop: '12px',
             fontWeight: 'normal',
           }}>SympoFlo</div>
           <div style={{
             fontSize: '13px',
-            color: '#64748b',
+            color: '#94a3b8',
             marginTop: '4px',
           }}>Your Life-Role Operating System</div>
         </div>
@@ -86,11 +86,11 @@ const Login: React.FC = () => {
           <div
             className="rounded-xl p-6 mb-4"
             style={{
-              background: '#1a2a4a',
-              border: '1px solid rgba(45, 212, 191, 0.2)',
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
             }}
           >
-            <h2 className="text-sm font-semibold uppercase tracking-wide mb-3" style={{ color: '#64748b' }}>
+            <h2 className="text-sm font-semibold uppercase tracking-wide mb-3" style={{ color: '#94a3b8' }}>
               Dev Demo Login
             </h2>
             <div className="space-y-2">
@@ -99,16 +99,19 @@ const Login: React.FC = () => {
                 return (
                   <button
                     key={u.id}
-                    className="w-full text-left flex items-center justify-between p-3"
-                    style={isHovered ? cardHoverStyle('#2dd4bf') : cardStyle('#2dd4bf')}
+                    className="w-full text-left flex items-center justify-between p-3 rounded-lg transition-all"
+                    style={{
+                      background: isHovered ? '#f1f5f9' : '#f8fafc',
+                      border: '1px solid #e2e8f0',
+                    }}
                     onClick={() => handleDemoLogin(u.id)}
                     onMouseEnter={() => setHoveredId(u.id)}
                     onMouseLeave={() => setHoveredId(null)}
                   >
-                    <span className="text-sm font-medium" style={{ color: '#f1f5f9' }}>{u.full_name}</span>
+                    <span className="text-sm font-medium" style={{ color: '#1a2a5e' }}>{u.full_name}</span>
                     <span
                       className="text-xs px-2 py-0.5 rounded-full font-medium"
-                      style={{ background: 'rgba(45,212,191,0.15)', color: '#2dd4bf' }}
+                      style={{ background: '#e0fdf4', color: '#0f766e' }}
                     >
                       {roleLabel(u)}
                     </span>
@@ -123,12 +126,12 @@ const Login: React.FC = () => {
         <div
           className="rounded-xl p-8"
           style={{
-            background: '#1a2a4a',
-            border: '1px solid rgba(45, 212, 191, 0.3)',
-            boxShadow: '0 0 32px rgba(45, 212, 191, 0.1)',
+            background: '#ffffff',
+            border: '1px solid #e2e8f0',
+            boxShadow: '0 4px 24px rgba(0, 0, 0, 0.06)',
           }}
         >
-          <h2 className="text-xl font-semibold mb-6" style={{ color: '#f1f5f9' }}>Sign in to your account</h2>
+          <h2 className="text-xl font-semibold mb-6" style={{ color: '#1a2a5e' }}>Sign in to your account</h2>
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <Label htmlFor="email" style={{ color: '#94a3b8' }}>Email</Label>
@@ -137,7 +140,7 @@ const Login: React.FC = () => {
                 onChange={e => { setEmail(e.target.value); setError(''); }}
                 placeholder="you@example.com"
                 className="mt-1"
-                style={{ background: '#0f1e38', borderColor: 'rgba(45,212,191,0.2)', color: '#f1f5f9' }}
+                style={{ background: '#ffffff', borderColor: '#e2e8f0', color: '#1a2a5e' }}
               />
             </div>
             <div>
@@ -147,7 +150,7 @@ const Login: React.FC = () => {
                 onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"
                 className="mt-1"
-                style={{ background: '#0f1e38', borderColor: 'rgba(45,212,191,0.2)', color: '#f1f5f9' }}
+                style={{ background: '#ffffff', borderColor: '#e2e8f0', color: '#1a2a5e' }}
               />
             </div>
             {error && <p className="text-sm" style={{ color: '#f59e0b' }}>{error}</p>}
@@ -155,7 +158,7 @@ const Login: React.FC = () => {
               type="submit"
               disabled={loading}
               className="w-full py-2.5 rounded-lg font-semibold text-sm transition-all"
-              style={{ background: '#2dd4bf', color: '#0a1628' }}
+              style={{ background: '#2dd4bf', color: '#0f172a' }}
               onMouseEnter={e => (e.currentTarget.style.filter = 'brightness(1.1)')}
               onMouseLeave={e => (e.currentTarget.style.filter = 'brightness(1)')}
             >
