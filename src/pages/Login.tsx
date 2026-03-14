@@ -37,6 +37,7 @@ const Login: React.FC = () => {
       workspace_name: demo.workspace_name,
       full_name: demo.full_name,
       email: demo.email,
+      theme_preference: 'light',
     };
     navigate(getDashboardRoute(synth));
   };
