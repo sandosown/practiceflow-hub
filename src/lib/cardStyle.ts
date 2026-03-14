@@ -43,9 +43,9 @@ export function cardHoverStyle(accent: string): React.CSSProperties {
   return {
     background: 'hsl(var(--card))',
     borderLeft:   `4px solid rgb(${r},${g},${b})`,
-    borderTop:    `1px solid rgba(${r},${g},${b},0.45)`,
-    borderBottom: `1px solid rgba(${r},${g},${b},0.45)`,
-    borderRight:  `1px solid rgba(${r},${g},${b},0.25)`,
+    borderTop:    `1px solid rgba(${r},${g},${b},0.65)`,
+    borderBottom: `1px solid rgba(${r},${g},${b},0.65)`,
+    borderRight:  `1px solid rgba(${r},${g},${b},0.45)`,
     borderRadius: '12px',
     boxShadow: `0 4px 16px rgba(${r},${g},${b},0.18), 0 1px 4px rgba(0,0,0,0.08)`,
     transition: 'all 0.2s ease',
