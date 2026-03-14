@@ -27,6 +27,7 @@ import GroupPracticeDashboard from "./pages/dashboard/GroupPracticeDashboard";
 import OfficeBoard from "./pages/dashboard/OfficeBoard";
 import GPModulePlaceholder from "./pages/dashboard/GPModulePlaceholder";
 import ChartsRequiringAction from "./pages/dashboard/modules/ChartsRequiringAction";
+import ClientDatabase from "./pages/dashboard/modules/ClientDatabase";
 
 const queryClient = new QueryClient();
 
