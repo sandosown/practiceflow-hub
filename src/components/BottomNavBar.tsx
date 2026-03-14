@@ -145,16 +145,16 @@ const BottomNavBar: React.FC = () => {
           style={{ background: '#1a2a5e', maxHeight: '75vh' }}
         >
           {/* Handle */}
-          <div className="flex justify-center pt-3 pb-4">
+          <div className="flex justify-center pt-3 pb-2">
             <div style={{ width: 32, height: 3, borderRadius: 2, background: 'rgba(255,255,255,0.2)' }} />
           </div>
 
           {/* Profile block */}
-          <div className="px-5 pb-4 flex items-center gap-3">
+          <div className="px-5 pb-3 flex items-center gap-3">
             <div
               style={{
-                width: 40,
-                height: 40,
+                width: 36,
+                height: 36,
                 borderRadius: '50%',
                 background: 'rgba(45,212,191,0.18)',
                 display: 'flex',
@@ -162,21 +162,21 @@ const BottomNavBar: React.FC = () => {
                 justifyContent: 'center',
                 color: ACTIVE_COLOR,
                 fontWeight: 700,
-                fontSize: 16,
+                fontSize: 14,
               }}
             >
               {userName.charAt(0) || '?'}
             </div>
             <div>
-              <p style={{ color: '#e2eaf4', fontSize: 14, fontWeight: 600 }}>{userName || 'User'}</p>
-              <p style={{ color: '#5a8ab0', fontSize: 11 }}>{roleLabelMap[userRole] ?? userRole}</p>
+              <p style={{ color: '#e2eaf4', fontSize: 13, fontWeight: 600, lineHeight: 1.2 }}>{userName || 'User'}</p>
+              <p style={{ color: '#5a8ab0', fontSize: 11, lineHeight: 1.2 }}>{roleLabelMap[userRole] ?? userRole}</p>
             </div>
           </div>
 
           {/* Sections */}
-          <div className="px-5 pb-6 overflow-y-auto" style={{ maxHeight: 'calc(75vh - 100px)' }}>
+          <div className="px-5 pb-5 overflow-y-auto" style={{ maxHeight: 'calc(75vh - 80px)' }}>
             {OWNER_SECTIONS.map((section) => (
-              <div key={section.title} className="mb-5">
+              <div key={section.title} className="mb-4">
                 <p
                   style={{
                     color: '#5a8ab0',
@@ -189,8 +189,8 @@ const BottomNavBar: React.FC = () => {
                 >
                   {section.title}
                 </p>
-                <div className="flex flex-col gap-1.5">
-                  {section.items.map((item) => {
+                <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 12, padding: '4px 0' }}>
+                  {section.items.map((item, idx) => {
                     const Icon = item.icon;
                     const active = location.pathname === item.path;
                     return (
@@ -200,15 +200,18 @@ const BottomNavBar: React.FC = () => {
                           navigate(item.path);
                           setMoreOpen(false);
                         }}
-                        className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors"
+                        className="flex items-center gap-3 w-full text-left"
                         style={{
-                          background: active ? ACTIVE_BG : 'rgba(255,255,255,0.07)',
+                          height: 44,
+                          padding: '0 14px',
+                          background: active ? ACTIVE_BG : 'transparent',
                           border: 'none',
+                          borderBottom: idx < section.items.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none',
                           cursor: 'pointer',
                         }}
                       >
-                        <Icon size={18} color={active ? ACTIVE_COLOR : '#e2eaf4'} strokeWidth={2} />
-                        <span style={{ color: active ? ACTIVE_COLOR : '#e2eaf4', fontSize: 13, fontWeight: 500 }}>
+                        <Icon size={18} color={active ? ACTIVE_COLOR : 'rgba(255,255,255,0.6)'} strokeWidth={2} />
+                        <span style={{ color: active ? ACTIVE_COLOR : '#e2eaf4', fontSize: 14, fontWeight: 400 }}>
                           {item.label}
                         </span>
                       </button>
