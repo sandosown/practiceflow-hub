@@ -12,6 +12,7 @@ interface SessionAPI {
   login: (email: string, password: string) => Promise<{ error: string | null }>;
   loginDemo: (demoUserId: string) => void;
   logout: () => Promise<void>;
+  setThemePreference: (pref: 'light' | 'dark') => Promise<void>;
 }
 
 const Ctx = createContext<SessionAPI | null>(null);
@@ -78,19 +79,29 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
       if (!mounted) return;
 
+      const themePref = (profile.theme_preference as 'light' | 'dark') ?? 'light';
+
+      // Apply theme immediately before setting state
+      if (themePref === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+
       setSession({
         user_id: profile.user_id,
         practice_id: profile.practice_id,
         role: profile.role as SessionData['role'],
         clinician_subtype: (profile.clinician_subtype as SessionData['clinician_subtype']) ?? null,
         intern_subtype: (profile.intern_subtype as SessionData['intern_subtype']) ?? null,
-        mode, // injected from hook
+        mode,
         visibility_scope: [],
         workflow_scope: [],
         onboarding_complete: profile.onboarding_complete ?? false,
         workspace_name: workspaceName,
         full_name: profile.full_name,
         email: profile.email,
+        theme_preference: themePref,
       });
       setIsBooting(false);
     };
@@ -133,6 +144,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
       workspace_name: demo.workspace_name,
       full_name: demo.full_name,
       email: demo.email,
+      theme_preference: 'light',
     });
     setIsBooting(false);
   }, [mode]);
@@ -151,10 +163,28 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (!isDemoMode) {
       await supabase.auth.signOut();
     }
+    document.documentElement.classList.remove('dark');
     setSession(null);
     setIsDemoMode(false);
     setIsBooting(false);
   }, [isDemoMode]);
+
+  // ── Theme preference ──
+  const setThemePreference = useCallback(async (pref: 'light' | 'dark') => {
+    if (pref === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    setSession(prev => prev ? { ...prev, theme_preference: pref } : prev);
+
+    if (!isDemoMode && session?.user_id) {
+      await supabase
+        .from('profiles')
+        .update({ theme_preference: pref } as any)
+        .eq('user_id', session.user_id);
+    }
+  }, [isDemoMode, session?.user_id]);
 
   // Keep mode in sync when device changes
   useEffect(() => {
@@ -166,7 +196,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const isAuthenticated = session !== null;
 
   return (
-    <Ctx.Provider value={{ session, isBooting, isAuthenticated, isDemoMode, login, loginDemo, logout }}>
+    <Ctx.Provider value={{ session, isBooting, isAuthenticated, isDemoMode, login, loginDemo, logout, setThemePreference }}>
       {isBooting ? (
         <div className="min-h-screen flex items-center justify-center bg-background">
           <div className="text-center space-y-4">

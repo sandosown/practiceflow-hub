@@ -6,7 +6,7 @@ import { ArrowLeft, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
-import { useSessionData } from '@/context/SessionContext';
+import { useSessionData, useSession } from '@/context/SessionContext';
 
 const ACCENT = '#2dd4bf';
 
@@ -28,22 +28,19 @@ const FieldRow: React.FC<{ label: string; children: React.ReactNode }> = ({ labe
 
 const Settings: React.FC = () => {
   const navigate = useNavigate();
+  const { setThemePreference } = useSession();
   const session = useSessionData();
 
   const [name, setName] = useState(session.full_name ?? '');
   const [email, setEmail] = useState(session.email ?? '');
   const [practiceName, setPracticeName] = useState(session.workspace_name ?? 'Clarity Counseling Group');
   const [notificationIntensity, setNotificationIntensity] = useState<'LOW' | 'MEDIUM' | 'HIGH'>('MEDIUM');
-  const [darkMode, setDarkMode] = useState(() => document.documentElement.classList.contains('dark'));
+  const darkMode = session.theme_preference === 'dark';
   const [radarDensity, setRadarDensity] = useState<'Compact' | 'Comfortable'>('Comfortable');
 
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [darkMode]);
+  const handleDarkModeToggle = (checked: boolean) => {
+    setThemePreference(checked ? 'dark' : 'light');
+  };
 
   const intensityOptions = ['LOW', 'MEDIUM', 'HIGH'] as const;
   const densityOptions = ['Compact', 'Comfortable'] as const;
@@ -135,7 +132,7 @@ const Settings: React.FC = () => {
           <SectionHeader title="Preferences" />
           <div className="rounded-xl bg-card p-4">
             <FieldRow label="Dark Mode">
-              <Switch checked={darkMode} onCheckedChange={setDarkMode} />
+              <Switch checked={darkMode} onCheckedChange={handleDarkModeToggle} />
             </FieldRow>
             <FieldRow label="Radar Density">
               <div className="flex rounded-lg overflow-hidden border border-border">

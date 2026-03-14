@@ -544,6 +544,7 @@ export type Database = {
           onboarding_complete: boolean
           practice_id: string | null
           role: string
+          theme_preference: string
           updated_at: string
           user_id: string
         }
@@ -558,6 +559,7 @@ export type Database = {
           onboarding_complete?: boolean
           practice_id?: string | null
           role?: string
+          theme_preference?: string
           updated_at?: string
           user_id: string
         }
@@ -572,6 +574,7 @@ export type Database = {
           onboarding_complete?: boolean
           practice_id?: string | null
           role?: string
+          theme_preference?: string
           updated_at?: string
           user_id?: string
         }
