@@ -268,21 +268,7 @@ Each signal type has its own accent (see Radar Signal Accents below).
 
 ## NEXT BUILD
 
-**Resume at:** Phase 6 — INTERN CLINICAL dashboard
-
-**Task:** Build the Clinical Intern dashboard shell with:
-- Radar section (relevant intern signals)
-- My Caseload section (scoped to intern's assigned clients)
-- Supervision Hours tracker (hours logged toward requirements)
-- Local search on caseload
-- Office Board access (now: Message Board)
-- All cards using domain accent + asymmetric border system
-- Bottom nav (Phase 9 — not yet, placeholder for now)
-
-**Build order after INTERN CLINICAL:**
-1. INTERN BUSINESS dashboard
-2. STAFF dashboard
-3. Then move to Phase 7 — Module Pages with real data
+**Resume at:** Phase 8 — Action Mode
 
 ---
 
