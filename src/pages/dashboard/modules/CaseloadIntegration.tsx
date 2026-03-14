@@ -279,21 +279,9 @@ const ReferralPipeline: React.FC = () => {
         {/* Kanban Board */}
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
           <div className="flex gap-4 overflow-x-auto pb-4">
-            {STAGES.map(stage => {
-              const cards = stageReferrals(stage);
-              return (
-                <DroppableColumn key={stage} stage={stage} count={cards.length}>
-                  {cards.length === 0 && (
-                    <div className="text-xs text-muted-foreground text-center py-6 rounded-lg" style={{ background: 'hsl(var(--muted) / 0.3)' }}>
-                      No referrals
-                    </div>
-                  )}
-                  {cards.map(r => (
-                    <DraggableCard key={r.id} referral={r} isMobile={isMobile} onMoveStage={moveStage} />
-                  ))}
-                </DroppableColumn>
-              );
-            })}
+            {STAGES.map(stage => (
+              <DroppableColumn key={stage} stage={stage} cards={stageReferrals(stage)} isMobile={isMobile} onMoveStage={moveStage} />
+            ))}
           </div>
           <DragOverlay>
             {activeReferral ? <OverlayCard referral={activeReferral} /> : null}
