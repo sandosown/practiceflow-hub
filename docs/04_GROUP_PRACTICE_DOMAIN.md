@@ -41,9 +41,9 @@ First-class workspace. Exemplar implementation of PF structure.
 2. Message Board (formerly Office Board — LOG-065)
 3. Management Center
 4. Client Database
-5. Caseload Integration
+5. Referral Pipeline (formerly Caseload Integration — LOG-076)
 6. Treatment Plan Tracker
-7. Supervision Structure
+7. Finance Tab (LOG-077 — replaces Supervision Structure on grid)
 8. Insurance Database
 9. Vendor Database
 10. Major Moments
