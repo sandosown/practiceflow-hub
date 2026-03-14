@@ -147,8 +147,8 @@ const BottomNavBar: React.FC = () => {
 
       <Drawer open={moreOpen} onOpenChange={setMoreOpen}>
         <DrawerContent
-          className="border-0"
-          style={{ background: '#1a2a5e', maxHeight: '75vh', borderRadius: '20px 20px 0 0' }}
+          className="border-0 md:!inset-x-auto md:!right-4 md:!left-auto md:!max-w-[400px] md:!bottom-[68px]"
+          style={{ background: '#1a2a5e', maxHeight: '75vh', borderRadius: '16px 16px 0 0' }}
         >
           {/* Handle */}
           <div className="flex justify-center pt-3 pb-2">
