@@ -24,6 +24,7 @@ const MODULES = [
   { id: 'supervision', label: 'Supervision Structure', icon: Shield, subtitle: 'Supervision assignments', path: '/dashboard/owner/group-practice/supervision', accent: '#4f46e5' },
   { id: 'insurance', label: 'Insurance Database', icon: CreditCard, subtitle: 'Payers & coverage', path: '/dashboard/owner/group-practice/insurance', accent: '#78716c' },
   { id: 'vendors', label: 'Vendor Database', icon: Package, subtitle: 'Vendor contacts & contracts', path: '/dashboard/owner/group-practice/vendors', accent: '#92764a' },
+  { id: 'major-moments', label: 'Major Moments', icon: Sparkles, subtitle: 'Your milestones and achievements.', path: '/dashboard/owner/group-practice/major-moments', accent: '#a78bfa' },
 ];
 
 function hexToRgb(hex: string): string {
