@@ -218,8 +218,9 @@ Each signal type has its own accent (see Radar Signal Accents below).
 | Message Board (formerly Office Board) | #0ea5e9 |
 | Management Center | #7c3aed |
 | Client Database | #0d9488 |
-| Caseload Integration | #3b82f6 |
+| Referral Pipeline | #0ea5e9 |
 | Treatment Plan Tracker | #059669 |
+| Finance Tab | #059669 |
 | Supervision Structure | #4f46e5 |
 | Insurance Database | #78716c |
 | Vendor Database | #92764a |
