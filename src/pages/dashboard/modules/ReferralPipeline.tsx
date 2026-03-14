@@ -398,10 +398,10 @@ const ReferralPipeline: React.FC = () => {
       referralId,
       from,
       to,
-      user: user?.full_name ?? 'Unknown',
+      user: session?.full_name ?? 'Unknown',
       timestamp: new Date().toISOString(),
     }]);
-  }, [user?.full_name]);
+  }, [session?.full_name]);
 
   const moveStage = useCallback((id: string, direction: 1 | -1) => {
     setReferrals(prev => prev.map(r => {
