@@ -20,24 +20,30 @@ const statusColor: Record<string, { bg: string; text: string }> = {
   PENDING_TRANSFER: { bg: 'rgba(245,158,11,0.15)', text: '#f59e0b' },
 };
 
+/** Tiny helper — extract r,g,b from a hex string for inline rgba() */
+function hexRgb(hex: string): string {
+  const h = hex.replace('#', '');
+  return `${parseInt(h.substring(0, 2), 16)},${parseInt(h.substring(2, 4), 16)},${parseInt(h.substring(4, 6), 16)}`;
+}
+
 const ClinicianDashboard: React.FC = () => {
   return (
-    <div className="min-h-screen" style={{ background: '#0a1628' }}>
+    <div className="min-h-screen bg-background">
       <TopNavBar />
 
       <main className="max-w-5xl mx-auto px-6 py-10">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm mb-6" style={{ color: '#64748b' }}>
+        <nav className="flex items-center gap-2 text-sm mb-6 text-muted-foreground">
           <span>Group Practice</span>
           <span>›</span>
-          <span style={{ color: '#f1f5f9' }} className="font-medium">My Dashboard</span>
+          <span className="text-foreground font-medium">My Dashboard</span>
         </nav>
 
-        <h1 className="text-2xl font-bold mb-8" style={{ color: '#f1f5f9' }}>Group Practice</h1>
+        <h1 className="text-2xl font-bold mb-8 text-foreground">Group Practice</h1>
 
         {/* Section 1 — Attention Layer */}
         <section className="mb-10">
-          <h2 className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3" style={{ color: '#94a3b8', borderLeft: '4px solid #2dd4bf' }}>
+          <h2 className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3 text-muted-foreground" style={{ borderLeft: '4px solid #2dd4bf' }}>
             RADAR
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -46,7 +52,7 @@ const ClinicianDashboard: React.FC = () => {
                 <p className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: s.accent }}>
                   {s.type}
                 </p>
-                <p className="text-sm mb-3" style={{ color: '#f1f5f9' }}>{s.detail}</p>
+                <p className="text-sm mb-3 text-foreground">{s.detail}</p>
                 <button
                   className="text-xs font-medium px-3 py-1 rounded"
                    style={{
@@ -64,7 +70,7 @@ const ClinicianDashboard: React.FC = () => {
 
         {/* Section 2 — My Caseload */}
         <section>
-          <h2 className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3" style={{ color: '#94a3b8', borderLeft: '4px solid #2dd4bf' }}>
+          <h2 className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3 text-muted-foreground" style={{ borderLeft: '4px solid #2dd4bf' }}>
             MY CASELOAD
           </h2>
           <div className="flex flex-col gap-3">
@@ -74,7 +80,7 @@ const ClinicianDashboard: React.FC = () => {
               return (
                 <div key={c.name} className="flex items-center justify-between p-4" style={cardStyle(accent)}>
                   <div className="flex items-center gap-4 min-w-0">
-                    <p className="text-sm font-medium truncate" style={{ color: '#f1f5f9' }}>{c.name}</p>
+                    <p className="text-sm font-medium truncate text-foreground">{c.name}</p>
                     <span
                       className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full whitespace-nowrap"
                       style={{ background: sc.bg, color: sc.text }}
@@ -82,9 +88,9 @@ const ClinicianDashboard: React.FC = () => {
                       {c.status.replace('_', ' ')}
                     </span>
                   </div>
-                  <div className="flex items-center gap-6 text-xs shrink-0" style={{ color: '#94a3b8' }}>
+                  <div className="flex items-center gap-6 text-xs shrink-0 text-muted-foreground">
                     <span>{c.sessions} sessions</span>
-                    <span style={{ color: c.nextDue ? '#f1f5f9' : '#64748b' }}>
+                    <span className={c.nextDue ? 'text-foreground' : 'text-muted-foreground'}>
                       {c.nextDue ?? '—'}
                     </span>
                   </div>
@@ -97,11 +103,5 @@ const ClinicianDashboard: React.FC = () => {
     </div>
   );
 };
-
-/** Tiny helper — extract r,g,b from a hex string for inline rgba() */
-function hexRgb(hex: string): string {
-  const h = hex.replace('#', '');
-  return `${parseInt(h.substring(0, 2), 16)},${parseInt(h.substring(2, 4), 16)},${parseInt(h.substring(4, 6), 16)}`;
-}
 
 export default ClinicianDashboard;
