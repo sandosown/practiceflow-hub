@@ -60,7 +60,9 @@ const GroupPracticeDashboard: React.FC = () => {
           padding: '14px 20px',
           display: 'flex',
           alignItems: 'center',
-          textAlign: 'center',
+          width: 500,
+          marginLeft: 'auto',
+          marginRight: 'auto',
           marginBottom: 16,
         }}>
           <span style={{ color: '#1a2a5e', fontSize: 16, fontWeight: 400 }}>
@@ -71,9 +73,12 @@ const GroupPracticeDashboard: React.FC = () => {
             {SIGNALS.length === 0 ? 'You currently have no signals requiring your attention.' : 'You currently have '}
           </span>
           {SIGNALS.length > 0 && (
-            <span style={{ color: '#2dd4bf', fontSize: 16, fontWeight: 600 }}>
-              {SIGNALS.length} signal{SIGNALS.length !== 1 ? 's' : ''} requiring your attention.
-            </span>
+            <>
+              {" "}
+              <span style={{ color: '#2dd4bf', fontSize: 16, fontWeight: 600 }}>
+                {SIGNALS.length} signal{SIGNALS.length !== 1 ? 's' : ''} requiring your attention.
+              </span>
+            </>
           )}
         </div>
 
