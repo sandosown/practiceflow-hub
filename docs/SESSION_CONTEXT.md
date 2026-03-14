@@ -419,6 +419,7 @@ git push origin main
 | src/pages/dashboard/modules/VendorDatabase.tsx | Vendor database module | ✅ Built |
 | src/pages/dashboard/modules/MajorMoments.tsx | Major Moments module | ✅ Built |
 | src/pages/dashboard/MessageBoard.tsx | Message Board (renamed from OfficeBoard) | ✅ Built |
+| src/components/BottomNavBar.tsx | Persistent mobile bottom nav | ✅ Built |
 | src/context/SessionContext.tsx | Session + role context | ✅ Built |
 | supabase/ | Supabase RLS config | ✅ Built |
 
