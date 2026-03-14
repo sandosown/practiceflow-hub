@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopNavBar from '@/components/TopNavBar';
 import { cardStyle } from '@/lib/cardStyle';
+import BottomNavBar from '@/components/BottomNavBar';
 
 const radarSignals = [
   { type: 'SUPERVISION SESSION DUE', detail: 'Weekly session not yet logged', accent: '#3b82f6' },
@@ -131,6 +132,7 @@ const InternClinicalDashboard: React.FC = () => {
           </div>
         </section>
       </div>
+      <BottomNavBar />
     </div>
   );
 };
