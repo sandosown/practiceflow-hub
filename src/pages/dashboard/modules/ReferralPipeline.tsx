@@ -9,7 +9,7 @@ import { cardStyle } from '@/lib/cardStyle';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useAuth } from '@/context/AuthContext';
+import { useSession } from '@/context/SessionContext';
 import {
   DndContext,
   DragOverlay,
