@@ -2,11 +2,23 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopNavBar from '@/components/TopNavBar';
 import BottomNavBar from '@/components/BottomNavBar';
-import { ArrowLeft, Search, Plus, Pencil, CheckSquare, ArrowRight, X } from 'lucide-react';
+import { ArrowLeft, Search, Plus, Pencil, CheckSquare, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cardStyle } from '@/lib/cardStyle';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { useIsMobile } from '@/hooks/use-mobile';
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  closestCenter,
+  type DragStartEvent,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import { useDraggable, useDroppable } from '@dnd-kit/core';
 
 const ACCENT = '#0ea5e9';
 
@@ -49,12 +61,101 @@ function hexToRgb(hex: string): string {
   return `${parseInt(h.substring(0, 2), 16)},${parseInt(h.substring(2, 4), 16)},${parseInt(h.substring(4, 6), 16)}`;
 }
 
+/* ── Draggable Card ── */
+const DraggableCard: React.FC<{ referral: Referral; isMobile: boolean; onMoveStage: (id: string, dir: 1 | -1) => void }> = ({ referral: r, isMobile, onMoveStage }) => {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id: r.id });
+  const style: React.CSSProperties = {
+    ...cardStyle(ACCENT),
+    borderRadius: 10,
+    opacity: isDragging ? 0.4 : 1,
+    transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined,
+    cursor: 'grab',
+    touchAction: 'none',
+  };
+
+  return (
+    <div ref={setNodeRef} {...attributes} {...listeners} className="p-3 space-y-2" style={style}>
+      <p className="font-semibold text-sm text-foreground">{r.firstName} {r.lastName}</p>
+      <p className="text-[11px] text-muted-foreground">Submitted {r.dateSubmitted}</p>
+      <div className="flex items-center gap-2">
+        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: `rgba(${hexToRgb(ACCENT)},0.12)`, color: ACCENT }}>
+          {r.source}
+        </span>
+        <span className="text-[10px] text-muted-foreground">{r.daysInStage}d in stage</span>
+      </div>
+      <div className="flex items-center gap-1 pt-1">
+        <button className="p-1 rounded hover:bg-muted transition-colors" title="Add Note" onPointerDown={e => e.stopPropagation()}>
+          <Pencil className="w-3.5 h-3.5 text-muted-foreground" />
+        </button>
+        <button className="p-1 rounded hover:bg-muted transition-colors" title="Add Task" onPointerDown={e => e.stopPropagation()}>
+          <CheckSquare className="w-3.5 h-3.5 text-muted-foreground" />
+        </button>
+        {isMobile && (
+          <button
+            className="p-1 rounded hover:bg-muted transition-colors ml-auto"
+            title="Move to next stage"
+            onPointerDown={e => e.stopPropagation()}
+            onClick={() => onMoveStage(r.id, 1)}
+          >
+            <ArrowRight className="w-3.5 h-3.5" style={{ color: ACCENT }} />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+/* ── Droppable Column ── */
+const DroppableColumn: React.FC<{ stage: Stage; children: React.ReactNode; count: number }> = ({ stage, children, count }) => {
+  const { setNodeRef, isOver } = useDroppable({ id: stage });
+  return (
+    <div ref={setNodeRef} className="flex-shrink-0 flex flex-col" style={{ minWidth: 240, width: 240 }}>
+      <div className="flex items-center justify-between mb-3 px-1">
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{stage}</h3>
+        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: `rgba(${hexToRgb(ACCENT)},0.12)`, color: ACCENT }}>
+          {count}
+        </span>
+      </div>
+      <div
+        className="flex flex-col gap-3 overflow-y-auto pr-1"
+        style={{
+          height: '70vh',
+          transition: 'background 150ms',
+          background: isOver ? `rgba(${hexToRgb(ACCENT)},0.06)` : undefined,
+          borderRadius: 8,
+          padding: 4,
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  );
+};
+
+/* ── Overlay Card (shown while dragging) ── */
+const OverlayCard: React.FC<{ referral: Referral }> = ({ referral: r }) => (
+  <div className="p-3 space-y-2 shadow-lg" style={{ ...cardStyle(ACCENT), borderRadius: 10, width: 232, background: 'hsl(var(--card))' }}>
+    <p className="font-semibold text-sm text-foreground">{r.firstName} {r.lastName}</p>
+    <p className="text-[11px] text-muted-foreground">Submitted {r.dateSubmitted}</p>
+    <div className="flex items-center gap-2">
+      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: `rgba(${hexToRgb(ACCENT)},0.12)`, color: ACCENT }}>
+        {r.source}
+      </span>
+      <span className="text-[10px] text-muted-foreground">{r.daysInStage}d in stage</span>
+    </div>
+  </div>
+);
+
 const ReferralPipeline: React.FC = () => {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [search, setSearch] = useState('');
   const [referrals, setReferrals] = useState<Referral[]>(INITIAL_REFERRALS);
   const [modalOpen, setModalOpen] = useState(false);
+  const [activeId, setActiveId] = useState<string | null>(null);
   const [form, setForm] = useState({ firstName: '', lastName: '', phone: '', email: '', source: 'Web Form', notes: '' });
+
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
   const q = search.toLowerCase();
   const filtered = referrals.filter(
@@ -71,6 +172,21 @@ const ReferralPipeline: React.FC = () => {
       if (next < 0 || next >= STAGES.length) return r;
       return { ...r, stage: STAGES[next], daysInStage: 0 };
     }));
+  };
+
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id as string);
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    setActiveId(null);
+    const { active, over } = event;
+    if (!over) return;
+    const targetStage = over.id as Stage;
+    if (!STAGES.includes(targetStage)) return;
+    setReferrals(prev => prev.map(r =>
+      r.id === active.id && r.stage !== targetStage ? { ...r, stage: targetStage, daysInStage: 0 } : r
+    ));
   };
 
   const handleAddReferral = () => {
@@ -93,6 +209,7 @@ const ReferralPipeline: React.FC = () => {
   };
 
   const outcomeReferrals = referrals.filter(r => r.outcome);
+  const activeReferral = activeId ? referrals.find(r => r.id === activeId) : null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -100,8 +217,6 @@ const ReferralPipeline: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6 py-6 pb-20">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm mb-6 text-muted-foreground">
-          <button onClick={() => navigate('/dashboard/owner')} className="hover:text-primary transition-colors">Workspaces</button>
-          <span>›</span>
           <button onClick={() => navigate('/dashboard/owner/group-practice')} className="hover:text-primary transition-colors">Group Practice</button>
           <span>›</span>
           <span className="text-foreground font-medium">Referral Pipeline</span>
@@ -136,64 +251,28 @@ const ReferralPipeline: React.FC = () => {
         </div>
 
         {/* Kanban Board */}
-        <div className="flex gap-4 overflow-x-auto pb-4">
-          {STAGES.map(stage => {
-            const cards = stageReferrals(stage);
-            return (
-              <div key={stage} className="flex-shrink-0" style={{ minWidth: 240, width: 240 }}>
-                {/* Column header */}
-                <div className="flex items-center justify-between mb-3 px-1">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{stage}</h3>
-                  <span
-                    className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-                    style={{ background: `rgba(${hexToRgb(ACCENT)},0.12)`, color: ACCENT }}
-                  >
-                    {cards.length}
-                  </span>
-                </div>
-
-                {/* Cards */}
-                <div className="flex flex-col gap-3">
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+          <div className="flex gap-4 overflow-x-auto pb-4">
+            {STAGES.map(stage => {
+              const cards = stageReferrals(stage);
+              return (
+                <DroppableColumn key={stage} stage={stage} count={cards.length}>
                   {cards.length === 0 && (
                     <div className="text-xs text-muted-foreground text-center py-6 rounded-lg" style={{ background: 'hsl(var(--muted) / 0.3)' }}>
                       No referrals
                     </div>
                   )}
                   {cards.map(r => (
-                    <div key={r.id} className="p-3 space-y-2" style={{ ...cardStyle(ACCENT), borderRadius: 10 }}>
-                      <p className="font-semibold text-sm text-foreground">{r.firstName} {r.lastName}</p>
-                      <p className="text-[11px] text-muted-foreground">Submitted {r.dateSubmitted}</p>
-                      <div className="flex items-center gap-2">
-                        <span
-                          className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
-                          style={{ background: `rgba(${hexToRgb(ACCENT)},0.12)`, color: ACCENT }}
-                        >
-                          {r.source}
-                        </span>
-                        <span className="text-[10px] text-muted-foreground">{r.daysInStage}d in stage</span>
-                      </div>
-                      <div className="flex items-center gap-1 pt-1">
-                        <button className="p-1 rounded hover:bg-muted transition-colors" title="Add Note">
-                          <Pencil className="w-3.5 h-3.5 text-muted-foreground" />
-                        </button>
-                        <button className="p-1 rounded hover:bg-muted transition-colors" title="Add Task">
-                          <CheckSquare className="w-3.5 h-3.5 text-muted-foreground" />
-                        </button>
-                        <button
-                          className="p-1 rounded hover:bg-muted transition-colors ml-auto"
-                          title="Move to next stage"
-                          onClick={() => moveStage(r.id, 1)}
-                        >
-                          <ArrowRight className="w-3.5 h-3.5" style={{ color: ACCENT }} />
-                        </button>
-                      </div>
-                    </div>
+                    <DraggableCard key={r.id} referral={r} isMobile={isMobile} onMoveStage={moveStage} />
                   ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                </DroppableColumn>
+              );
+            })}
+          </div>
+          <DragOverlay>
+            {activeReferral ? <OverlayCard referral={activeReferral} /> : null}
+          </DragOverlay>
+        </DndContext>
 
         {/* Outcome Buckets */}
         <section className="mt-8">
@@ -205,18 +284,9 @@ const ReferralPipeline: React.FC = () => {
               const isComplete = outcome === 'Intake Complete';
               const items = outcomeReferrals.filter(r => r.outcome === outcome);
               return (
-                <div
-                  key={outcome}
-                  className="p-4 rounded-xl"
-                  style={{
-                    background: isComplete ? 'rgba(5,150,105,0.1)' : 'rgba(148,163,184,0.1)',
-                  }}
-                >
+                <div key={outcome} className="p-4 rounded-xl" style={{ background: isComplete ? 'rgba(5,150,105,0.1)' : 'rgba(148,163,184,0.1)' }}>
                   <div className="flex items-center gap-2 mb-2">
-                    <h3
-                      className="text-xs font-semibold uppercase tracking-wider"
-                      style={{ color: isComplete ? '#059669' : 'hsl(var(--muted-foreground))' }}
-                    >
+                    <h3 className="text-xs font-semibold uppercase tracking-wider" style={{ color: isComplete ? '#059669' : 'hsl(var(--muted-foreground))' }}>
                       {outcome}
                     </h3>
                     {isComplete && (
