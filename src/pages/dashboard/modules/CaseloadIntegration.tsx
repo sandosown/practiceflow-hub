@@ -93,8 +93,8 @@ const CaseloadIntegration: React.FC = () => {
           <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/owner/group-practice')} className="text-muted-foreground">
             <ArrowLeft className="w-4 h-4 mr-1" /> Back
           </Button>
-          <h1 className="text-2xl font-bold text-foreground pl-3" style={{ borderLeft: '4px solid #3b82f6' }}>
-            Caseload Integration
+          <h1 className="text-2xl font-bold text-foreground pl-3" style={{ borderLeft: '4px solid #0ea5e9' }}>
+            Referral Pipeline
           </h1>
         </div>
 
