@@ -122,9 +122,10 @@ Custom stages (LOG-092):
 - Owner can add custom stages anywhere in the chain — before, after, or between existing stages
 - Custom stages are hat-scoped
 - Stage order is drag-reorderable by Owner
-- Default stages cannot be removed — only custom stages can be deleted
+- Default stages cannot be removed — only custom stages can be deleted. However, default stage names ARE editable — Owner can rename any stage to fit their workflow. The stage structure and position of default stages is preserved even if renamed.
 - A + button appears in the stage header bar to add a new stage at that position
 - Custom stage name is user-defined, max 30 characters
+- All stage names — default and custom — are editable by Owner at any time. Rename is done inline on the stage column header. Stage name max 30 characters.
 
 ### Outcome Bucket Entry (LOG-093)
 
