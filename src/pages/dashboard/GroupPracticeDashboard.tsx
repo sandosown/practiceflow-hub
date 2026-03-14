@@ -68,7 +68,7 @@ const GroupPracticeDashboard: React.FC = () => {
                 <p className="text-sm" style={{ color: '#64748b' }}>{s.detail}</p>
                 <button
                   className="h-7 text-xs font-semibold px-3 rounded-full mt-1"
-                  style={{ background: s.accent, color: '#0a1628' }}
+                  style={{ background: 'transparent', color: s.accent, border: `1px solid rgba(${hexToRgb(s.accent)},0.45)` }}
                 >
                   Resolve
                 </button>
