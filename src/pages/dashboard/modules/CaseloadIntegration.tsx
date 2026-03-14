@@ -105,28 +105,60 @@ const DraggableCard: React.FC<{ referral: Referral; isMobile: boolean; onMoveSta
   );
 };
 
-/* ── Droppable Column ── */
-const DroppableColumn: React.FC<{ stage: Stage; children: React.ReactNode; count: number }> = ({ stage, children, count }) => {
+/* ── Droppable Column with collapse ── */
+const MAX_VISIBLE = 2;
+
+const DroppableColumn: React.FC<{ stage: Stage; cards: Referral[]; isMobile: boolean; onMoveStage: (id: string, dir: 1 | -1) => void }> = ({ stage, cards, isMobile, onMoveStage }) => {
   const { setNodeRef, isOver } = useDroppable({ id: stage });
+  const [expanded, setExpanded] = useState(false);
+
+  const visibleCards = expanded ? cards : cards.slice(0, MAX_VISIBLE);
+  const hiddenCount = cards.length - MAX_VISIBLE;
+
   return (
     <div ref={setNodeRef} className="flex-shrink-0 flex flex-col" style={{ minWidth: 240, width: 240 }}>
       <div className="flex items-center justify-between mb-3 px-1">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{stage}</h3>
         <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: `rgba(${hexToRgb(ACCENT)},0.12)`, color: ACCENT }}>
-          {count}
+          {cards.length}
         </span>
       </div>
       <div
         className="flex flex-col gap-3 overflow-y-auto pr-1"
         style={{
-          height: '70vh',
+          minHeight: 120,
+          maxHeight: '70vh',
           transition: 'background 150ms',
           background: isOver ? `rgba(${hexToRgb(ACCENT)},0.06)` : undefined,
           borderRadius: 8,
           padding: 4,
         }}
       >
-        {children}
+        {cards.length === 0 && (
+          <div className="text-xs text-muted-foreground text-center py-6 rounded-lg" style={{ background: 'hsl(var(--muted) / 0.3)' }}>
+            No referrals
+          </div>
+        )}
+        {visibleCards.map(r => (
+          <DraggableCard key={r.id} referral={r} isMobile={isMobile} onMoveStage={onMoveStage} />
+        ))}
+        {hiddenCount > 0 && !expanded && (
+          <button
+            onClick={() => setExpanded(true)}
+            className="text-xs font-semibold py-2 rounded-lg transition-colors hover:bg-muted"
+            style={{ color: ACCENT }}
+          >
+            +{hiddenCount} more
+          </button>
+        )}
+        {expanded && hiddenCount > 0 && (
+          <button
+            onClick={() => setExpanded(false)}
+            className="text-xs font-semibold py-2 rounded-lg transition-colors hover:bg-muted text-muted-foreground"
+          >
+            Show less
+          </button>
+        )}
       </div>
     </div>
   );
