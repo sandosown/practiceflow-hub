@@ -31,6 +31,12 @@ const OWNER_SECTIONS: DrawerSection[] = [
     ],
   },
   {
+    title: 'CLINICAL',
+    items: [
+      { label: 'Supervision Structure', icon: Shield, path: '/dashboard/owner/group-practice/supervision' },
+    ],
+  },
+  {
     title: 'TEAM',
     items: [
       { label: 'Directory', icon: Contact, path: '/dashboard/owner/group-practice/directory' },
