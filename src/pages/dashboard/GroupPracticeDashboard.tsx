@@ -16,7 +16,7 @@ const SIGNALS = [
 
 const MODULES = [
   { id: 'charts', label: 'Charts Requiring Action', icon: ClipboardList, subtitle: 'Treatment plans needing review', path: '/dashboard/owner/group-practice/charts', accent: '#d97706' },
-  { id: 'office-board', label: 'Office Board', icon: MessageSquare, subtitle: 'Announcements, updates & resources', path: '/dashboard/owner/group-practice/office-board', accent: '#0ea5e9' },
+  { id: 'message-board', label: 'Message Board', icon: MessageSquare, subtitle: 'Announcements, updates & resources', path: '/dashboard/owner/group-practice/office-board', accent: '#0ea5e9' },
   { id: 'management', label: 'Management Center', icon: LayoutDashboard, subtitle: 'Staff, operations & oversight', path: '/dashboard/owner/group-practice/management', accent: '#7c3aed' },
   { id: 'clients', label: 'Client Database', icon: Users, subtitle: 'Client records & status', path: '/dashboard/owner/group-practice/clients', accent: '#0d9488' },
   { id: 'caseload', label: 'Caseload Integration', icon: Briefcase, subtitle: 'Therapist assignments & capacity', path: '/dashboard/owner/group-practice/caseload', accent: '#3b82f6' },
@@ -52,10 +52,9 @@ const GroupPracticeDashboard: React.FC = () => {
         {/* Radar */}
         <section className="mb-10">
           <h2
-            className="text-xl font-bold mb-4 pl-3"
-            style={{ color: '#f1f5f9', borderLeft: '4px solid #2dd4bf' }}
+            className="text-xl font-bold mb-4 pl-3 text-foreground border-l-4 border-primary"
           >
-            Radar
+            RADAR
           </h2>
           <div className="flex gap-3 overflow-x-auto pb-2">
             {SIGNALS.map((s, i) => (
