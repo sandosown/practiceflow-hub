@@ -60,26 +60,28 @@ const GroupPracticeDashboard: React.FC = () => {
           padding: '14px 20px',
           display: 'flex',
           alignItems: 'center',
-          width: 500,
+          width: 'fit-content',
+          whiteSpace: 'nowrap',
           marginLeft: 'auto',
           marginRight: 'auto',
           marginBottom: 16,
         }}>
-          <span style={{ color: '#1a2a5e', fontSize: 16, fontWeight: 400 }}>
-            {(() => { const h = new Date().getHours(); return h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening'; })()}, Dr. Sarah.
-          </span>
-          <span style={{ color: '#94a3b8', fontSize: 16 }}> — </span>
-          <span style={{ color: '#1a2a5e', fontSize: 16, fontWeight: 400 }}>
-            {SIGNALS.length === 0 ? 'You currently have no signals requiring your attention.' : 'You currently have '}
-          </span>
-          {SIGNALS.length > 0 && (
-            <>
-              {" "}
-              <span style={{ color: '#2dd4bf', fontSize: 16, fontWeight: 600 }}>
-                {SIGNALS.length} signal{SIGNALS.length !== 1 ? 's' : ''} requiring your attention.
-              </span>
-            </>
-          )}
+          {(() => {
+            const h = new Date().getHours();
+            const greeting = h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
+            const count = SIGNALS.length;
+            const signalText = count === 0
+              ? 'no signals requiring your attention.'
+              : `${count} signal${count !== 1 ? 's' : ''} requiring your attention.`;
+            return (
+              <>
+                <span style={{ color: '#1a2a5e', fontSize: 16, fontWeight: 400 }}>{greeting}, Dr. Sarah.</span>
+                <span style={{ color: '#94a3b8', fontSize: 16 }}> — </span>
+                <span style={{ color: '#1a2a5e', fontSize: 16, fontWeight: 400 }}>You currently have </span>
+                <span style={{ color: '#2dd4bf', fontSize: 16, fontWeight: 600 }}>{signalText}</span>
+              </>
+            );
+          })()}
         </div>
 
         {/* Radar */}
