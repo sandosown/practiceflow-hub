@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Home, MessageSquare, Briefcase, Calendar, MoreHorizontal,
   LayoutDashboard, Users, CreditCard, Package, ShieldCheck,
-  Contact, Award, Mail, Rss, BookOpen, Settings,
+  Contact, Award, Mail, Rss, BookOpen, Settings, Sparkles,
 } from 'lucide-react';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { useSessionData } from '@/context/SessionContext';
@@ -35,6 +35,12 @@ const OWNER_SECTIONS: DrawerSection[] = [
     items: [
       { label: 'Directory', icon: Contact, path: '/dashboard/owner/group-practice/directory' },
       { label: 'Recognition', icon: Award, path: '/dashboard/owner/group-practice/major-moments' },
+    ],
+  },
+  {
+    title: 'PERSONAL',
+    items: [
+      { label: 'Major Moments', icon: Sparkles, path: '/dashboard/owner/group-practice/major-moments' },
     ],
   },
   {
