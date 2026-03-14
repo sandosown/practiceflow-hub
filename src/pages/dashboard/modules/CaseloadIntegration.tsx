@@ -187,7 +187,7 @@ const ReferralPipeline: React.FC = () => {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [form, setForm] = useState({ firstName: '', lastName: '', phone: '', email: '', source: '', notes: '' });
 
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
   const q = search.toLowerCase();
   const filtered = referrals.filter(
