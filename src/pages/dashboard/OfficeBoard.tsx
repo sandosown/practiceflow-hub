@@ -242,6 +242,7 @@ const MessageBoard: React.FC = () => {
           </div>
         )}
       </div>
+      <BottomNavBar />
     </div>
   );
 };
