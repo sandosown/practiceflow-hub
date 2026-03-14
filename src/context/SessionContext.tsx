@@ -163,10 +163,28 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (!isDemoMode) {
       await supabase.auth.signOut();
     }
+    document.documentElement.classList.remove('dark');
     setSession(null);
     setIsDemoMode(false);
     setIsBooting(false);
   }, [isDemoMode]);
+
+  // ── Theme preference ──
+  const setThemePreference = useCallback(async (pref: 'light' | 'dark') => {
+    if (pref === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    setSession(prev => prev ? { ...prev, theme_preference: pref } : prev);
+
+    if (!isDemoMode && session?.user_id) {
+      await supabase
+        .from('profiles')
+        .update({ theme_preference: pref } as any)
+        .eq('user_id', session.user_id);
+    }
+  }, [isDemoMode, session?.user_id]);
 
   // Keep mode in sync when device changes
   useEffect(() => {
@@ -178,7 +196,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const isAuthenticated = session !== null;
 
   return (
-    <Ctx.Provider value={{ session, isBooting, isAuthenticated, isDemoMode, login, loginDemo, logout }}>
+    <Ctx.Provider value={{ session, isBooting, isAuthenticated, isDemoMode, login, loginDemo, logout, setThemePreference }}>
       {isBooting ? (
         <div className="min-h-screen flex items-center justify-center bg-background">
           <div className="text-center space-y-4">
