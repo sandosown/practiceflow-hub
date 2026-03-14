@@ -200,6 +200,7 @@ const BottomNavBar: React.FC = () => {
           alignItems: 'center',
           justifyContent: 'space-around',
           zIndex: 50,
+          overflow: 'hidden',
         }}
       >
         {NAV_ITEMS.map((item) => {
