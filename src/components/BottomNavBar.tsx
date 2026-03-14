@@ -147,7 +147,7 @@ const BottomNavBar: React.FC = () => {
 
       <Drawer open={moreOpen} onOpenChange={setMoreOpen}>
         <DrawerContent
-          className="border-0 md:!inset-x-auto md:!right-4 md:!left-auto md:!max-w-[400px] md:!bottom-[68px]"
+          className="border-0 md:!left-auto md:!right-0 md:!inset-x-auto md:!max-w-[400px] md:!bottom-[64px] md:!translate-x-0"
           style={{ background: '#1a2a5e', maxHeight: '75vh', borderRadius: '16px 16px 0 0' }}
         >
           {/* Handle */}
@@ -198,7 +198,7 @@ const BottomNavBar: React.FC = () => {
                 >
                   {section.title}
                 </p>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: section.title === 'PRACTICE' ? 'repeat(3, 1fr)' : 'repeat(4, 1fr)', gap: 8 }}>
                   {section.items.map((item) => {
                     const Icon = item.icon;
                     const active = location.pathname === item.path;
