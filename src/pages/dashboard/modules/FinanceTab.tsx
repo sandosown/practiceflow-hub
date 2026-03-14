@@ -68,6 +68,7 @@ function getDateRange(period: TimePeriod): { from: string; to: string } {
 const FinanceTab: React.FC = () => {
   const navigate = useNavigate();
   const session = useSessionData();
+  const { isDemoMode } = useSession();
   const [period, setPeriod] = useState<TimePeriod>('Month');
   const [entries, setEntries] = useState<FinanceEntry[]>([]);
   const [dueItems, setDueItems] = useState<DueItem[]>([]);
