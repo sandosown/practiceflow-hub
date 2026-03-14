@@ -4,38 +4,35 @@
 
 @layer base {
   :root {
-    /* SympoFlo Dark Navy System — Phase 4 */
-    --background: 220 50% 7%;
-    --foreground: 210 40% 96%;
-
-    --card: 220 40% 14%;
-    --card-foreground: 210 40% 96%;
-
-    --popover: 220 40% 14%;
-    --popover-foreground: 210 40% 96%;
-
-    --primary: 170 60% 50%;
-    --primary-foreground: 220 50% 5%;
-
-    --secondary: 220 35% 20%;
-    --secondary-foreground: 210 40% 96%;
-
-    --muted: 220 35% 18%;
-    --muted-foreground: 215 20% 55%;
-
+    /* ── SympoFlo Light Mode (default — LOG-070) ── */
+    --background: 220 20% 95%;        /* #f1f4f8 */
+    --foreground: 226 57% 23%;        /* #1a2a5e */
+    --card: 0 0% 100%;                /* #ffffff */
+    --card-foreground: 226 57% 23%;   /* #1a2a5e */
+    --popover: 0 0% 100%;
+    --popover-foreground: 226 57% 23%;
+    --primary: 170 60% 50%;           /* #2dd4bf */
+    --primary-foreground: 226 57% 23%;
+    --secondary: 220 20% 92%;
+    --secondary-foreground: 226 57% 23%;
+    --muted: 220 20% 92%;
+    --muted-foreground: 215 20% 65%;  /* #94a3b8 */
     --accent: 170 60% 50%;
-    --accent-foreground: 220 50% 5%;
-
+    --accent-foreground: 226 57% 23%;
     --destructive: 270 30% 45%;
     --destructive-foreground: 210 40% 96%;
-
-    --border: 220 30% 20%;
-    --input: 220 40% 16%;
+    --border: 220 20% 88%;
+    --input: 220 20% 92%;
     --ring: 170 60% 50%;
-
     --radius: 0.75rem;
 
-    /* Signal colors (no red) */
+    /* ── Nav bar ── */
+    --nav-bar: 226 57% 23%;           /* #1a2a5e */
+
+    /* ── Card surface (used by cardStyle.ts) ── */
+    --card-surface: 0 0% 100%;        /* #ffffff light */
+
+    /* Signal colors (no red — ever) */
     --signal-warning: 38 92% 50%;
     --signal-warning-foreground: 220 50% 5%;
     --signal-info: 210 70% 55%;
@@ -43,7 +40,42 @@
     --signal-success: 150 42% 50%;
     --signal-success-foreground: 220 50% 5%;
 
-    --sidebar-background: 220 50% 5%;
+    --sidebar-background: 226 57% 23%;
+    --sidebar-foreground: 210 40% 96%;
+    --sidebar-primary: 170 60% 50%;
+    --sidebar-primary-foreground: 226 57% 23%;
+    --sidebar-accent: 220 35% 18%;
+    --sidebar-accent-foreground: 210 40% 96%;
+    --sidebar-border: 220 30% 20%;
+    --sidebar-ring: 170 60% 50%;
+  }
+
+  .dark {
+    /* ── SympoFlo Dark Mode (user-selectable via Settings — LOG-070) ── */
+    --background: 211 52% 24%;        /* #1e3a5f */
+    --foreground: 210 40% 96%;        /* #f1f5f9 */
+    --card: 214 51% 20%;              /* #1a3254 */
+    --card-foreground: 210 40% 96%;
+    --popover: 214 51% 20%;
+    --popover-foreground: 210 40% 96%;
+    --primary: 170 60% 50%;           /* #2dd4bf — unchanged */
+    --primary-foreground: 220 50% 5%;
+    --secondary: 220 35% 20%;
+    --secondary-foreground: 210 40% 96%;
+    --muted: 220 35% 18%;
+    --muted-foreground: 207 35% 60%;  /* #7ea8c9 */
+    --accent: 170 60% 50%;
+    --accent-foreground: 220 50% 5%;
+    --destructive: 270 30% 45%;
+    --destructive-foreground: 210 40% 96%;
+    --border: 211 52% 25%;
+    --input: 214 51% 22%;
+    --ring: 170 60% 50%;
+
+    --nav-bar: 213 54% 19%;           /* #152d4e */
+    --card-surface: 214 51% 20%;      /* #1a3254 dark */
+
+    --sidebar-background: 213 54% 19%;
     --sidebar-foreground: 210 40% 96%;
     --sidebar-primary: 170 60% 50%;
     --sidebar-primary-foreground: 220 50% 5%;
@@ -58,7 +90,6 @@
   * {
     @apply border-border;
   }
-
   body {
     @apply antialiased bg-background text-foreground;
     font-family: Arial, system-ui, -apple-system, sans-serif;
@@ -66,10 +97,10 @@
 }
 
 @layer utilities {
-  /* ── Surface card ── */
+  /* ── Surface card (light/dark aware) ── */
   .sf-card {
-    background: hsl(220 40% 14%);
-    border: 1px solid hsl(220 30% 22%);
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
     border-radius: 12px;
     transition: all 0.2s ease;
   }
@@ -77,19 +108,23 @@
     border-color: hsl(170 60% 50% / 0.5);
   }
   .sf-card-muted {
-    background: hsl(220 40% 14%);
-    border: 1px solid hsl(220 30% 18%);
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
     border-radius: 12px;
     opacity: 0.45;
   }
-
   /* ── Alert card ── */
   .sf-alert-card {
-    background: hsl(220 35% 16%);
-    border: 1px solid hsl(220 30% 22%);
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
     border-radius: 12px;
     min-width: 260px;
     flex-shrink: 0;
     transition: all 0.2s ease;
+  }
+
+  /* ── Nav bar ── */
+  .sf-nav {
+    background: hsl(var(--nav-bar));
   }
 }
