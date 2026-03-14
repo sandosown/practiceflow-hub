@@ -216,7 +216,7 @@
 | LOG-089 | Partner role — co-owner level, full access by default, self-configures visible tabs per hat, hat-scoped, universal across all engines |
 | LOG-090 | Permission Grant System — Owner grants View Only or Full Access to any module for any staff member, per-hat, revocable |
 | LOG-091 | Invitation System — only entry point for staff, Owner/Admin/designated roles can invite, single-use link expires 72hrs, hat-scoped |
-| LOG-092 | Custom Pipeline Stages — Owner adds stages anywhere in chain, drag-reorderable, default stages cannot be removed |
+| LOG-092 | Custom Pipeline Stages — Owner adds stages anywhere in chain, drag-reorderable, default stages cannot be removed. LOG-092 amended — default stage names are editable by Owner. Structure preserved, labels are not locked. |
 | LOG-093 | Referral Pipeline outcome bucket entry — drag or forward/back arrows, desktop and mobile, all movements logged |
 | LOG-094 | Staff Deactivation — INACTIVE status, never hard delete, immediate or date-set removal, blocked if active assignments exist |
 
