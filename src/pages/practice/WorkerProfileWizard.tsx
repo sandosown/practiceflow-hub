@@ -245,7 +245,7 @@ const WorkerProfileWizard: React.FC = () => {
       {/* Navigation */}
       <div className="flex items-center justify-between mt-6 max-w-xl">
         <Button variant="ghost" onClick={() => setStep(s => Math.max(0, s - 1))} disabled={step === 0}>
-          <ChevronLeft className="w-4 h-4 mr-1" /> Back
+          <ChevronLeft className="w-4 h-4" />
         </Button>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => hook.saveDraft()} disabled={hook.saving} className="text-sm">

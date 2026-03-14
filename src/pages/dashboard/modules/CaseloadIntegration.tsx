@@ -215,10 +215,6 @@ const ReferralPipeline: React.FC = () => {
     <div className="min-h-screen bg-background">
       <TopNavBar />
       <div className="max-w-7xl mx-auto px-6 py-6 pb-20">
-        {/* Breadcrumbs */}
-        <nav className="flex items-center gap-2 text-sm mb-6 text-muted-foreground">
-          <span className="text-foreground font-medium">Referral Pipeline</span>
-        </nav>
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-2">

@@ -31,10 +31,6 @@ const GPModulePlaceholder: React.FC<Props> = ({ title }) => {
     <div className="min-h-screen" style={{ background: '#0a1628' }}>
       <TopNavBar />
       <div className="max-w-5xl mx-auto px-6 py-6">
-        <div className="flex items-center gap-2 text-sm mb-6" style={{ color: '#94a3b8' }}>
-          <span className="font-medium" style={{ color: '#f1f5f9' }}>{title}</span>
-        </div>
-
         <div className="flex items-center gap-3 mb-8">
           <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/owner/group-practice')} className="text-muted-foreground">
             <ArrowLeft className="w-4 h-4" />
