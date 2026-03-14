@@ -62,7 +62,7 @@ Before any feature is built, it must answer:
 
 ### Top Navigation Bar (Locked)
 - Logo (left) — SympoFlo wordmark in Georgia serif
-- Workspace context (center) — visible inside workspace only, not on opening dashboard
+- Workspace context (center) — visible inside workspace only, not on opening dashboard. Displays the owner's company name as entered in Operating Profile (e.g. "Clarity Counseling Group"). It never displays the default workspace category label ("Group Practice", "Coaching", "Home"). The words "Group Practice" and "Workspaces" do not appear anywhere in the app UI — not in breadcrumbs, headers, nav labels, page titles, or any surface.
 - User name + avatar dropdown (top-right)
 - Log out — clearly labeled, never icon-only
 - No role badge

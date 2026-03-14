@@ -362,12 +362,12 @@ Major Moments is the only module with a unique visual treatment distinct from op
 
 ## Navigation Rules — LOCKED
 
-- Breadcrumb on every sub-page
+- Breadcrumbs show the current page name only. No parent workspace prefix ever. "Group Practice", "Coaching", "Home", and "Workspaces" never appear in any breadcrumb, header, page title, or any UI surface anywhere in the app.
 - Back button on every sub-page
 - No role badge in persistent nav
 - No mode badge in persistent nav
 - Logout: "Log out" label — not icon only
-- Workspace context: inside workspace only
+- Workspace context: inside workspace only — displays owner's company name, never default category label
 - Opening dashboard: no Radar, no workspace bleed
 - Surface names: workspace name only, no qualifier
 - Avatar dropdown: Profile, Settings, Log out — always in that order
