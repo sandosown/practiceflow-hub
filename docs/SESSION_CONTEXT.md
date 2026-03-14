@@ -676,33 +676,31 @@ If ignored, disappears on next navigation.
 
 ## APPROVED THIS SESSION
 
-- Login page — Light Mode tokens applied ✅
+- LOG-086 verified — Add Referral source dropdown confirmed ✅
 
-- Bottom navigation bar — 5 items, correct order, correct colors ✅
+- Finance module page — approved ✅
 
-- More drawer — grid layout, all sections, correct order ✅
+- Redundant page labels removed app-wide ✅
 
-- More drawer CLINICAL section — Supervision Structure added ✅
+- Back button text removed app-wide ✅
 
-- Avatar dropdown — initials, chevron, correct item order ✅
+- Referral Pipeline drag and drop + column collapse (2 cards max, +X more) ✅
 
-- Breadcrumb cleanup — "Workspaces" removed from GP and Referral Pipeline pages ✅
+- Mobile hamburger menu ✅
 
-- Greeting banner — centered, single line, dynamic, correct copy ✅
+- Settings page built + 404 route fixed ✅
 
-- Referral Pipeline card — renamed, correct subtitle, correct accent ✅
+- Dark Mode toggle in Settings ✅
 
-- Referral Pipeline module page — kanban board, 5 columns, outcome buckets, Add Referral modal ✅
+- Dark Mode persistence across sessions (Supabase) ✅
 
-- Finance card — on GP grid, correct name, correct accent ✅
+- LOG-071 asymmetric border system applied and approved ✅
 
-- Finance module page — built (screenshot review pending next session) ✅
+- LOG-087 applied to codebase — Group Practice and Workspaces removed from all UI surfaces ✅
 
-- Major Moments — moved from GP grid to More drawer PERSONAL section ✅
+- More drawer role-filtered for all 7 roles ✅
 
-- Supervision Structure — moved from GP grid to More drawer CLINICAL section ✅
-
-- Canon files — LOG-076 through LOG-080 updated and pushed to GitHub ✅
+- Phase 9 complete ✅
 
 ---
 
