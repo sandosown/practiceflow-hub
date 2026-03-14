@@ -1,6 +1,7 @@
 import React from 'react';
 import TopNavBar from '@/components/TopNavBar';
 import { cardStyle } from '@/lib/cardStyle';
+import BottomNavBar from '@/components/BottomNavBar';
 
 const radarSignals = [
   { type: 'LP VERIFICATION OVERDUE', detail: 'Priya Patel — due 3 days ago', accent: '#ea580c' },
