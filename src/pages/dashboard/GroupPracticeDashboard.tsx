@@ -51,7 +51,7 @@ const GroupPracticeDashboard: React.FC = () => {
           <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/owner')} className="text-muted-foreground">
             <ArrowLeft className="w-4 h-4 mr-1" /> Back
           </Button>
-          <h1 className="text-2xl font-bold" style={{ color: '#f1f5f9' }}>Group Practice</h1>
+          <h1 className="text-2xl font-bold text-foreground">Group Practice</h1>
         </div>
 
         {/* Radar */}
