@@ -531,15 +531,19 @@ const ReferralPipeline: React.FC = () => {
     setCustomStages(prev => [...prev, name]);
   }, [customStages]);
 
-  const deleteCustomStage = useCallback((name: string) => {
-    // Move any cards in this stage to the previous stage
-    const idx = stages.indexOf(name);
+  const deleteCustomStage = useCallback((stageKey: string) => {
+    const idx = stages.indexOf(stageKey);
     const fallback = idx > 0 ? stages[idx - 1] : stages[0];
     setReferrals(prev => prev.map(r =>
-      r.stage === name ? { ...r, stage: fallback, daysInStage: 0 } : r
+      r.stage === stageKey ? { ...r, stage: fallback, daysInStage: 0 } : r
     ));
-    setCustomStages(prev => prev.filter(s => s !== name));
+    setCustomStages(prev => prev.filter(s => s !== stageKey));
+    setStageRenames(prev => { const next = { ...prev }; delete next[stageKey]; return next; });
   }, [stages]);
+
+  const renameStage = useCallback((stageKey: string, newName: string) => {
+    setStageRenames(prev => ({ ...prev, [stageKey]: newName }));
+  }, []);
 
   const outcomeReferrals = referrals.filter(r => r.outcome);
   const activeReferral = activeId ? referrals.find(r => r.id === activeId) : null;
