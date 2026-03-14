@@ -312,7 +312,22 @@ const ReferralPipeline: React.FC = () => {
             </div>
             <Input placeholder="Phone" value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} />
             <Input placeholder="Email" value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} />
-            <Input placeholder="Source" value={form.source} onChange={e => setForm(p => ({ ...p, source: e.target.value }))} />
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-foreground">Source</label>
+              <select
+                value={form.source}
+                onChange={e => setForm(p => ({ ...p, source: e.target.value }))}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                <option value="" disabled>Select source…</option>
+                <option value="Web Form">Web Form</option>
+                <option value="Phone Call">Phone Call</option>
+                <option value="Email">Email</option>
+                <option value="Walk-in">Walk-in</option>
+                <option value="Referral from provider">Referral from provider</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
             <textarea
               placeholder="Notes"
               value={form.notes}
