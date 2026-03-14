@@ -86,7 +86,7 @@ const CaseloadIntegration: React.FC = () => {
           <span>›</span>
           <button onClick={() => navigate('/dashboard/owner/group-practice')} className="hover:text-primary transition-colors">Group Practice</button>
           <span>›</span>
-          <span className="text-foreground font-medium">Caseload Integration</span>
+          <span className="text-foreground font-medium">Referral Pipeline</span>
         </nav>
 
         <div className="flex items-center gap-3 mb-6">
