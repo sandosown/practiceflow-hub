@@ -247,8 +247,8 @@ Each signal type has its own accent (see Radar Signal Accents below).
 | Phase 3 | Structural Fixes | ✅ COMPLETE |
 | Phase 4 | Visual Overhaul | ✅ COMPLETE |
 | Phase 5 | Landing Energy + Language Doctrine | ✅ COMPLETE |
-| Phase 6 | Role-Specific Dashboard Content | 🔄 IN PROGRESS |
-| Phase 7 | Module Pages — Real Content | 🔜 PENDING |
+| Phase 6 | Role-Specific Dashboard Content | ✅ COMPLETE |
+| Phase 7 | Module Pages — Real Content | ✅ COMPLETE |
 | Phase 8 | Action Mode | 🔜 PENDING |
 | Phase 9 | Navigation System + Light/Dark Mode | 🔜 PENDING — Canon locked, build pending |
 | Phase 10 | Calendar & Appointments | 🔜 PENDING — Canon locked, build pending |
