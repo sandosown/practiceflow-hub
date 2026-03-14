@@ -86,15 +86,15 @@ const CaseloadIntegration: React.FC = () => {
           <span>›</span>
           <button onClick={() => navigate('/dashboard/owner/group-practice')} className="hover:text-primary transition-colors">Group Practice</button>
           <span>›</span>
-          <span className="text-foreground font-medium">Caseload Integration</span>
+          <span className="text-foreground font-medium">Referral Pipeline</span>
         </nav>
 
         <div className="flex items-center gap-3 mb-6">
           <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/owner/group-practice')} className="text-muted-foreground">
             <ArrowLeft className="w-4 h-4 mr-1" /> Back
           </Button>
-          <h1 className="text-2xl font-bold text-foreground pl-3" style={{ borderLeft: '4px solid #3b82f6' }}>
-            Caseload Integration
+          <h1 className="text-2xl font-bold text-foreground pl-3" style={{ borderLeft: '4px solid #0ea5e9' }}>
+            Referral Pipeline
           </h1>
         </div>
 
@@ -103,13 +103,13 @@ const CaseloadIntegration: React.FC = () => {
           <Input placeholder="Search by clinician or status…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
         </div>
 
-        {renderSection('CLINICIAN CAPACITY', '#3b82f6',
+        {renderSection('CLINICIAN CAPACITY', '#0ea5e9',
           <>
             {filteredClinicians.length === 0 && <p className="text-sm text-muted-foreground pl-3">No matching clinicians.</p>}
             {filteredClinicians.map((c, i) => {
               const badge = AVAILABILITY_STYLES[c.availability];
               return (
-                <div key={i} className="p-4 flex items-center justify-between gap-4" style={cardStyle('#3b82f6')}>
+                <div key={i} className="p-4 flex items-center justify-between gap-4" style={cardStyle('#0ea5e9')}>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <p className="text-sm font-semibold text-foreground">{c.name}</p>
