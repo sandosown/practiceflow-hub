@@ -65,25 +65,29 @@ const TopNavBar: React.FC = () => {
         <button
           onClick={() => setDropdownOpen(prev => !prev)}
           className="flex items-center gap-2 text-sm transition-colors"
-          style={{ color: '#94a3b8', cursor: 'pointer', background: 'none', border: 'none', padding: 0 }}
+          style={{ color: '#94a3b8', cursor: 'pointer', background: 'none', border: 'none', padding: '4px 8px', borderRadius: 8, transition: 'background 0.15s' }}
+          onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.07)')}
+          onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
         >
-          {session.full_name && (
-            <span className="hidden md:inline">{session.full_name}</span>
-          )}
           <div style={{
-            width: 30,
-            height: 30,
+            width: 32,
+            height: 32,
             borderRadius: '50%',
-            background: 'rgba(45,212,191,0.18)',
+            background: '#2dd4bf',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#2dd4bf',
-            fontWeight: 700,
-            fontSize: 13,
+            color: '#0f172a',
+            fontWeight: 600,
+            fontSize: 12,
+            flexShrink: 0,
           }}>
-            {(session.full_name ?? '?').charAt(0)}
+            {(session.full_name ?? '?').split(' ').map(w => w.charAt(0)).join('').slice(0, 2)}
           </div>
+          {session.full_name && (
+            <span className="hidden md:inline">{session.full_name}</span>
+          )}
+          <ChevronDown size={12} color="rgba(255,255,255,0.6)" className="hidden md:block" />
         </button>
 
         {dropdownOpen && (
