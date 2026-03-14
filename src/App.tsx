@@ -87,8 +87,8 @@ const AppRoutes = () => (
     <Route path="/dashboard/owner/group-practice/caseload" element={<ProtectedRoute><CaseloadIntegration /></ProtectedRoute>} />
     <Route path="/dashboard/owner/group-practice/treatment" element={<ProtectedRoute><TreatmentPlanTracker /></ProtectedRoute>} />
     <Route path="/dashboard/owner/group-practice/supervision" element={<ProtectedRoute><SupervisionStructure /></ProtectedRoute>} />
-    <Route path="/dashboard/owner/group-practice/insurance" element={<ProtectedRoute><GPModulePlaceholder title="Insurance Database" /></ProtectedRoute>} />
-    <Route path="/dashboard/owner/group-practice/vendors" element={<ProtectedRoute><GPModulePlaceholder title="Vendor Database" /></ProtectedRoute>} />
+    <Route path="/dashboard/owner/group-practice/insurance" element={<ProtectedRoute><InsuranceDatabase /></ProtectedRoute>} />
+    <Route path="/dashboard/owner/group-practice/vendors" element={<ProtectedRoute><VendorDatabase /></ProtectedRoute>} />
 
     {/* Onboarding placeholder */}
     <Route path="/onboarding" element={<ProtectedRoute><div className="min-h-screen bg-background flex items-center justify-center"><p className="text-muted-foreground">Onboarding — Phase 3</p></div></ProtectedRoute>} />
