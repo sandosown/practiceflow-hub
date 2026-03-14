@@ -211,6 +211,7 @@
 | LOG-078 | Supervision Structure moves from GP grid to More drawer CLINICAL section |
 | LOG-079 | More drawer CLINICAL section added between PRACTICE and TEAM |
 | LOG-080 | Guide Center Video Tutorials tab added as second tab alongside Written Guides |
+| LOG-087 | "Group Practice" and "Workspaces" are permanently banned from all UI surfaces. Breadcrumbs show page name only. Top bar center shows owner's company name only. |
 
 ---
 
