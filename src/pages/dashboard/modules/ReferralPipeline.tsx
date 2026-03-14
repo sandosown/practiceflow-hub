@@ -427,14 +427,18 @@ const ReferralPipeline: React.FC = () => {
   const [search, setSearch] = useState('');
   const [referrals, setReferrals] = useState<Referral[]>(INITIAL_REFERRALS);
   const [customStages, setCustomStages] = useState<string[]>([]);
+  const [stageRenames, setStageRenames] = useState<Record<string, string>>({});
   const [modalOpen, setModalOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [form, setForm] = useState({ firstName: '', lastName: '', phone: '', email: '', source: '', notes: '' });
   const [movementLog, setMovementLog] = useState<MovementLog[]>([]);
 
-  // All stages = defaults + custom appended
-  const stages = [...DEFAULT_STAGES.slice(0, -1), ...customStages, DEFAULT_STAGES[DEFAULT_STAGES.length - 1]];
-  // Custom stages inserted before "Assigned" (the last default)
+  // All stages use internal keys; display names resolved via stageRenames
+  const stageKeys = [...DEFAULT_STAGES.slice(0, -1), ...customStages, DEFAULT_STAGES[DEFAULT_STAGES.length - 1]];
+  // For backward compat, stages used throughout still reference keys
+  const stages = stageKeys;
+
+  const getDisplayName = (key: string) => stageRenames[key] ?? key;
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
