@@ -41,6 +41,7 @@ import FinanceTab from "./pages/dashboard/modules/FinanceTab";
 import MajorMoments from "./pages/dashboard/modules/MajorMoments";
 import AccessPermissions from "./pages/dashboard/modules/AccessPermissions";
 import Settings from "./pages/Settings";
+import CalendarPage from "./pages/CalendarPage";
 
 const queryClient = new QueryClient();
 
