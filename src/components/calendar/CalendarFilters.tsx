@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Search, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -79,20 +79,12 @@ function filterSummary(f: CalendarFilterState): string {
   return parts.join(' · ');
 }
 
-function filterSummaryNoKeyword(f: CalendarFilterState): string {
-  const parts: string[] = [];
-  if (f.dateFrom && f.dateTo) parts.push(`${f.dateFrom} – ${f.dateTo}`);
-  else if (f.dateFrom) parts.push(`From ${f.dateFrom}`);
-  else if (f.dateTo) parts.push(`To ${f.dateTo}`);
-  if (f.selectedTypes.length === 1) parts.push(f.selectedTypes[0]);
-  else if (f.selectedTypes.length > 1) parts.push(`${f.selectedTypes.length} types`);
-  if (f.selectedStatuses.length === 1) parts.push(f.selectedStatuses[0]);
-  else if (f.selectedStatuses.length > 1) parts.push(`${f.selectedStatuses.length} statuses`);
-  if (f.assignedTo !== 'all') {
-    const name = DEMO_USERS.find(u => u.id === f.assignedTo)?.full_name;
-    if (name) parts.push(name);
-  }
-  return parts.join(' · ');
+/** Appointment-like shape for live search */
+export interface SearchableAppointment {
+  appointment_id: string;
+  title: string;
+  appointment_type: string;
+  start_time: string;
 }
 
 interface Props {
@@ -104,6 +96,8 @@ interface Props {
   role: string;
   placeholder?: string;
   compact?: boolean;
+  appointments?: SearchableAppointment[];
+  onSelectAppointment?: (appt: SearchableAppointment) => void;
 }
 
 /* ─── Accent Chip ─── */
@@ -126,6 +120,55 @@ const AccentChip: React.FC<{
   </button>
 );
 
+/* ─── Live Search Results ─── */
+const LiveSearchResults: React.FC<{
+  keyword: string;
+  appointments: SearchableAppointment[];
+  onSelect: (appt: SearchableAppointment) => void;
+}> = ({ keyword, appointments, onSelect }) => {
+  const q = keyword.trim().toLowerCase();
+  const results = useMemo(() => {
+    if (!q) return [];
+    return appointments
+      .filter(a => a.title.toLowerCase().includes(q))
+      .slice(0, 8);
+  }, [q, appointments]);
+
+  if (!q) return null;
+  if (q.length >= 2 && results.length === 0) {
+    return (
+      <div className="mt-1.5 py-2 px-2 text-[11px] text-muted-foreground">
+        No results found
+      </div>
+    );
+  }
+  if (results.length === 0) return null;
+
+  return (
+    <div className="mt-1.5 border border-border rounded-md bg-background overflow-hidden">
+      {results.map(a => {
+        const color = TYPE_COLORS[a.appointment_type] ?? '#64748b';
+        const d = new Date(a.start_time);
+        const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        return (
+          <button
+            key={a.appointment_id}
+            onClick={() => onSelect(a)}
+            className="w-full flex items-center gap-2 px-2.5 py-1.5 text-left hover:bg-accent/10 transition-colors"
+          >
+            <span
+              className="w-2 h-2 rounded-full flex-shrink-0"
+              style={{ background: color }}
+            />
+            <span className="text-xs text-foreground truncate flex-1">{a.title}</span>
+            <span className="text-[10px] text-muted-foreground flex-shrink-0">{dateStr}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
 /* ─── Filter Dropdown Content ─── */
 const FilterDropdownContent: React.FC<{
   draft: CalendarFilterState;
@@ -136,7 +179,9 @@ const FilterDropdownContent: React.FC<{
   onSearch: () => void;
   onClear: () => void;
   compact?: boolean;
-}> = ({ draft, setDraft, currentDate, onMonthYearChange, role, onSearch, onClear, compact }) => {
+  appointments?: SearchableAppointment[];
+  onSelectAppointment?: (appt: SearchableAppointment) => void;
+}> = ({ draft, setDraft, currentDate, onMonthYearChange, role, onSearch, onClear, compact, appointments = [], onSelectAppointment }) => {
   const isOwnerAdmin = role === 'OWNER' || role === 'ADMIN' || role === 'PARTNER';
   const staff = DEMO_USERS.filter(u => u.practice_id === 'demo-practice-1');
   const [monthPickerOpen, setMonthPickerOpen] = useState(false);
@@ -151,9 +196,16 @@ const FilterDropdownContent: React.FC<{
           type="text"
           value={draft.keyword}
           onChange={e => setDraft(prev => ({ ...prev, keyword: e.target.value }))}
-          placeholder="Type to search by title..."
+          placeholder="Search..."
           className="w-full px-2.5 py-1.5 rounded-md border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
         />
+        {appointments.length > 0 && onSelectAppointment && (
+          <LiveSearchResults
+            keyword={draft.keyword}
+            appointments={appointments}
+            onSelect={onSelectAppointment}
+          />
+        )}
       </div>
 
       {/* Date Range */}
@@ -302,6 +354,7 @@ const FilterDropdownContent: React.FC<{
 const CalendarFilters: React.FC<Props> = ({
   filters, onChange, onClear, currentDate, onMonthYearChange, role,
   placeholder = 'Search calendar...', compact = false,
+  appointments = [], onSelectAppointment,
 }) => {
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<CalendarFilterState>({ ...filters });
@@ -346,6 +399,11 @@ const CalendarFilters: React.FC<Props> = ({
     setOpen(o => !o);
   };
 
+  const handleSelectAppointment = (appt: SearchableAppointment) => {
+    setOpen(false);
+    onSelectAppointment?.(appt);
+  };
+
   const ChevronIcon = open ? ChevronUp : ChevronDown;
 
   // Desktop
@@ -380,6 +438,8 @@ const CalendarFilters: React.FC<Props> = ({
               onSearch={handleSearch}
               onClear={handleClear}
               compact={compact}
+              appointments={appointments}
+              onSelectAppointment={handleSelectAppointment}
             />
           </div>
         )}
@@ -421,6 +481,8 @@ const CalendarFilters: React.FC<Props> = ({
             onSearch={handleSearch}
             onClear={handleClear}
             compact
+            appointments={appointments}
+            onSelectAppointment={handleSelectAppointment}
           />
         </SheetContent>
       </Sheet>
