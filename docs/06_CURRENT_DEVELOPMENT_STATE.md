@@ -225,7 +225,7 @@
 | LOG-098 | Calendar Filter System — keyword, date range, month/year, type, status, assigned to — universal across all hats, real-time filtering, mobile-responsive | LOCKED |
 | LOG-099 | Proactive Canon Flagging Rule — Claude must flag all canon-worthy decisions during sessions without waiting to be asked | LOCKED |
 | LOG-100 | Color Variety Rule — varied colors required on all chip sets, blocks, and grouped visual elements — monotone sets rejected | LOCKED |
-| LOG-101 | SympoFlo Full Color Palette — 23 approved colors, pairing rules, variety doctrine, banned colors confirmed | LOCKED |
+| LOG-101 | UI Color Variety System — 23 approved UI colors, variety rules, banned colors, distinct from brand palette | LOCKED |
 
 ---
 
