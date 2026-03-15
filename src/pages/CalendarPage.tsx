@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { Plus, ChevronLeft, ChevronRight, Clock, User, X, Edit2, CalendarIcon, Trash2, AlertTriangle, List } from 'lucide-react';
+import { Plus, ChevronLeft, ChevronRight, Clock, User, X, Edit2, CalendarIcon, Trash2, AlertTriangle, List, Search } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -101,23 +101,40 @@ const CalendarPage: React.FC = () => {
   const [addOpen, setAddOpen] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
   const [selectedPanelDate, setSelectedPanelDate] = useState<Date | null>(null);
+  const [calendarSearch, setCalendarSearch] = useState('');
+  const [panelSearch, setPanelSearch] = useState('');
   const isMobile = useIsMobile();
   const panelScrollRef = useRef<HTMLDivElement>(null);
 
   /* ── Role-scoped filtering ── */
-  const visibleAppointments = useMemo(() => {
+  const roleFilteredAppointments = useMemo(() => {
     if (role === 'OWNER' || role === 'ADMIN' || role === 'PARTNER') {
-      // See all practice appointments
       return appointments;
     }
     if (role === 'SUPERVISOR') {
-      // Own + supervisees (for demo: clinician + clinical intern are supervisees)
       const superviseeIds = ['demo-clinician', 'demo-intern-clinical'];
       return appointments.filter(a => a.assigned_to === userId || superviseeIds.includes(a.assigned_to));
     }
-    // Everyone else: own only
     return appointments.filter(a => a.assigned_to === userId);
   }, [appointments, userId, role]);
+
+  /* ── Search filter helper ── */
+  const filterBySearch = useCallback((appts: DemoAppointment[], query: string) => {
+    if (!query.trim()) return appts;
+    const q = query.toLowerCase();
+    return appts.filter(a =>
+      a.title.toLowerCase().includes(q) ||
+      a.appointment_type.toLowerCase().includes(q) ||
+      getNameById(a.assigned_to).toLowerCase().includes(q) ||
+      (a.assigned_by ? getNameById(a.assigned_by).toLowerCase().includes(q) : false)
+    );
+  }, []);
+
+  /* ── Calendar-visible appointments (role + calendar search) ── */
+  const visibleAppointments = useMemo(
+    () => filterBySearch(roleFilteredAppointments, calendarSearch),
+    [roleFilteredAppointments, calendarSearch, filterBySearch]
+  );
 
   /* ── Navigation ── */
   const navigatePrev = () => {
@@ -146,11 +163,12 @@ const CalendarPage: React.FC = () => {
     }, 100);
   }, []);
 
-  /* ── Panel grouped appointments ── */
+  /* ── Panel grouped appointments (role + panel search) ── */
   const panelAppointments = useMemo(() => {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
-    const filtered = visibleAppointments.filter(a => {
+    const panelFiltered = filterBySearch(roleFilteredAppointments, panelSearch);
+    const filtered = panelFiltered.filter(a => {
       const d = new Date(a.start_time);
       if (view === 'day') return isSameDay(d, currentDate);
       return d.getFullYear() === year && d.getMonth() === month;
@@ -164,7 +182,7 @@ const CalendarPage: React.FC = () => {
       grouped[key].push(a);
     });
     return grouped;
-  }, [visibleAppointments, currentDate, view]);
+  }, [roleFilteredAppointments, panelSearch, currentDate, view, filterBySearch]);
 
   const panelDateContext = view === 'day'
     ? formatDateLong(currentDate)
@@ -488,6 +506,18 @@ const CalendarPage: React.FC = () => {
           </button>
         </div>
 
+        {/* Calendar search bar */}
+        <div className="relative mb-4">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <input
+            type="text"
+            value={calendarSearch}
+            onChange={e => setCalendarSearch(e.target.value)}
+            placeholder="Search appointments..."
+            className="w-full pl-9 pr-3 py-2 rounded-lg border border-border bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+          />
+        </div>
+
         {/* Calendar body + Panel layout */}
         <div className="flex gap-4">
           <div className={`bg-card rounded-xl border border-border/60 overflow-hidden transition-all duration-300 ${panelOpen && !isMobile ? 'flex-1 min-w-0' : 'w-full'}`}>
@@ -512,6 +542,8 @@ const CalendarPage: React.FC = () => {
                 grouped={panelAppointments}
                 dateContext={panelDateContext}
                 onSelect={openDetail}
+                search={panelSearch}
+                onSearchChange={setPanelSearch}
               />
             </div>
           )}
@@ -528,6 +560,8 @@ const CalendarPage: React.FC = () => {
                 grouped={panelAppointments}
                 dateContext={panelDateContext}
                 onSelect={(a) => { setPanelOpen(false); openDetail(a); }}
+                search={panelSearch}
+                onSearchChange={setPanelSearch}
               />
             </SheetContent>
           </Sheet>
@@ -579,7 +613,7 @@ interface PanelProps {
   onSelect: (a: DemoAppointment) => void;
 }
 
-const AppointmentsPanel: React.FC<PanelProps> = ({ grouped, dateContext, onSelect }) => {
+const AppointmentsPanel: React.FC<PanelProps & { search?: string; onSearchChange?: (v: string) => void }> = ({ grouped, dateContext, onSelect, search, onSearchChange }) => {
   const dateKeys = Object.keys(grouped).sort();
 
   return (
@@ -588,6 +622,21 @@ const AppointmentsPanel: React.FC<PanelProps> = ({ grouped, dateContext, onSelec
         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Appointments</p>
         <p className="text-sm text-foreground/70 mt-0.5">{dateContext}</p>
       </div>
+      {/* Panel search bar */}
+      {onSearchChange && (
+        <div className="px-4 pb-2">
+          <div className="relative">
+            <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <input
+              type="text"
+              value={search ?? ''}
+              onChange={e => onSearchChange(e.target.value)}
+              placeholder="Search..."
+              className="w-full pl-8 pr-3 py-1.5 rounded-md border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+            />
+          </div>
+        </div>
+      )}
       <ScrollArea className="flex-1 px-4 pb-4">
         {dateKeys.length === 0 ? (
           <p className="text-sm text-muted-foreground py-8 text-center">No appointments this month.</p>
@@ -600,25 +649,29 @@ const AppointmentsPanel: React.FC<PanelProps> = ({ grouped, dateContext, onSelec
                 <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 border-b border-border/30 pb-1">
                   {d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
                 </p>
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   {appts.map(a => {
                     const color = TYPE_COLORS[a.appointment_type] ?? '#64748b';
                     return (
                       <button
                         key={a.appointment_id}
                         onClick={() => onSelect(a)}
-                        className="w-full text-left rounded-lg p-2 hover:bg-accent/10 transition-colors"
+                        className="w-full text-left rounded-lg p-2.5 hover:opacity-80 transition-opacity"
+                        style={{
+                          background: 'hsl(var(--card))',
+                          borderLeft: `4px solid ${color}`,
+                          borderTop: `1px solid ${color}40`,
+                          borderBottom: `1px solid ${color}40`,
+                          borderRight: `1px solid ${color}26`,
+                        }}
                       >
-                        <div className="flex items-start gap-2">
-                          <span className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0" style={{ background: color }} />
-                          <div className="min-w-0 flex-1">
-                            <p className="text-xs text-muted-foreground">{formatTime(a.start_time)} – {formatTime(a.end_time)}</p>
-                            <p className="text-sm font-medium text-foreground truncate">{a.title}</p>
-                            <p className="text-[11px] text-muted-foreground">{a.appointment_type}</p>
-                            {a.assigned_by && a.assigned_by !== a.assigned_to && (
-                              <p className="text-[10px] text-muted-foreground">with {getNameById(a.assigned_to)}</p>
-                            )}
-                          </div>
+                        <div className="min-w-0">
+                          <p className="text-xs text-muted-foreground">{formatTime(a.start_time)} – {formatTime(a.end_time)}</p>
+                          <p className="text-sm font-medium text-foreground truncate">{a.title}</p>
+                          <p className="text-[11px] text-muted-foreground">{a.appointment_type}</p>
+                          {a.assigned_by && a.assigned_by !== a.assigned_to && (
+                            <p className="text-[10px] text-muted-foreground">with {getNameById(a.assigned_to)}</p>
+                          )}
                         </div>
                       </button>
                     );
