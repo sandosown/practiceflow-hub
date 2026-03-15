@@ -150,11 +150,12 @@ const DraggableCard: React.FC<{
           {isLast ? (
             <OutcomePopover onSelect={(o) => onMoveToOutcome(r.id, o)}>
               <button
-                className="p-1 rounded hover:bg-muted transition-colors"
+                className="text-[10px] font-semibold px-2 py-0.5 rounded-md hover:bg-muted/50 transition-colors"
+                style={{ color: '#2dd4bf', border: '1px solid #2dd4bf', background: 'transparent' }}
                 title="Move to outcome"
                 onPointerDown={e => e.stopPropagation()}
               >
-                <ArrowRight className="w-3.5 h-3.5" style={{ color: ACCENT }} />
+                Close Out →
               </button>
             </OutcomePopover>
           ) : (
