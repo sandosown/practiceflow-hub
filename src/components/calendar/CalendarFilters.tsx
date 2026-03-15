@@ -406,12 +406,12 @@ const FilterDropdownContent: React.FC<{
             ...prev,
             selectedStatuses: e.target.value === 'all' ? [] : [e.target.value],
           }))}
-          className="w-full text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+          className="w-full text-xs text-foreground bg-card focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
           style={fieldStyle}
         >
-          <option value="all">All Statuses</option>
+          <option value="all" className="bg-card text-foreground">All Statuses</option>
           {ALL_STATUSES.map(s => (
-            <option key={s} value={s}>{s}</option>
+            <option key={s} value={s} className="bg-card text-foreground">{s}</option>
           ))}
         </select>
       </div>
