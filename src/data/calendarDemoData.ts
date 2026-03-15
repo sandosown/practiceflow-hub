@@ -3,6 +3,8 @@
  * Uses demo user IDs from demoUsers.ts.
  */
 
+export type AppointmentStatus = 'confirmed' | 'completed' | 'cancelled' | 'rescheduled' | 'no_show';
+
 export interface DemoAppointment {
   appointment_id: string;
   hat_id: string;
@@ -19,6 +21,9 @@ export interface DemoAppointment {
   notes: string | null;
   needs_reschedule: boolean;
   reschedule_requested_by: string | null;
+  status: AppointmentStatus;
+  status_updated_at: string | null;
+  status_updated_by: string | null;
 }
 
 function isoDate(dayOffset: number, hour: number, minute = 0): string {
