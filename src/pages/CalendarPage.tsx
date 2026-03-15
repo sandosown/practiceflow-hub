@@ -136,6 +136,40 @@ const CalendarPage: React.FC = () => {
   };
   const goToToday = () => setCurrentDate(new Date());
 
+  /* ── Scroll panel to date ── */
+  const scrollPanelToDate = useCallback((date: Date) => {
+    setSelectedPanelDate(date);
+    setTimeout(() => {
+      const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      const el = document.getElementById(`panel-date-${dateKey}`);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }, []);
+
+  /* ── Panel grouped appointments ── */
+  const panelAppointments = useMemo(() => {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const filtered = visibleAppointments.filter(a => {
+      const d = new Date(a.start_time);
+      if (view === 'day') return isSameDay(d, currentDate);
+      return d.getFullYear() === year && d.getMonth() === month;
+    });
+    filtered.sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime());
+    const grouped: Record<string, DemoAppointment[]> = {};
+    filtered.forEach(a => {
+      const d = new Date(a.start_time);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      if (!grouped[key]) grouped[key] = [];
+      grouped[key].push(a);
+    });
+    return grouped;
+  }, [visibleAppointments, currentDate, view]);
+
+  const panelDateContext = view === 'day'
+    ? formatDateLong(currentDate)
+    : formatMonthYear(currentDate);
+
   /* ── Open detail ── */
   const openDetail = (appt: DemoAppointment) => {
     setSelectedAppt(appt);
