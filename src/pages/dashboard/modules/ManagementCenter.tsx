@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopNavBar from '@/components/TopNavBar';
 import BottomNavBar from '@/components/BottomNavBar';
-import { ArrowLeft, Plus } from 'lucide-react';
+import { ArrowLeft, Plus, Search, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cardStyle } from '@/lib/cardStyle';
 import { supabase } from '@/integrations/supabase/client';
