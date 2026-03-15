@@ -561,10 +561,8 @@ const CalendarFilters: React.FC<Props> = ({
         {/* CHANGE 2 — Filters toggle button */}
         <button
           onClick={() => setOpen(o => !o)}
-          className="flex items-center gap-1.5 mt-2 transition-colors"
+          className="flex items-center gap-1.5 mt-2 transition-colors border border-border text-muted-foreground"
           style={{
-            border: '1px solid rgba(255,255,255,0.15)',
-            color: 'rgba(255,255,255,0.5)',
             background: 'transparent',
             borderRadius: 6,
             padding: '4px 12px',
