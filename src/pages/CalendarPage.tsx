@@ -1388,26 +1388,7 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
           />
           {participantDropdownOpen && (
             <div className="absolute z-50 mt-1 left-0 right-0 bg-card border border-border rounded-lg shadow-lg max-h-52 overflow-y-auto">
-              {/* Internal staff options */}
-              {filteredParticipantOptions.map((o) => (
-                <button
-                  key={o.id}
-                  type="button"
-                  onClick={() => { addParticipant({ id: o.id, name: o.name, role: o.role }); setParticipantDropdownOpen(false); }}
-                  className="w-full text-left px-3 py-2 text-sm hover:bg-accent/10 transition-colors flex items-center justify-between"
-                >
-                  <span className="text-foreground font-medium">{o.name}</span>
-                  <span className="text-[11px] text-muted-foreground">{o.role}</span>
-                </button>
-              ))}
-              {filteredParticipantOptions.length === 0 && !addingExternalPerson && (
-                <p className="text-xs text-muted-foreground px-3 py-2">No matching staff found</p>
-              )}
-
-              {/* Divider */}
-              <div className="border-t border-border my-1" />
-
-              {/* Add someone new */}
+              {/* Add someone new — at top */}
               {!addingExternalPerson ? (
                 <button
                   type="button"
@@ -1453,6 +1434,25 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
                     </button>
                   </div>
                 </div>
+              )}
+
+              {/* Divider */}
+              <div className="border-t border-border my-1" />
+
+              {/* Internal staff options */}
+              {filteredParticipantOptions.map((o) => (
+                <button
+                  key={o.id}
+                  type="button"
+                  onClick={() => { addParticipant({ id: o.id, name: o.name, role: o.role }); setParticipantDropdownOpen(false); }}
+                  className="w-full text-left px-3 py-2 text-sm hover:bg-accent/10 transition-colors flex items-center justify-between"
+                >
+                  <span className="text-foreground font-medium">{o.name}</span>
+                  <span className="text-[11px] text-muted-foreground">{o.role}</span>
+                </button>
+              ))}
+              {filteredParticipantOptions.length === 0 && !addingExternalPerson && (
+                <p className="text-xs text-muted-foreground px-3 py-2">No matching staff found</p>
               )}
             </div>
           )}
