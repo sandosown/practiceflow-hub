@@ -36,7 +36,7 @@ const STATUS_COLORS: Record<string, string> = {
   'completed': '#059669',
   'cancelled': '#78716c',
   'rescheduled': '#d97706',
-  'no_show': '#ea580c',
+  'no_show': '#c026d3',
 };
 
 const STATUS_LABELS: Record<string, string> = {
