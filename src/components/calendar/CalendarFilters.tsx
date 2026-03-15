@@ -7,22 +7,22 @@ import { DEMO_USERS } from '@/data/demoUsers';
 const TEAL = '#2dd4bf';
 
 const TYPE_COLORS: Record<string, string> = {
-  'Client Session': '#0d9488',
-  'Supervision Session': '#4f46e5',
-  'Staff Meeting': '#7c3aed',
-  'Intake': '#0ea5e9',
-  'Personal': '#94a3b8',
-  'Meeting': '#2dd4bf',
-  'Session': '#059669',
-  'Other': '#64748b',
+  'Client Session': '#2dd4bf',
+  'Supervision Session': '#818cf8',
+  'Staff Meeting': '#fb923c',
+  'Intake': '#34d399',
+  'Personal': '#e879f9',
+  'Meeting': '#38bdf8',
+  'Session': '#a3e635',
+  'Other': '#94a3b8',
 };
 
 const STATUS_COLORS: Record<string, string> = {
-  'Confirmed': '#2dd4bf',
-  'Completed': '#059669',
-  'Cancelled': '#78716c',
-  'Rescheduled': '#d97706',
-  'No Show': '#c026d3',
+  'Confirmed': '#4ade80',
+  'Completed': '#94a3b8',
+  'Cancelled': '#cbd5e1',
+  'Rescheduled': '#fb923c',
+  'No Show': '#e879f9',
 };
 
 const ALL_TYPES = Object.keys(TYPE_COLORS);
