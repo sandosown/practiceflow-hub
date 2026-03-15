@@ -13,7 +13,7 @@ const NAV_ITEMS = [
   { label: 'Home', icon: Home, path: '/dashboard/owner/group-practice' },
   { label: 'Board', icon: MessageSquare, path: '/dashboard/owner/group-practice/office-board' },
   { label: 'My Work', icon: Briefcase, path: null as string | null, action: 'none' },
-  { label: 'Calendar', icon: Calendar, path: null as string | null, action: 'none' },
+  { label: 'Calendar', icon: Calendar, path: '/calendar' },
   { label: 'More', icon: MoreHorizontal, path: null as string | null, action: 'drawer' },
 ];
 
