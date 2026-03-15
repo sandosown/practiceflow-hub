@@ -770,8 +770,18 @@ const AppointmentsPanel: React.FC<PanelProps> = ({ grouped, dateContext, onSelec
                       >
                         <div className="min-w-0">
                           <p className="text-xs text-muted-foreground">{formatTime(a.start_time)} – {formatTime(a.end_time)}</p>
-                          <p className="text-sm font-medium text-foreground truncate">{a.title}</p>
-                          <p className="text-[11px] text-muted-foreground">{a.appointment_type}</p>
+                          <p className={`text-sm font-medium text-foreground truncate ${a.status === 'cancelled' ? 'line-through' : ''}`}
+                            style={{ opacity: (a.status === 'cancelled' || a.status === 'no_show') ? 0.5 : 1 }}
+                          >{a.title}</p>
+                          <div className="flex items-center gap-1.5 mt-0.5">
+                            <p className="text-[11px] text-muted-foreground">{a.appointment_type}</p>
+                            <span
+                              className="px-1.5 py-0 rounded-full text-[10px] font-medium"
+                              style={{ color: STATUS_COLORS[a.status], border: `1px solid ${STATUS_COLORS[a.status]}` }}
+                            >
+                              {STATUS_LABELS[a.status]}
+                            </span>
+                          </div>
                           {a.assigned_by && a.assigned_by !== a.assigned_to && (
                             <p className="text-[10px] text-muted-foreground">with {getNameById(a.assigned_to)}</p>
                           )}
