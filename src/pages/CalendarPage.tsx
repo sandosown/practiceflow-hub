@@ -549,6 +549,14 @@ const CalendarPage: React.FC = () => {
           currentDate={currentDate}
           onMonthYearChange={handleMonthYearChange}
           role={role}
+          appointments={roleFilteredAppointments}
+          onSelectAppointment={(appt) => {
+            const d = new Date(appt.start_time);
+            setCurrentDate(d);
+            setView('day');
+            const found = appointments.find(a => a.appointment_id === appt.appointment_id);
+            if (found) openDetail(found);
+          }}
         />
 
         {/* Calendar body + Panel layout */}
