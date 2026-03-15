@@ -541,7 +541,7 @@ const CalendarPage: React.FC = () => {
           </button>
         </div>
 
-        {/* Smart filter bar — replaces plain search */}
+        {/* Search bar with filter dropdown */}
         <CalendarFilters
           filters={calendarFilters}
           onChange={setCalendarFilters}
@@ -549,7 +549,6 @@ const CalendarPage: React.FC = () => {
           currentDate={currentDate}
           onMonthYearChange={handleMonthYearChange}
           role={role}
-          layout="horizontal"
         />
 
         {/* Calendar body + Panel layout */}
@@ -670,7 +669,7 @@ const AppointmentsPanel: React.FC<PanelProps> = ({ grouped, dateContext, onSelec
         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Appointments</p>
         <p className="text-sm text-foreground/70 mt-0.5">{dateContext}</p>
       </div>
-      {/* Panel filter bar — vertical stack */}
+      {/* Panel search bar with filter dropdown */}
       <div className="px-4 pb-3">
         <CalendarFilters
           filters={filters}
@@ -679,7 +678,8 @@ const AppointmentsPanel: React.FC<PanelProps> = ({ grouped, dateContext, onSelec
           currentDate={currentDate}
           onMonthYearChange={onMonthYearChange}
           role={role}
-          layout="vertical"
+          placeholder="Search..."
+          compact
         />
       </div>
       <ScrollArea className="flex-1 px-4 pb-4">

@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { Search, Filter, X, ChevronDown } from 'lucide-react';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import React, { useState, useRef, useEffect } from 'react';
+import { Search, X, ChevronDown } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -26,7 +25,7 @@ export interface CalendarFilterState {
   dateTo: string;
   selectedTypes: string[];
   selectedStatuses: string[];
-  assignedTo: string; // 'all' or user id
+  assignedTo: string;
 }
 
 export const DEFAULT_FILTERS: CalendarFilterState = {
@@ -49,280 +48,342 @@ export function isFiltersActive(f: CalendarFilterState): boolean {
   );
 }
 
+/** Build a short summary string of active filters */
+function filterSummary(f: CalendarFilterState): string {
+  const parts: string[] = [];
+  if (f.keyword.trim()) parts.push(`"${f.keyword.trim()}"`);
+  if (f.dateFrom && f.dateTo) parts.push(`${f.dateFrom} – ${f.dateTo}`);
+  else if (f.dateFrom) parts.push(`From ${f.dateFrom}`);
+  else if (f.dateTo) parts.push(`To ${f.dateTo}`);
+  if (f.selectedTypes.length === 1) parts.push(f.selectedTypes[0]);
+  else if (f.selectedTypes.length > 1) parts.push(`${f.selectedTypes.length} types`);
+  if (f.selectedStatuses.length === 1) parts.push(f.selectedStatuses[0]);
+  else if (f.selectedStatuses.length > 1) parts.push(`${f.selectedStatuses.length} statuses`);
+  if (f.assignedTo !== 'all') {
+    const name = DEMO_USERS.find(u => u.id === f.assignedTo)?.full_name;
+    if (name) parts.push(name);
+  }
+  return parts.join(' · ');
+}
+
 interface Props {
   filters: CalendarFilterState;
   onChange: (f: CalendarFilterState) => void;
   onClear: () => void;
-  /** Current month/year shown on calendar — for the month/year picker */
   currentDate: Date;
   onMonthYearChange: (date: Date) => void;
   role: string;
-  /** vertical = panel layout, horizontal = calendar bar */
-  layout?: 'horizontal' | 'vertical';
+  placeholder?: string;
+  compact?: boolean;
 }
 
-/* ─── Multiselect Dropdown ─── */
-const MultiSelectDropdown: React.FC<{
-  label: string;
-  options: string[];
-  selected: string[];
-  onChange: (v: string[]) => void;
-}> = ({ label, options, selected, onChange }) => {
-  const display = selected.length === 0 ? label : `${label} (${selected.length})`;
-
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <button
-          className="flex items-center gap-1 px-2.5 py-1.5 rounded-md border text-xs font-medium transition-colors hover:bg-accent/10"
-          style={{
-            borderColor: selected.length > 0 ? TEAL : 'hsl(var(--border))',
-            color: selected.length > 0 ? TEAL : 'hsl(var(--foreground))',
-          }}
-        >
-          {display}
-          <ChevronDown size={12} />
-        </button>
-      </PopoverTrigger>
-      <PopoverContent className="w-48 p-2" align="start">
-        <div className="space-y-1">
-          {options.map(opt => (
-            <label key={opt} className="flex items-center gap-2 py-1 px-1 rounded hover:bg-accent/10 cursor-pointer text-xs text-foreground">
-              <Checkbox
-                checked={selected.includes(opt)}
-                onCheckedChange={(checked) => {
-                  if (checked) onChange([...selected, opt]);
-                  else onChange(selected.filter(s => s !== opt));
-                }}
-              />
-              {opt}
-            </label>
-          ))}
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
-};
-
-/* ─── Month/Year Picker ─── */
-const MonthYearPicker: React.FC<{
+/* ─── Filter Dropdown Content ─── */
+const FilterDropdownContent: React.FC<{
+  draft: CalendarFilterState;
+  setDraft: React.Dispatch<React.SetStateAction<CalendarFilterState>>;
   currentDate: Date;
-  onSelect: (d: Date) => void;
-}> = ({ currentDate, onSelect }) => {
-  const month = currentDate.getMonth();
-  const year = currentDate.getFullYear();
-  const [pickerYear, setPickerYear] = useState(year);
+  onMonthYearChange: (d: Date) => void;
+  role: string;
+  onSearch: () => void;
+  onClear: () => void;
+  compact?: boolean;
+}> = ({ draft, setDraft, currentDate, onMonthYearChange, role, onSearch, onClear, compact }) => {
+  const isOwnerAdmin = role === 'OWNER' || role === 'ADMIN' || role === 'PARTNER';
+  const staff = DEMO_USERS.filter(u => u.practice_id === 'demo-practice-1');
+  const [monthPickerOpen, setMonthPickerOpen] = useState(false);
+  const [pickerYear, setPickerYear] = useState(currentDate.getFullYear());
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <button
-          className="flex items-center gap-1 px-2.5 py-1.5 rounded-md border border-border text-xs font-medium transition-colors hover:bg-accent/10 text-foreground"
-        >
-          {MONTHS[month]} {year}
-          <ChevronDown size={12} />
-        </button>
-      </PopoverTrigger>
-      <PopoverContent className="w-56 p-3" align="start">
-        <div className="flex items-center justify-between mb-2">
-          <button onClick={() => setPickerYear(y => y - 1)} className="text-xs text-muted-foreground hover:text-foreground">←</button>
-          <span className="text-sm font-semibold text-foreground">{pickerYear}</span>
-          <button onClick={() => setPickerYear(y => y + 1)} className="text-xs text-muted-foreground hover:text-foreground">→</button>
+    <div className={`space-y-3 ${compact ? 'text-xs' : 'text-sm'}`}>
+      {/* Keyword */}
+      <div>
+        <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">Keyword</label>
+        <div className="relative">
+          <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <input
+            type="text"
+            value={draft.keyword}
+            onChange={e => setDraft(prev => ({ ...prev, keyword: e.target.value }))}
+            placeholder="Search by keyword..."
+            className="w-full pl-8 pr-3 py-1.5 rounded-md border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+          />
         </div>
-        <div className="grid grid-cols-3 gap-1">
-          {MONTHS.map((m, i) => {
-            const isActive = i === month && pickerYear === year;
+      </div>
+
+      {/* Date Range */}
+      <div>
+        <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">Date Range</label>
+        <div className="flex items-center gap-1.5">
+          <input
+            type="date"
+            value={draft.dateFrom}
+            onChange={e => setDraft(prev => ({ ...prev, dateFrom: e.target.value }))}
+            className="flex-1 px-2 py-1.5 rounded-md border border-border bg-background text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+            title="From"
+          />
+          <span className="text-xs text-muted-foreground">–</span>
+          <input
+            type="date"
+            value={draft.dateTo}
+            onChange={e => setDraft(prev => ({ ...prev, dateTo: e.target.value }))}
+            className="flex-1 px-2 py-1.5 rounded-md border border-border bg-background text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+            title="To"
+          />
+        </div>
+      </div>
+
+      {/* Month / Year */}
+      <div>
+        <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">Month / Year</label>
+        <button
+          onClick={() => setMonthPickerOpen(o => !o)}
+          className="flex items-center gap-1 w-full px-2.5 py-1.5 rounded-md border border-border text-xs font-medium hover:bg-accent/10 text-foreground"
+        >
+          {MONTHS[currentDate.getMonth()]} {currentDate.getFullYear()}
+          <ChevronDown size={12} className="ml-auto" />
+        </button>
+        {monthPickerOpen && (
+          <div className="mt-1.5 p-2 rounded-md border border-border bg-card">
+            <div className="flex items-center justify-between mb-2">
+              <button onClick={() => setPickerYear(y => y - 1)} className="text-xs text-muted-foreground hover:text-foreground px-1">←</button>
+              <span className="text-xs font-semibold text-foreground">{pickerYear}</span>
+              <button onClick={() => setPickerYear(y => y + 1)} className="text-xs text-muted-foreground hover:text-foreground px-1">→</button>
+            </div>
+            <div className="grid grid-cols-3 gap-1">
+              {MONTHS.map((m, i) => {
+                const isActive = i === currentDate.getMonth() && pickerYear === currentDate.getFullYear();
+                return (
+                  <button
+                    key={m}
+                    onClick={() => {
+                      onMonthYearChange(new Date(pickerYear, i, 1));
+                      setMonthPickerOpen(false);
+                    }}
+                    className="text-[11px] py-1 rounded-md transition-colors hover:bg-accent/10"
+                    style={isActive ? { background: TEAL, color: '#0f172a', fontWeight: 600 } : { color: 'hsl(var(--foreground))' }}
+                  >
+                    {m.slice(0, 3)}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Appointment Type */}
+      <div>
+        <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">Appointment Type</label>
+        <div className="flex flex-wrap gap-1.5">
+          {ALL_TYPES.map(t => {
+            const checked = draft.selectedTypes.includes(t);
             return (
               <button
-                key={m}
-                onClick={() => onSelect(new Date(pickerYear, i, 1))}
-                className="text-xs py-1.5 rounded-md transition-colors hover:bg-accent/10"
-                style={isActive ? { background: TEAL, color: '#0f172a', fontWeight: 600 } : { color: 'hsl(var(--foreground))' }}
+                key={t}
+                onClick={() => setDraft(prev => ({
+                  ...prev,
+                  selectedTypes: checked ? prev.selectedTypes.filter(s => s !== t) : [...prev.selectedTypes, t],
+                }))}
+                className="px-2 py-1 rounded-full text-[11px] font-medium border transition-colors"
+                style={checked
+                  ? { borderColor: TEAL, color: TEAL, background: 'rgba(45,212,191,0.08)' }
+                  : { borderColor: 'hsl(var(--border))', color: 'hsl(var(--muted-foreground))' }
+                }
               >
-                {m.slice(0, 3)}
+                {t}
               </button>
             );
           })}
         </div>
-      </PopoverContent>
-    </Popover>
-  );
-};
+      </div>
 
-/* ─── Assigned To dropdown ─── */
-const AssignedToDropdown: React.FC<{
-  value: string;
-  onChange: (v: string) => void;
-}> = ({ value, onChange }) => {
-  const staff = DEMO_USERS.filter(u => u.practice_id === 'demo-practice-1');
-  const display = value === 'all' ? 'All Staff' : (staff.find(s => s.id === value)?.full_name ?? 'All Staff');
-
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <button
-          className="flex items-center gap-1 px-2.5 py-1.5 rounded-md border text-xs font-medium transition-colors hover:bg-accent/10"
-          style={{
-            borderColor: value !== 'all' ? TEAL : 'hsl(var(--border))',
-            color: value !== 'all' ? TEAL : 'hsl(var(--foreground))',
-          }}
-        >
-          {display}
-          <ChevronDown size={12} />
-        </button>
-      </PopoverTrigger>
-      <PopoverContent className="w-52 p-2" align="start">
-        <div className="space-y-1">
-          <label className="flex items-center gap-2 py-1 px-1 rounded hover:bg-accent/10 cursor-pointer text-xs text-foreground">
-            <input
-              type="radio"
-              name="assigned-to"
-              checked={value === 'all'}
-              onChange={() => onChange('all')}
-              className="accent-[#2dd4bf]"
-            />
-            All Staff
-          </label>
-          {staff.map(s => (
-            <label key={s.id} className="flex items-center gap-2 py-1 px-1 rounded hover:bg-accent/10 cursor-pointer text-xs text-foreground">
-              <input
-                type="radio"
-                name="assigned-to"
-                checked={value === s.id}
-                onChange={() => onChange(s.id)}
-                className="accent-[#2dd4bf]"
-              />
-              {s.full_name}
-            </label>
-          ))}
+      {/* Status */}
+      <div>
+        <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">Status</label>
+        <div className="flex flex-wrap gap-1.5">
+          {ALL_STATUSES.map(s => {
+            const checked = draft.selectedStatuses.includes(s);
+            return (
+              <button
+                key={s}
+                onClick={() => setDraft(prev => ({
+                  ...prev,
+                  selectedStatuses: checked ? prev.selectedStatuses.filter(x => x !== s) : [...prev.selectedStatuses, s],
+                }))}
+                className="px-2 py-1 rounded-full text-[11px] font-medium border transition-colors"
+                style={checked
+                  ? { borderColor: TEAL, color: TEAL, background: 'rgba(45,212,191,0.08)' }
+                  : { borderColor: 'hsl(var(--border))', color: 'hsl(var(--muted-foreground))' }
+                }
+              >
+                {s}
+              </button>
+            );
+          })}
         </div>
-      </PopoverContent>
-    </Popover>
-  );
-};
-
-/* ─── Filter Controls (shared between layouts) ─── */
-const FilterControls: React.FC<Props & { stacked?: boolean }> = ({
-  filters, onChange, onClear, currentDate, onMonthYearChange, role, stacked,
-}) => {
-  const isOwnerAdmin = role === 'OWNER' || role === 'ADMIN' || role === 'PARTNER';
-  const active = isFiltersActive(filters);
-  const gapClass = stacked ? 'flex flex-col gap-2' : 'flex flex-wrap items-center gap-2';
-
-  return (
-    <div className={gapClass}>
-      {/* Keyword */}
-      <div className="relative">
-        <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
-        <input
-          type="text"
-          value={filters.keyword}
-          onChange={e => onChange({ ...filters, keyword: e.target.value })}
-          placeholder="Search by keyword..."
-          className={`pl-8 pr-3 py-1.5 rounded-md border border-border bg-card text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50 ${stacked ? 'w-full' : 'w-44'}`}
-        />
       </div>
 
-      {/* Date Range */}
-      <div className={`flex items-center gap-1.5 ${stacked ? 'w-full' : ''}`}>
-        <input
-          type="date"
-          value={filters.dateFrom}
-          onChange={e => onChange({ ...filters, dateFrom: e.target.value })}
-          className={`px-2 py-1.5 rounded-md border border-border bg-card text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50 ${stacked ? 'flex-1' : 'w-[120px]'}`}
-          title="From date"
-        />
-        <span className="text-xs text-muted-foreground">–</span>
-        <input
-          type="date"
-          value={filters.dateTo}
-          onChange={e => onChange({ ...filters, dateTo: e.target.value })}
-          className={`px-2 py-1.5 rounded-md border border-border bg-card text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50 ${stacked ? 'flex-1' : 'w-[120px]'}`}
-          title="To date"
-        />
-      </div>
-
-      {/* Month/Year */}
-      <MonthYearPicker currentDate={currentDate} onSelect={onMonthYearChange} />
-
-      {/* Type multiselect */}
-      <MultiSelectDropdown
-        label="Type"
-        options={ALL_TYPES}
-        selected={filters.selectedTypes}
-        onChange={v => onChange({ ...filters, selectedTypes: v })}
-      />
-
-      {/* Status multiselect */}
-      <MultiSelectDropdown
-        label="Status"
-        options={ALL_STATUSES}
-        selected={filters.selectedStatuses}
-        onChange={v => onChange({ ...filters, selectedStatuses: v })}
-      />
-
-      {/* Assigned To — Owner/Admin only */}
+      {/* Assigned To */}
       {isOwnerAdmin && (
-        <AssignedToDropdown
-          value={filters.assignedTo}
-          onChange={v => onChange({ ...filters, assignedTo: v })}
-        />
+        <div>
+          <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">Assigned To</label>
+          <select
+            value={draft.assignedTo}
+            onChange={e => setDraft(prev => ({ ...prev, assignedTo: e.target.value }))}
+            className="w-full px-2.5 py-1.5 rounded-md border border-border bg-background text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+          >
+            <option value="all">All Staff</option>
+            {staff.map(s => (
+              <option key={s.id} value={s.id}>{s.full_name}</option>
+            ))}
+          </select>
+        </div>
       )}
 
-      {/* Clear all */}
-      {active && (
+      {/* Actions */}
+      <div className="flex items-center gap-2 pt-1">
+        <button
+          onClick={onSearch}
+          className="flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors hover:opacity-80"
+          style={{ border: `1.5px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
+        >
+          Search
+        </button>
         <button
           onClick={onClear}
-          className="text-xs font-medium flex items-center gap-1 hover:opacity-80 transition-opacity"
-          style={{ color: TEAL }}
+          className="text-xs font-medium hover:opacity-80 transition-opacity text-muted-foreground"
         >
-          <X size={12} />
-          Clear all
+          Clear
         </button>
-      )}
+      </div>
     </div>
   );
 };
 
-/* ═══ Main Export ═══ */
-const CalendarFilters: React.FC<Props> = (props) => {
-  const { layout = 'horizontal' } = props;
+/* ═══ Main Export — Search Box with Filter Dropdown ═══ */
+const CalendarFilters: React.FC<Props> = ({
+  filters, onChange, onClear, currentDate, onMonthYearChange, role,
+  placeholder = 'Search calendar...', compact = false,
+}) => {
+  const [open, setOpen] = useState(false);
+  const [draft, setDraft] = useState<CalendarFilterState>({ ...filters });
+  const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const active = isFiltersActive(props.filters);
+  const active = isFiltersActive(filters);
+  const summary = active ? filterSummary(filters) : '';
 
-  // Desktop horizontal or panel vertical
-  if (!isMobile || layout === 'vertical') {
+  // Sync draft when filters change externally
+  useEffect(() => {
+    if (!open) setDraft({ ...filters });
+  }, [filters, open]);
+
+  // Close dropdown on outside click (desktop only)
+  useEffect(() => {
+    if (!open || isMobile) return;
+    const handler = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [open, isMobile]);
+
+  const handleSearch = () => {
+    onChange(draft);
+    setOpen(false);
+  };
+
+  const handleClear = () => {
+    const cleared = { ...DEFAULT_FILTERS };
+    setDraft(cleared);
+    onClear();
+    setOpen(false);
+  };
+
+  const handleBarClear = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    handleClear();
+  };
+
+  // Desktop: inline dropdown
+  if (!isMobile) {
     return (
-      <div className={layout === 'vertical' ? 'px-0' : 'mb-4'}>
-        <FilterControls {...props} stacked={layout === 'vertical'} />
+      <div ref={containerRef} className={`relative ${compact ? '' : 'mb-4'}`}>
+        {/* Search bar */}
+        <div
+          className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card cursor-text transition-colors hover:border-[#2dd4bf]/40"
+          onClick={() => setOpen(true)}
+        >
+          <Search size={16} className="text-muted-foreground flex-shrink-0" />
+          {active ? (
+            <span className="text-xs text-foreground truncate flex-1">{summary}</span>
+          ) : (
+            <span className="text-xs text-muted-foreground flex-1">{placeholder}</span>
+          )}
+          {active && (
+            <button onClick={handleBarClear} className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground flex-shrink-0">
+              <X size={12} />
+              Clear
+            </button>
+          )}
+        </div>
+
+        {/* Dropdown panel */}
+        {open && (
+          <div className={`absolute z-50 top-full mt-1 ${compact ? 'w-full' : 'w-[380px]'} left-0 bg-card border border-border rounded-xl shadow-lg p-4 animate-fade-in`}>
+            <FilterDropdownContent
+              draft={draft}
+              setDraft={setDraft}
+              currentDate={currentDate}
+              onMonthYearChange={onMonthYearChange}
+              role={role}
+              onSearch={handleSearch}
+              onClear={handleClear}
+              compact={compact}
+            />
+          </div>
+        )}
       </div>
     );
   }
 
-  // Mobile: collapse behind button
+  // Mobile: search bar → bottom sheet
   return (
-    <div className="mb-4">
-      <button
-        onClick={() => setMobileOpen(true)}
-        className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-accent/10 border border-border relative"
+    <div className={compact ? '' : 'mb-4'}>
+      <div
+        className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card cursor-text"
+        onClick={() => setOpen(true)}
       >
-        <Filter size={16} className="text-foreground" />
-        <span className="text-foreground">Filters</span>
-        {active && (
-          <span
-            className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full"
-            style={{ background: TEAL }}
-          />
+        <Search size={16} className="text-muted-foreground flex-shrink-0" />
+        {active ? (
+          <span className="text-xs text-foreground truncate flex-1">{summary}</span>
+        ) : (
+          <span className="text-xs text-muted-foreground flex-1">{placeholder}</span>
         )}
-      </button>
+        {active && (
+          <button onClick={handleBarClear} className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground flex-shrink-0">
+            <X size={12} />
+            Clear
+          </button>
+        )}
+      </div>
 
-      <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="bottom" className="h-auto max-h-[80vh] rounded-t-xl p-4">
-          <SheetHeader className="mb-4">
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent side="bottom" className="h-auto max-h-[85vh] rounded-t-xl p-4 overflow-y-auto">
+          <SheetHeader className="mb-3">
             <SheetTitle className="text-sm font-semibold text-foreground">Filters</SheetTitle>
           </SheetHeader>
-          <FilterControls {...props} stacked />
+          <FilterDropdownContent
+            draft={draft}
+            setDraft={setDraft}
+            currentDate={currentDate}
+            onMonthYearChange={onMonthYearChange}
+            role={role}
+            onSearch={handleSearch}
+            onClear={handleClear}
+            compact
+          />
         </SheetContent>
       </Sheet>
     </div>
