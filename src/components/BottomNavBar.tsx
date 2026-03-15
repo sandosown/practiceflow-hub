@@ -181,6 +181,7 @@ const BottomNavBar: React.FC = () => {
 
   const roleLabelMap: Record<string, string> = {
     OWNER: 'Owner',
+    PARTNER: 'Partner',
     CLINICIAN: 'Clinician',
     INTERN_CLINICAL: 'Clinical Intern',
     INTERN_BUSINESS: 'Business Intern',

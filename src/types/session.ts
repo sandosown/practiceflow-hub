@@ -1,4 +1,4 @@
-export type AppRole = 'OWNER' | 'ADMIN' | 'SUPERVISOR' | 'CLINICIAN' | 'INTERN' | 'STAFF';
+export type AppRole = 'OWNER' | 'PARTNER' | 'ADMIN' | 'SUPERVISOR' | 'CLINICIAN' | 'INTERN' | 'STAFF';
 export type ClinicianSubtype = 'LICENSED' | 'LP' | null;
 export type InternSubtype = 'CLINICAL' | 'BUSINESS' | null;
 export type AppMode = 'CONTROL' | 'ACTION';
