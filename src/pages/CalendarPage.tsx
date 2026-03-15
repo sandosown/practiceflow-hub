@@ -688,6 +688,8 @@ const AppointmentsPanel: React.FC<PanelProps> = ({ grouped, dateContext, onSelec
           role={role}
           placeholder="Search..."
           compact
+          appointments={Object.values(grouped).flat()}
+          onSelectAppointment={(appt) => onSelect(appt as any)}
         />
       </div>
       <ScrollArea className="flex-1 px-4 pb-4">
