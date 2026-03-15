@@ -263,18 +263,70 @@ const ManagementCenter: React.FC = () => {
               </button>
             )}
           </div>
-          <div className="flex flex-col gap-3">
-            {activeStaff.map((s) => (
-              <StaffRow
-                key={s.id}
-                staff={s}
-                contextInfo={getStaffContextInfo(s)}
-                onViewProfile={setViewingStaff}
-                onRemove={setRemoveTarget}
-                showRemove={canRemoveStaff(s)}
-              />
-            ))}
-          </div>
+
+          {/* Default state — summary only */}
+          {!staffSearch.trim() && !browseAll && (
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">
+                <span className="font-semibold" style={{ color: TEAL }}>{allActive.length}</span> active staff member{allActive.length !== 1 ? 's' : ''}
+              </p>
+              {credentialAlertCount > 0 && (
+                <p className="text-sm text-muted-foreground">
+                  <span className="font-semibold" style={{ color: TEAL }}>{credentialAlertCount}</span> with pending credential renewal{credentialAlertCount !== 1 ? 's' : ''}
+                </p>
+              )}
+              <button
+                onClick={() => setBrowseAll(true)}
+                className="text-sm font-medium mt-2 transition-colors hover:underline"
+                style={{ color: TEAL, background: 'transparent', border: 'none', padding: 0 }}
+              >
+                Browse all →
+              </button>
+            </div>
+          )}
+
+          {/* Search results */}
+          {staffSearch.trim() && (
+            <div className="flex flex-col gap-3">
+              {activeStaff.length > 0 ? activeStaff.map((s) => (
+                <StaffRow
+                  key={s.id}
+                  staff={s}
+                  contextInfo={getStaffContextInfo(s)}
+                  onViewProfile={setViewingStaff}
+                  onRemove={setRemoveTarget}
+                  showRemove={canRemoveStaff(s)}
+                />
+              )) : (
+                <p className="text-sm text-muted-foreground py-4 text-center">No matching staff found.</p>
+              )}
+            </div>
+          )}
+
+          {/* Browse all expanded */}
+          {!staffSearch.trim() && browseAll && (
+            <>
+              <div className="flex flex-col gap-3">
+                {allActive.map((s) => (
+                  <StaffRow
+                    key={s.id}
+                    staff={s}
+                    contextInfo={getStaffContextInfo(s)}
+                    onViewProfile={setViewingStaff}
+                    onRemove={setRemoveTarget}
+                    showRemove={canRemoveStaff(s)}
+                  />
+                ))}
+              </div>
+              <button
+                onClick={() => setBrowseAll(false)}
+                className="text-sm font-medium mt-3 transition-colors hover:underline"
+                style={{ color: TEAL, background: 'transparent', border: 'none', padding: 0 }}
+              >
+                Show less
+              </button>
+            </>
+          )}
 
           {isOwner && inactiveStaff.length > 0 && (
             <div className="mt-6">
