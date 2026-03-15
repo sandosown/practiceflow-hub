@@ -174,10 +174,10 @@ const DatePickerField: React.FC<{
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <button
-            className="flex items-center gap-2 w-full text-xs text-foreground"
+            className="flex items-center gap-2 w-full text-xs text-foreground min-h-[44px]"
             style={fieldStyle}
           >
-            <span className="flex-1 text-left" style={{ color: value ? undefined : 'rgba(255,255,255,0.35)' }}>
+            <span className={`flex-1 text-left ${value ? 'text-foreground' : 'text-muted-foreground'}`}>
               {value ? formatDisplayDate(value) : 'Select date'}
             </span>
             {value && (
