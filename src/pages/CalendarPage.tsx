@@ -163,11 +163,12 @@ const CalendarPage: React.FC = () => {
     }, 100);
   }, []);
 
-  /* ── Panel grouped appointments ── */
+  /* ── Panel grouped appointments (role + panel search) ── */
   const panelAppointments = useMemo(() => {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
-    const filtered = visibleAppointments.filter(a => {
+    const panelFiltered = filterBySearch(roleFilteredAppointments, panelSearch);
+    const filtered = panelFiltered.filter(a => {
       const d = new Date(a.start_time);
       if (view === 'day') return isSameDay(d, currentDate);
       return d.getFullYear() === year && d.getMonth() === month;
@@ -181,7 +182,7 @@ const CalendarPage: React.FC = () => {
       grouped[key].push(a);
     });
     return grouped;
-  }, [visibleAppointments, currentDate, view]);
+  }, [roleFilteredAppointments, panelSearch, currentDate, view, filterBySearch]);
 
   const panelDateContext = view === 'day'
     ? formatDateLong(currentDate)
