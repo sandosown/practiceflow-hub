@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import { Plus, ChevronLeft, ChevronRight, Clock, User, X, Edit2, CalendarIcon, Trash2, AlertTriangle, List, Search, Check, RotateCcw, MapPin, Video, Link2, Users } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
