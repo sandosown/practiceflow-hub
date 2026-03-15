@@ -1099,17 +1099,6 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
     return u.role.charAt(0) + u.role.slice(1).toLowerCase();
   };
 
-  // Assign To options based on role
-  const assignToOptions = useMemo(() => {
-    if (role === 'OWNER' || role === 'ADMIN' || role === 'PARTNER') {
-      return activeStaff;
-    }
-    if (role === 'SUPERVISOR') {
-      const superviseeIds = ['demo-clinician', 'demo-intern-clinical'];
-      return activeStaff.filter(u => u.id === userId || superviseeIds.includes(u.id));
-    }
-    return [];
-  }, [role, userId, activeStaff]);
 
   // Participants options based on role — includes role label
   const participantOptions = useMemo((): { id: string; name: string; role: string }[] => {
