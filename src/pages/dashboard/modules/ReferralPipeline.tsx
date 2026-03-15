@@ -560,10 +560,21 @@ const ReferralPipeline: React.FC = () => {
         {/* Kanban Board */}
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
           <div className="flex gap-4 overflow-x-auto pb-4 items-start">
-            {/* Add Stage button at the front (Owner only) */}
+            {/* Add Stage + Edit Pipeline buttons at the front (Owner only) */}
             {isOwner && (
-              <div className="flex-shrink-0 self-start mt-8">
+              <div className="flex-shrink-0 self-start mt-1 flex flex-col gap-2">
                 <AddStageButton onAdd={addCustomStage} />
+                <button
+                  onClick={() => setEditMode(prev => !prev)}
+                  className="flex items-center gap-1 text-[11px] font-semibold px-2 py-1 rounded-md transition-colors whitespace-nowrap"
+                  style={{
+                    color: editMode ? 'hsl(var(--foreground))' : ACCENT,
+                    border: `1px solid ${editMode ? 'hsl(var(--border))' : `rgba(${hexToRgb(ACCENT)},0.4)`}`,
+                    background: editMode ? 'hsl(var(--muted))' : 'transparent',
+                  }}
+                >
+                  {editMode ? 'Done' : <><Settings className="w-3 h-3" /> Edit Pipeline</>}
+                </button>
               </div>
             )}
             {stages.map((stage) => (
@@ -573,8 +584,8 @@ const ReferralPipeline: React.FC = () => {
                 cards={stageReferrals(stage)}
                 isMobile={isMobile}
                 stages={stages}
-                isOwner={isOwner}
                 isCustom={!DEFAULT_STAGES.includes(stage)}
+                editMode={editMode}
                 onMoveStage={moveStage}
                 onMoveToOutcome={moveToOutcome}
                 onDeleteStage={() => deleteCustomStage(stage)}
