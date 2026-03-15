@@ -588,7 +588,7 @@ const ReferralPipeline: React.FC = () => {
                 </button>
               </div>
             )}
-            {stages.map((stage) => (
+            {stages.map((stage, idx) => (
               <DroppableColumn
                 key={stage}
                 stage={getDisplayName(stage)}
@@ -597,6 +597,7 @@ const ReferralPipeline: React.FC = () => {
                 stages={stages}
                 isCustom={!DEFAULT_STAGES.includes(stage)}
                 editMode={editMode}
+                autoFocusEdit={idx === 0}
                 onMoveStage={moveStage}
                 onMoveToOutcome={moveToOutcome}
                 onDeleteStage={() => deleteCustomStage(stage)}
