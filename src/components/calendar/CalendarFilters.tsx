@@ -473,7 +473,7 @@ const CalendarFilters: React.FC<Props> = ({
         </div>
 
         {open && (
-          <div className={`absolute z-50 top-full mt-1 ${compact ? 'w-full' : 'w-[380px]'} left-0 bg-card border border-border rounded-xl shadow-lg p-4 animate-fade-in`}>
+          <div className={`absolute z-50 top-full mt-1 ${compact ? 'w-full' : 'w-[380px]'} left-0 bg-card border border-border rounded-xl shadow-lg animate-fade-in`}>
             <FilterDropdownContent
               draft={draft}
               setDraft={setDraft}
