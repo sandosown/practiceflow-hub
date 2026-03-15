@@ -1,7 +1,8 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Search, X, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { Search, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+
 
 const TEAL = '#2dd4bf';
 
@@ -32,8 +33,6 @@ const MONTHS = [
   'July', 'August', 'September', 'October', 'November', 'December',
 ];
 
-const DAYS_OF_WEEK = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-
 export interface CalendarFilterState {
   keyword: string;
   dateFrom: string;
@@ -63,6 +62,19 @@ export function isFiltersActive(f: CalendarFilterState): boolean {
   );
 }
 
+function filterSummary(f: CalendarFilterState): string {
+  const parts: string[] = [];
+  if (f.keyword.trim()) parts.push(`"${f.keyword.trim()}"`);
+  if (f.dateFrom && f.dateTo) parts.push(`${f.dateFrom} – ${f.dateTo}`);
+  else if (f.dateFrom) parts.push(`From ${f.dateFrom}`);
+  else if (f.dateTo) parts.push(`To ${f.dateTo}`);
+  if (f.selectedTypes.length === 1) parts.push(f.selectedTypes[0]);
+  else if (f.selectedTypes.length > 1) parts.push(`${f.selectedTypes.length} types`);
+  if (f.selectedStatuses.length === 1) parts.push(f.selectedStatuses[0]);
+  else if (f.selectedStatuses.length > 1) parts.push(`${f.selectedStatuses.length} statuses`);
+  return parts.join(' · ');
+}
+
 /** Appointment-like shape for live search */
 export interface SearchableAppointment {
   appointment_id: string;
@@ -71,149 +83,19 @@ export interface SearchableAppointment {
   start_time: string;
 }
 
-/* ─── Date Picker Popover ─── */
-const DatePickerPopover: React.FC<{
-  value: string;
-  onChange: (v: string) => void;
-  placeholder: string;
-}> = ({ value, onChange, placeholder }) => {
-  const [open, setOpen] = useState(false);
-  const today = new Date();
-  const selected = value ? new Date(value + 'T00:00:00') : null;
-  const [viewYear, setViewYear] = useState(selected?.getFullYear() ?? today.getFullYear());
-  const [viewMonth, setViewMonth] = useState(selected?.getMonth() ?? today.getMonth());
+interface Props {
+  filters: CalendarFilterState;
+  onChange: (f: CalendarFilterState) => void;
+  onClear: () => void;
+  currentDate: Date;
+  onMonthYearChange: (date: Date) => void;
+  role: string;
+  placeholder?: string;
+  compact?: boolean;
+  appointments?: SearchableAppointment[];
+  onSelectAppointment?: (appt: SearchableAppointment) => void;
+}
 
-  useEffect(() => {
-    if (open) {
-      const d = value ? new Date(value + 'T00:00:00') : new Date();
-      setViewYear(d.getFullYear());
-      setViewMonth(d.getMonth());
-    }
-  }, [open, value]);
-
-  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
-  const firstDayOfWeek = new Date(viewYear, viewMonth, 1).getDay();
-  const cells: (number | null)[] = [];
-  for (let i = 0; i < firstDayOfWeek; i++) cells.push(null);
-  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
-
-  const formatDisplay = (dateStr: string) => {
-    const d = new Date(dateStr + 'T00:00:00');
-    return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
-  };
-
-  const isToday = (day: number) =>
-    day === today.getDate() && viewMonth === today.getMonth() && viewYear === today.getFullYear();
-
-  const isSelected = (day: number) =>
-    selected && day === selected.getDate() && viewMonth === selected.getMonth() && viewYear === selected.getFullYear();
-
-  const handleSelect = (day: number) => {
-    const m = String(viewMonth + 1).padStart(2, '0');
-    const dd = String(day).padStart(2, '0');
-    onChange(`${viewYear}-${m}-${dd}`);
-    setOpen(false);
-  };
-
-  const fieldStyle: React.CSSProperties = {
-    background: 'rgba(255,255,255,0.05)',
-    border: '1px solid rgba(255,255,255,0.08)',
-    borderRadius: 8,
-    padding: '10px 12px',
-  };
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <button
-          className="w-full flex items-center gap-2 text-xs text-left"
-          style={fieldStyle}
-        >
-          <span className={`flex-1 ${value ? 'text-foreground' : 'text-muted-foreground'}`}>
-            {value ? formatDisplay(value) : placeholder}
-          </span>
-          {value ? (
-            <X
-              size={12}
-              className="text-muted-foreground hover:text-foreground flex-shrink-0"
-              onClick={e => { e.stopPropagation(); onChange(''); }}
-            />
-          ) : (
-            <ChevronDown size={12} className="text-muted-foreground flex-shrink-0" />
-          )}
-        </button>
-      </PopoverTrigger>
-      <PopoverContent
-        align="start"
-        className="w-auto p-3 pointer-events-auto"
-        style={{
-          background: 'rgba(6,14,30,0.97)',
-          border: '1px solid rgba(45,212,191,0.15)',
-          borderRadius: 10,
-        }}
-      >
-        {/* Header nav */}
-        <div className="flex items-center justify-between mb-2">
-          <button
-            onClick={() => {
-              if (viewMonth === 0) { setViewMonth(11); setViewYear(y => y - 1); }
-              else setViewMonth(m => m - 1);
-            }}
-            className="p-1 rounded hover:bg-white/10 text-muted-foreground hover:text-foreground"
-          >
-            <ChevronLeft size={14} />
-          </button>
-          <span className="text-xs font-semibold text-foreground">
-            {MONTHS[viewMonth]} {viewYear}
-          </span>
-          <button
-            onClick={() => {
-              if (viewMonth === 11) { setViewMonth(0); setViewYear(y => y + 1); }
-              else setViewMonth(m => m + 1);
-            }}
-            className="p-1 rounded hover:bg-white/10 text-muted-foreground hover:text-foreground"
-          >
-            <ChevronRight size={14} />
-          </button>
-        </div>
-
-        {/* Day headers */}
-        <div className="grid grid-cols-7 gap-0 mb-1">
-          {DAYS_OF_WEEK.map(d => (
-            <div key={d} className="text-center text-[10px] text-muted-foreground py-1">{d}</div>
-          ))}
-        </div>
-
-        {/* Day cells */}
-        <div className="grid grid-cols-7 gap-0">
-          {cells.map((day, i) => {
-            if (day === null) return <div key={`e-${i}`} className="w-8 h-8" />;
-            const sel = isSelected(day);
-            const tod = isToday(day);
-            return (
-              <button
-                key={day}
-                onClick={() => handleSelect(day)}
-                className="w-8 h-8 flex items-center justify-center text-[11px] rounded-md transition-colors"
-                style={
-                  sel
-                    ? { background: TEAL, color: '#0f172a', fontWeight: 600 }
-                    : tod
-                    ? { border: `1px solid rgba(45,212,191,0.4)`, color: TEAL }
-                    : { color: 'hsl(var(--foreground))' }
-                }
-                onMouseEnter={e => { if (!sel) e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
-                onMouseLeave={e => { if (!sel) e.currentTarget.style.background = 'transparent'; }}
-              >
-                {day}
-              </button>
-            );
-          })}
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
-};
 
 /* ─── Live Search Results ─── */
 const LiveSearchResults: React.FC<{
@@ -251,7 +133,10 @@ const LiveSearchResults: React.FC<{
             onClick={() => onSelect(a)}
             className="w-full flex items-center gap-2 px-2.5 py-1.5 text-left hover:bg-accent/10 transition-colors"
           >
-            <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: color }} />
+            <span
+              className="w-2 h-2 rounded-full flex-shrink-0"
+              style={{ background: color }}
+            />
             <span className="text-xs text-foreground truncate flex-1">{a.title}</span>
             <span className="text-[10px] text-muted-foreground flex-shrink-0">{dateStr}</span>
           </button>
@@ -261,17 +146,19 @@ const LiveSearchResults: React.FC<{
   );
 };
 
-/* ─── Filter Panel Content (shared desktop + mobile) ─── */
-const FilterPanelContent: React.FC<{
+/* ─── Filter Dropdown Content ─── */
+const FilterDropdownContent: React.FC<{
   draft: CalendarFilterState;
   setDraft: React.Dispatch<React.SetStateAction<CalendarFilterState>>;
   currentDate: Date;
   onMonthYearChange: (d: Date) => void;
+  role: string;
   onSearch: () => void;
   onClear: () => void;
+  compact?: boolean;
   appointments?: SearchableAppointment[];
   onSelectAppointment?: (appt: SearchableAppointment) => void;
-}> = ({ draft, setDraft, currentDate, onMonthYearChange, onSearch, onClear, appointments = [], onSelectAppointment }) => {
+}> = ({ draft, setDraft, currentDate, onMonthYearChange, role, onSearch, onClear, compact, appointments = [], onSelectAppointment }) => {
   const [monthPickerOpen, setMonthPickerOpen] = useState(false);
   const [pickerYear, setPickerYear] = useState(currentDate.getFullYear());
 
@@ -282,25 +169,22 @@ const FilterPanelContent: React.FC<{
     padding: '10px 12px',
   };
 
-  const sectionLabel = "text-[10px] font-semibold uppercase tracking-[0.08em] mb-1 block";
+  const sectionLabel = "text-[10px] font-semibold uppercase tracking-[0.08em] mb-1 block" as const;
   const sectionLabelStyle: React.CSSProperties = { color: 'rgba(255,255,255,0.4)' };
 
   return (
     <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
-      {/* 1. Keyword Search */}
+      {/* Keyword */}
       <div>
         <label className={sectionLabel} style={sectionLabelStyle}>Keyword</label>
-        <div className="relative">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
-          <input
-            type="text"
-            value={draft.keyword}
-            onChange={e => setDraft(prev => ({ ...prev, keyword: e.target.value }))}
-            placeholder="Search appointments..."
-            className="w-full text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50 pl-9"
-            style={fieldStyle}
-          />
-        </div>
+        <input
+          type="text"
+          value={draft.keyword}
+          onChange={e => setDraft(prev => ({ ...prev, keyword: e.target.value }))}
+          placeholder="Search..."
+          className="w-full text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+          style={fieldStyle}
+        />
         {appointments.length > 0 && onSelectAppointment && (
           <LiveSearchResults
             keyword={draft.keyword}
@@ -310,7 +194,7 @@ const FilterPanelContent: React.FC<{
         )}
       </div>
 
-      {/* 2. Month / Year */}
+      {/* Month / Year */}
       <div>
         <label className={sectionLabel} style={sectionLabelStyle}>Month / Year</label>
         <button
@@ -350,27 +234,31 @@ const FilterPanelContent: React.FC<{
         )}
       </div>
 
-      {/* 3. Start Date */}
+      {/* Start Date */}
       <div>
         <label className={sectionLabel} style={sectionLabelStyle}>Start Date</label>
-        <DatePickerPopover
+        <input
+          type="date"
           value={draft.dateFrom}
-          onChange={v => setDraft(prev => ({ ...prev, dateFrom: v }))}
-          placeholder="Select start date"
+          onChange={e => setDraft(prev => ({ ...prev, dateFrom: e.target.value }))}
+          className="w-full text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+          style={fieldStyle}
         />
       </div>
 
-      {/* 4. End Date */}
+      {/* End Date */}
       <div>
         <label className={sectionLabel} style={sectionLabelStyle}>End Date</label>
-        <DatePickerPopover
+        <input
+          type="date"
           value={draft.dateTo}
-          onChange={v => setDraft(prev => ({ ...prev, dateTo: v }))}
-          placeholder="Select end date"
+          onChange={e => setDraft(prev => ({ ...prev, dateTo: e.target.value }))}
+          className="w-full text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+          style={fieldStyle}
         />
       </div>
 
-      {/* 5. Appointment Type */}
+      {/* Appointment Type */}
       <div>
         <label className={sectionLabel} style={sectionLabelStyle}>Appointment Type</label>
         <select
@@ -389,7 +277,7 @@ const FilterPanelContent: React.FC<{
         </select>
       </div>
 
-      {/* 6. Status */}
+      {/* Status */}
       <div>
         <label className={sectionLabel} style={sectionLabelStyle}>Status</label>
         <select
@@ -408,7 +296,7 @@ const FilterPanelContent: React.FC<{
         </select>
       </div>
 
-      {/* 7+8. Search + Clear */}
+      {/* Actions */}
       <div className="flex items-center gap-3 pt-1">
         <button
           onClick={onSearch}
@@ -437,58 +325,142 @@ const FilterPanelContent: React.FC<{
   );
 };
 
-/* ═══ Main Export — Permanently Visible Filter Panel (LOG-107) ═══ */
-
-interface Props {
-  filters: CalendarFilterState;
-  onChange: (f: CalendarFilterState) => void;
-  onClear: () => void;
-  currentDate: Date;
-  onMonthYearChange: (date: Date) => void;
-  role: string;
-  placeholder?: string;
-  compact?: boolean;
-  appointments?: SearchableAppointment[];
-  onSelectAppointment?: (appt: SearchableAppointment) => void;
-}
-
+/* ═══ Main Export — Search Box with Filter Dropdown ═══ */
 const CalendarFilters: React.FC<Props> = ({
   filters, onChange, onClear, currentDate, onMonthYearChange, role,
-  placeholder, compact = false,
+  placeholder = 'Search calendar...', compact = false,
   appointments = [], onSelectAppointment,
 }) => {
+  const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<CalendarFilterState>({ ...filters });
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
+  const active = isFiltersActive(filters);
+  const summary = active ? filterSummary(filters) : '';
 
   useEffect(() => {
-    setDraft({ ...filters });
-  }, [filters]);
+    if (!open) setDraft({ ...filters });
+  }, [filters, open]);
+
+  useEffect(() => {
+    if (!open || isMobile) return;
+    const handler = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [open, isMobile]);
 
   const handleSearch = () => {
     onChange(draft);
+    setOpen(false);
   };
 
   const handleClear = () => {
     const cleared = { ...DEFAULT_FILTERS };
     setDraft(cleared);
     onClear();
+    setOpen(false);
+  };
+
+  const handleBarClear = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    handleClear();
+  };
+
+  const handleBarClick = () => {
+    setOpen(o => !o);
   };
 
   const handleSelectAppointment = (appt: SearchableAppointment) => {
+    setOpen(false);
     onSelectAppointment?.(appt);
   };
 
+  const ChevronIcon = open ? ChevronUp : ChevronDown;
+
+  // Desktop
+  if (!isMobile) {
+    return (
+      <div ref={containerRef} className={`relative ${compact ? '' : 'mb-4'}`}>
+        <div
+          onClick={handleBarClick}
+          className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card transition-colors hover:border-[#2dd4bf]/40 cursor-pointer"
+        >
+          <Search size={16} className="text-muted-foreground flex-shrink-0" />
+          <span className="flex-1 text-xs min-w-0 truncate" style={{ color: active && summary ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))' }}>
+            {active && summary ? summary : placeholder}
+          </span>
+          {active && (
+            <button onClick={handleBarClear} className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground flex-shrink-0">
+              <X size={12} />
+              Clear
+            </button>
+          )}
+          <ChevronIcon size={14} className="text-muted-foreground flex-shrink-0" />
+        </div>
+
+        {open && (
+          <div className={`absolute z-50 top-full mt-1 ${compact ? 'w-full' : 'w-[380px]'} left-0 bg-card border border-border rounded-xl shadow-lg animate-fade-in`}>
+            <FilterDropdownContent
+              draft={draft}
+              setDraft={setDraft}
+              currentDate={currentDate}
+              onMonthYearChange={onMonthYearChange}
+              role={role}
+              onSearch={handleSearch}
+              onClear={handleClear}
+              compact={compact}
+              appointments={appointments}
+              onSelectAppointment={handleSelectAppointment}
+            />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Mobile
   return (
     <div className={compact ? '' : 'mb-4'}>
-      <FilterPanelContent
-        draft={draft}
-        setDraft={setDraft}
-        currentDate={currentDate}
-        onMonthYearChange={onMonthYearChange}
-        onSearch={handleSearch}
-        onClear={handleClear}
-        appointments={appointments}
-        onSelectAppointment={handleSelectAppointment}
-      />
+      <div
+        onClick={handleBarClick}
+        className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card cursor-pointer"
+      >
+        <Search size={16} className="text-muted-foreground flex-shrink-0" />
+        <span className="flex-1 text-xs min-w-0 truncate" style={{ color: active && summary ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))' }}>
+          {active && summary ? summary : placeholder}
+        </span>
+        {active && (
+          <button onClick={handleBarClear} className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground flex-shrink-0">
+            <X size={12} />
+            Clear
+          </button>
+        )}
+        <ChevronIcon size={14} className="text-muted-foreground flex-shrink-0" />
+      </div>
+
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent side="bottom" className="h-auto max-h-[85vh] rounded-t-xl p-0 overflow-y-auto">
+          <SheetHeader className="mb-3">
+            <SheetTitle className="text-sm font-semibold text-foreground">Filters</SheetTitle>
+          </SheetHeader>
+          <FilterDropdownContent
+            draft={draft}
+            setDraft={setDraft}
+            currentDate={currentDate}
+            onMonthYearChange={onMonthYearChange}
+            role={role}
+            onSearch={handleSearch}
+            onClear={handleClear}
+            compact
+            appointments={appointments}
+            onSelectAppointment={handleSelectAppointment}
+          />
+        </SheetContent>
+      </Sheet>
     </div>
   );
 };
