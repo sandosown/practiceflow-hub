@@ -253,6 +253,7 @@ const CalendarPage: React.FC = () => {
                   if (cellDate) {
                     setCurrentDate(cellDate);
                     setView('day');
+                    if (panelOpen) scrollPanelToDate(cellDate);
                   }
                 }}
               >
