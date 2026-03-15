@@ -280,8 +280,57 @@ const CalendarPage: React.FC = () => {
     toast({ title: `Status updated to ${STATUS_LABELS[newStatus]}` });
   }, [userId]);
 
+  /* ── Duplicate detection state ── */
+  const [duplicateModalOpen, setDuplicateModalOpen] = useState(false);
+  const [duplicateAppt, setDuplicateAppt] = useState<DemoAppointment | null>(null);
+  const [duplicateCreatorName, setDuplicateCreatorName] = useState('');
+
   /* ── Add appointment ── */
   const handleAddAppointment = (data: Omit<DemoAppointment, 'appointment_id'>) => {
+    // Duplicate detection: check if a linked appointment with the exact same participant set already exists
+    if (data.participants.length > 0) {
+      // Build the set of all people in the new appointment (creator + participants)
+      const newParticipantIds = new Set<string>();
+      newParticipantIds.add(data.created_by);
+      data.participants.forEach(p => {
+        if (p.id) newParticipantIds.add(p.id);
+      });
+
+      // Only check if we have at least 2 people (creator + at least one participant with id)
+      if (newParticipantIds.size >= 2) {
+        // Find existing linked appointments with exact same participant set
+        const duplicates = appointments.filter(existing => {
+          if (!existing.is_linked) return false;
+          if (existing.status === 'cancelled') return false;
+
+          // Build existing participant set (creator + participants)
+          const existingIds = new Set<string>();
+          existingIds.add(existing.created_by);
+          existing.participants.forEach(p => {
+            if (p.id) existingIds.add(p.id);
+          });
+
+          // Check exact match
+          if (existingIds.size !== newParticipantIds.size) return false;
+          for (const id of newParticipantIds) {
+            if (!existingIds.has(id)) return false;
+          }
+          return true;
+        });
+
+        if (duplicates.length > 0) {
+          // Show the most recent duplicate
+          const mostRecent = duplicates.sort((a, b) =>
+            new Date(b.start_time).getTime() - new Date(a.start_time).getTime()
+          )[0];
+          setDuplicateAppt(mostRecent);
+          setDuplicateCreatorName(getNameById(mostRecent.created_by));
+          setDuplicateModalOpen(true);
+          return; // Block save
+        }
+      }
+    }
+
     const newAppt: DemoAppointment = {
       ...data,
       appointment_id: `appt-new-${Date.now()}`,
@@ -289,6 +338,36 @@ const CalendarPage: React.FC = () => {
     setAppointments(prev => [...prev, newAppt]);
     setAddOpen(false);
     toast({ title: 'Appointment created' });
+  };
+
+  /* ── Duplicate modal handlers ── */
+  const handleDuplicateGoToCalendar = () => {
+    setDuplicateModalOpen(false);
+    setAddOpen(false);
+    if (duplicateAppt) {
+      const d = new Date(duplicateAppt.start_time);
+      setCurrentDate(d);
+      setView('day');
+    }
+  };
+
+  const handleDuplicateGoToAppointments = () => {
+    setDuplicateModalOpen(false);
+    setAddOpen(false);
+    setPanelOpen(true);
+    if (duplicateAppt) {
+      const d = new Date(duplicateAppt.start_time);
+      setCurrentDate(d);
+      scrollPanelToDate(d);
+    }
+  };
+
+  const handleDuplicateEditExisting = () => {
+    setDuplicateModalOpen(false);
+    setAddOpen(false);
+    if (duplicateAppt) {
+      openDetail(duplicateAppt);
+    }
   };
 
   /* ── Appointment chip ── */
