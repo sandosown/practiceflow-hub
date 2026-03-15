@@ -1548,58 +1548,44 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
         </div>
       </div>
 
-      {/* 5A. Location (if In-Person) — LOG-103 */}
+      {/* Location / Virtual conditional sections — inside glass cards */}
       {meetingFormat === 'in_person' && (
-        <div className="space-y-1.5">
-          <Label>Where?</Label>
+        <div style={glassCard}>
+          <p style={sectionLabel}>Where?</p>
           {!addingLocation ? (
-            <>
-              <Select value={location} onValueChange={(val) => {
-                if (val === '__add_new__') {
-                  setAddingLocation(true);
-                } else {
-                  setLocation(val);
-                }
-              }}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select location..." />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="__add_new__">
-                    <span className="flex items-center gap-1.5" style={{ color: TEAL }}>
-                      <Plus size={12} /> Add New Location
-                    </span>
+            <Select value={location} onValueChange={(val) => {
+              if (val === '__add_new__') {
+                setAddingLocation(true);
+              } else {
+                setLocation(val);
+              }
+            }}>
+              <SelectTrigger className={`${glassInputFocusClass} text-white`} style={{ ...glassInput, height: 40 }}>
+                <SelectValue placeholder="Select location..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__add_new__">
+                  <span className="flex items-center gap-1.5" style={{ color: TEAL }}>
+                    <Plus size={12} /> Add New Location
+                  </span>
+                </SelectItem>
+                {savedLocations.map(loc => (
+                  <SelectItem key={loc.location_id} value={loc.name}>
+                    <div className="flex flex-col">
+                      <span>{loc.name}</span>
+                      {loc.address && <span className="text-[11px] text-muted-foreground">{loc.address}</span>}
+                    </div>
                   </SelectItem>
-                  {savedLocations.map(loc => (
-                    <SelectItem key={loc.location_id} value={loc.name}>
-                      <div className="flex flex-col">
-                        <span>{loc.name}</span>
-                        {loc.address && <span className="text-[11px] text-muted-foreground">{loc.address}</span>}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              
-            </>
+                ))}
+              </SelectContent>
+            </Select>
           ) : (
-            <div className="space-y-2 rounded-lg border border-border p-3">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">New Location</p>
-              <Input
-                value={newLocationName}
-                onChange={e => setNewLocationName(e.target.value)}
-                placeholder="Location name *"
-                className="text-sm"
-                autoFocus
-              />
-              <Input
-                value={newLocationAddress}
-                onChange={e => setNewLocationAddress(e.target.value)}
-                placeholder="Address (optional)"
-                className="text-sm"
-              />
+            <div className="space-y-2 rounded-lg p-3" style={{ border: '1px solid rgba(255,255,255,0.07)' }}>
+              <p style={{ ...sectionLabel, marginBottom: 4 }}>New Location</p>
+              <Input value={newLocationName} onChange={e => setNewLocationName(e.target.value)} placeholder="Location name *" className={`text-sm ${glassInputFocusClass}`} style={{ ...glassInput, width: '100%', height: 'auto' }} autoFocus />
+              <Input value={newLocationAddress} onChange={e => setNewLocationAddress(e.target.value)} placeholder="Address (optional)" className={`text-sm ${glassInputFocusClass}`} style={{ ...glassInput, width: '100%', height: 'auto' }} />
               <Select value={newLocationType} onValueChange={setNewLocationType}>
-                <SelectTrigger className="h-8 text-sm">
+                <SelectTrigger className={`h-8 text-sm ${glassInputFocusClass} text-white`} style={{ ...glassInput, height: 32 }}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -1609,13 +1595,8 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
                 </SelectContent>
               </Select>
               <div className="flex items-center justify-between">
-                <label className="flex items-center gap-2 text-xs text-foreground/80 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={saveForFuture}
-                    onChange={e => setSaveForFuture(e.target.checked)}
-                    className="rounded border-border"
-                  />
+                <label className="flex items-center gap-2 text-xs cursor-pointer" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  <input type="checkbox" checked={saveForFuture} onChange={e => setSaveForFuture(e.target.checked)} className="rounded" />
                   Save for future use?
                 </label>
               </div>
@@ -1628,13 +1609,7 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
                     if (saveForFuture) {
                       const { data, error } = await supabase
                         .from('hat_locations')
-                        .insert({
-                          hat_id: 'w1',
-                          name,
-                          address: newLocationAddress.trim() || null,
-                          type: newLocationType.toLowerCase(),
-                          created_by: userId,
-                        })
+                        .insert({ hat_id: 'w1', name, address: newLocationAddress.trim() || null, type: newLocationType.toLowerCase(), created_by: userId })
                         .select()
                         .single();
                       if (!error && data) {
@@ -1643,23 +1618,15 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
                       }
                     }
                     setLocation(name);
-                    setNewLocationName('');
-                    setNewLocationAddress('');
-                    setNewLocationType('Office');
-                    setSaveForFuture(true);
-                    setAddingLocation(false);
+                    setNewLocationName(''); setNewLocationAddress(''); setNewLocationType('Office'); setSaveForFuture(true); setAddingLocation(false);
                   }}
                   disabled={!newLocationName.trim()}
-                  className="flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors disabled:opacity-40"
+                  className="flex-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors disabled:opacity-40"
                   style={{ border: `1px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
                 >
                   Add
                 </button>
-                <button
-                  type="button"
-                  onClick={() => { setAddingLocation(false); setNewLocationName(''); setNewLocationAddress(''); }}
-                  className="px-3 py-1.5 text-muted-foreground text-xs"
-                >
+                <button type="button" onClick={() => { setAddingLocation(false); setNewLocationName(''); setNewLocationAddress(''); }} className="px-3 py-1.5 text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
                   Cancel
                 </button>
               </div>
@@ -1668,14 +1635,13 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
         </div>
       )}
 
-      {/* 5B. Platform + Meeting Link (if Virtual) */}
       {meetingFormat === 'virtual' && (
-        <>
-          <div className="space-y-1.5">
-            <Label>Platform *</Label>
+        <div style={glassCard} className="flex flex-col gap-2">
+          <div>
+            <p style={sectionLabel}>Platform *</p>
             {!addingPlatform ? (
               <Select value={virtualPlatform} onValueChange={setVirtualPlatform}>
-                <SelectTrigger>
+                <SelectTrigger className={`${glassInputFocusClass} text-white`} style={{ ...glassInput, height: 40 }}>
                   <SelectValue placeholder="Select platform..." />
                 </SelectTrigger>
                 <SelectContent>
@@ -1694,90 +1660,65 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
               </Select>
             ) : (
               <div className="flex gap-2">
-                <Input
-                  value={newPlatformName}
-                  onChange={e => setNewPlatformName(e.target.value)}
-                  placeholder="Platform name"
-                  className="text-sm"
-                  autoFocus
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (newPlatformName.trim()) {
-                      setCustomPlatforms(prev => [...prev, newPlatformName.trim()]);
-                      setVirtualPlatform(newPlatformName.trim());
-                      setNewPlatformName('');
-                    }
-                    setAddingPlatform(false);
-                  }}
-                  className="px-3 py-1.5 rounded-md text-xs font-medium"
-                  style={{ border: `1px solid ${TEAL}`, color: TEAL }}
-                >
-                  Add
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setAddingPlatform(false); setNewPlatformName(''); }}
-                  className="px-2 py-1.5 text-muted-foreground text-xs"
-                >
-                  Cancel
-                </button>
+                <Input value={newPlatformName} onChange={e => setNewPlatformName(e.target.value)} placeholder="Platform name" className={`text-sm ${glassInputFocusClass}`} style={{ ...glassInput, width: '100%', height: 'auto' }} autoFocus />
+                <button type="button" onClick={() => { if (newPlatformName.trim()) { setCustomPlatforms(prev => [...prev, newPlatformName.trim()]); setVirtualPlatform(newPlatformName.trim()); setNewPlatformName(''); } setAddingPlatform(false); }} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ border: `1px solid ${TEAL}`, color: TEAL }}>Add</button>
+                <button type="button" onClick={() => { setAddingPlatform(false); setNewPlatformName(''); }} className="px-2 py-1.5 text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>Cancel</button>
               </div>
             )}
           </div>
-
-          <div className="space-y-1.5">
-            <Label>Meeting Link</Label>
-            <Input
-              value={meetingLink}
-              onChange={e => setMeetingLink(e.target.value)}
-              placeholder="https://..."
-              type="url"
-              className="text-sm"
-            />
+          <div>
+            <p style={sectionLabel}>Meeting Link</p>
+            <Input value={meetingLink} onChange={e => setMeetingLink(e.target.value)} placeholder="https://..." type="url" className={`text-sm ${glassInputFocusClass}`} style={{ ...glassInput, width: '100%', height: 'auto' }} />
           </div>
-        </>
+        </div>
       )}
 
-      {/* 6. Date */}
-      <div className="space-y-1.5">
-        <Label>Date *</Label>
-        <Input type="date" value={date} onChange={e => setDate(e.target.value)} />
-      </div>
-
-      {/* 7. Time row */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="space-y-1.5">
-          <Label>Start Time *</Label>
-          <Input type="time" value={startTime} onChange={e => setStartTime(e.target.value)} />
+      {/* Group 4: Date + Start Time + End Time */}
+      <div style={glassCard}>
+        <p style={sectionLabel}>Schedule *</p>
+        <div className="grid grid-cols-3 gap-2">
+          <div>
+            <p style={{ ...sectionLabel, fontSize: 9 }}>Date</p>
+            <Input type="date" value={date} onChange={e => setDate(e.target.value)} className={glassInputFocusClass} style={{ ...glassInput, width: '100%', height: 'auto' }} />
+          </div>
+          <div>
+            <p style={{ ...sectionLabel, fontSize: 9 }}>Start</p>
+            <Input type="time" value={startTime} onChange={e => setStartTime(e.target.value)} className={glassInputFocusClass} style={{ ...glassInput, width: '100%', height: 'auto' }} />
+          </div>
+          <div>
+            <p style={{ ...sectionLabel, fontSize: 9 }}>End</p>
+            <Input type="time" value={endTime} onChange={e => setEndTime(e.target.value)} className={glassInputFocusClass} style={{ ...glassInput, width: '100%', height: 'auto' }} />
+          </div>
         </div>
-        <div className="space-y-1.5">
-          <Label>End Time *</Label>
-          <Input type="time" value={endTime} onChange={e => setEndTime(e.target.value)} />
-        </div>
       </div>
 
-
-      {/* 9. Notes */}
-      <div className="space-y-1.5">
-        <Label>Notes</Label>
-        <Textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Optional notes..." rows={3} />
+      {/* Group 5: Notes */}
+      <div style={glassCard}>
+        <p style={sectionLabel}>Notes</p>
+        <Textarea
+          value={notes}
+          onChange={e => setNotes(e.target.value)}
+          placeholder="Optional notes..."
+          rows={3}
+          className={glassInputFocusClass}
+          style={{ ...glassInput, minHeight: 72, resize: 'vertical' } as React.CSSProperties}
+        />
       </div>
 
-      {/* 10. Actions */}
-      <div className="flex gap-2 pt-2">
+      {/* Actions */}
+      <div className="flex flex-col gap-2 pt-1">
         <button
           type="submit"
-          className="flex-1 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors hover:opacity-80"
-          style={{ border: `1.5px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
+          className="w-full px-4 py-2.5 text-sm font-medium transition-all hover:bg-[rgba(45,212,191,0.08)]"
+          style={{ border: `1.5px solid ${TEAL}`, color: TEAL, background: 'transparent', borderRadius: 8 }}
         >
           Save
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2.5 rounded-lg text-sm text-muted-foreground border border-border hover:bg-accent/10 transition-colors"
+          className="w-full px-4 py-2 text-sm transition-colors"
+          style={{ color: 'rgba(255,255,255,0.4)', background: 'transparent', border: 'none' }}
         >
           Cancel
         </button>
