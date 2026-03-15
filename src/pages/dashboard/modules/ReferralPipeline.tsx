@@ -183,17 +183,27 @@ const DroppableColumn: React.FC<{
   stages: string[];
   isCustom: boolean;
   editMode: boolean;
+  autoFocusEdit?: boolean;
   onMoveStage: (id: string, dir: 1 | -1) => void;
   onMoveToOutcome: (id: string, outcome: Outcome) => void;
   onDeleteStage?: () => void;
   onRenameStage?: (newName: string) => void;
-}> = ({ stage, cards, isMobile, stages, isCustom, editMode, onMoveStage, onMoveToOutcome, onDeleteStage, onRenameStage }) => {
+}> = ({ stage, cards, isMobile, stages, isCustom, editMode, autoFocusEdit, onMoveStage, onMoveToOutcome, onDeleteStage, onRenameStage }) => {
   const { setNodeRef, isOver } = useDroppable({ id: stage });
   const [expanded, setExpanded] = useState(false);
   const [editName, setEditName] = useState(stage);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   // Sync editName when stage display name changes externally
   React.useEffect(() => { setEditName(stage); }, [stage]);
+
+  // Auto-focus and select text when entering edit mode on the first stage
+  React.useEffect(() => {
+    if (editMode && autoFocusEdit && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [editMode, autoFocusEdit]);
 
   const visibleCards = expanded ? cards : cards.slice(0, MAX_VISIBLE);
   const hiddenCount = cards.length - MAX_VISIBLE;
@@ -209,14 +219,15 @@ const DroppableColumn: React.FC<{
     <div ref={setNodeRef} className="flex-shrink-0 flex flex-col" style={{ minWidth: 240, width: 240 }}>
       <div className="flex items-center justify-between mb-3 px-1">
         {editMode ? (
-          <div className="flex items-center gap-1 flex-1 mr-1">
+          <div className="flex items-center gap-1 flex-1 mr-1 p-1">
             <Input
+              ref={inputRef}
               value={editName}
               maxLength={30}
               onChange={e => setEditName(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') handleBlurOrEnter(); }}
               onBlur={handleBlurOrEnter}
-              className="h-6 text-xs font-semibold uppercase tracking-wider px-1 py-0"
+              className="h-7 text-xs font-semibold uppercase tracking-wider px-2 py-1"
             />
             {isCustom && (
               <button
@@ -573,11 +584,11 @@ const ReferralPipeline: React.FC = () => {
                     background: editMode ? 'hsl(var(--muted))' : 'transparent',
                   }}
                 >
-                  {editMode ? 'Done' : <><Settings className="w-3 h-3" /> Edit Pipeline</>}
+                  {editMode ? 'Done' : <><Settings className="w-3 h-3" /> Edit</>}
                 </button>
               </div>
             )}
-            {stages.map((stage) => (
+            {stages.map((stage, idx) => (
               <DroppableColumn
                 key={stage}
                 stage={getDisplayName(stage)}
@@ -586,6 +597,7 @@ const ReferralPipeline: React.FC = () => {
                 stages={stages}
                 isCustom={!DEFAULT_STAGES.includes(stage)}
                 editMode={editMode}
+                autoFocusEdit={idx === 0}
                 onMoveStage={moveStage}
                 onMoveToOutcome={moveToOutcome}
                 onDeleteStage={() => deleteCustomStage(stage)}
