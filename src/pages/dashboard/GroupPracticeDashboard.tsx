@@ -63,14 +63,10 @@ const GroupPracticeDashboard: React.FC = () => {
           borderBottom: '1px solid rgba(45,212,191,0.25)',
           borderRight: '1px solid rgba(45,212,191,0.15)',
           padding: '14px 20px',
-          display: 'flex',
-          alignItems: 'center',
-          width: 'fit-content',
-          whiteSpace: 'nowrap',
           marginLeft: 'auto',
           marginRight: 'auto',
           marginBottom: 16,
-        }}>
+        }} className="max-w-fit md:whitespace-nowrap">
           {(() => {
             const h = new Date().getHours();
             const greeting = h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
@@ -79,7 +75,7 @@ const GroupPracticeDashboard: React.FC = () => {
               ? 'no signals requiring your attention.'
               : `${count} signal${count !== 1 ? 's' : ''} requiring your attention.`;
             return (
-              <p style={{ color: 'hsl(var(--foreground))', fontSize: 16, fontWeight: 400, margin: 0 }}>
+              <p className="text-foreground text-sm md:text-base" style={{ fontWeight: 400, margin: 0 }}>
                 {`${greeting}, Dr. Sarah. `}
                 <span style={{ color: '#94a3b8' }}>—</span>
                 {" You currently have "}
