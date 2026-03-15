@@ -609,7 +609,7 @@ interface PanelProps {
   onSelect: (a: DemoAppointment) => void;
 }
 
-const AppointmentsPanel: React.FC<PanelProps> = ({ grouped, dateContext, onSelect }) => {
+const AppointmentsPanel: React.FC<PanelProps & { search?: string; onSearchChange?: (v: string) => void }> = ({ grouped, dateContext, onSelect, search, onSearchChange }) => {
   const dateKeys = Object.keys(grouped).sort();
 
   return (
@@ -618,6 +618,21 @@ const AppointmentsPanel: React.FC<PanelProps> = ({ grouped, dateContext, onSelec
         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Appointments</p>
         <p className="text-sm text-foreground/70 mt-0.5">{dateContext}</p>
       </div>
+      {/* Panel search bar */}
+      {onSearchChange && (
+        <div className="px-4 pb-2">
+          <div className="relative">
+            <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <input
+              type="text"
+              value={search ?? ''}
+              onChange={e => onSearchChange(e.target.value)}
+              placeholder="Search..."
+              className="w-full pl-8 pr-3 py-1.5 rounded-md border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+            />
+          </div>
+        </div>
+      )}
       <ScrollArea className="flex-1 px-4 pb-4">
         {dateKeys.length === 0 ? (
           <p className="text-sm text-muted-foreground py-8 text-center">No appointments this month.</p>
@@ -630,25 +645,29 @@ const AppointmentsPanel: React.FC<PanelProps> = ({ grouped, dateContext, onSelec
                 <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 border-b border-border/30 pb-1">
                   {d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
                 </p>
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   {appts.map(a => {
                     const color = TYPE_COLORS[a.appointment_type] ?? '#64748b';
                     return (
                       <button
                         key={a.appointment_id}
                         onClick={() => onSelect(a)}
-                        className="w-full text-left rounded-lg p-2 hover:bg-accent/10 transition-colors"
+                        className="w-full text-left rounded-lg p-2.5 hover:opacity-80 transition-opacity"
+                        style={{
+                          background: 'hsl(var(--card))',
+                          borderLeft: `4px solid ${color}`,
+                          borderTop: `1px solid ${color}40`,
+                          borderBottom: `1px solid ${color}40`,
+                          borderRight: `1px solid ${color}26`,
+                        }}
                       >
-                        <div className="flex items-start gap-2">
-                          <span className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0" style={{ background: color }} />
-                          <div className="min-w-0 flex-1">
-                            <p className="text-xs text-muted-foreground">{formatTime(a.start_time)} – {formatTime(a.end_time)}</p>
-                            <p className="text-sm font-medium text-foreground truncate">{a.title}</p>
-                            <p className="text-[11px] text-muted-foreground">{a.appointment_type}</p>
-                            {a.assigned_by && a.assigned_by !== a.assigned_to && (
-                              <p className="text-[10px] text-muted-foreground">with {getNameById(a.assigned_to)}</p>
-                            )}
-                          </div>
+                        <div className="min-w-0">
+                          <p className="text-xs text-muted-foreground">{formatTime(a.start_time)} – {formatTime(a.end_time)}</p>
+                          <p className="text-sm font-medium text-foreground truncate">{a.title}</p>
+                          <p className="text-[11px] text-muted-foreground">{a.appointment_type}</p>
+                          {a.assigned_by && a.assigned_by !== a.assigned_to && (
+                            <p className="text-[10px] text-muted-foreground">with {getNameById(a.assigned_to)}</p>
+                          )}
                         </div>
                       </button>
                     );
