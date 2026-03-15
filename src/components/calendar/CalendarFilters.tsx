@@ -1,18 +1,32 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, X, ChevronDown } from 'lucide-react';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Search, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { DEMO_USERS } from '@/data/demoUsers';
 
 const TEAL = '#2dd4bf';
 
-const ALL_TYPES = [
-  'Client Session', 'Supervision Session', 'Staff Meeting', 'Intake',
-  'Personal', 'Meeting', 'Session', 'Other',
-];
+const TYPE_COLORS: Record<string, string> = {
+  'Client Session': '#0d9488',
+  'Supervision Session': '#4f46e5',
+  'Staff Meeting': '#7c3aed',
+  'Intake': '#0ea5e9',
+  'Personal': '#94a3b8',
+  'Meeting': '#2dd4bf',
+  'Session': '#059669',
+  'Other': '#64748b',
+};
 
-const ALL_STATUSES = ['Confirmed', 'Completed', 'Cancelled', 'Rescheduled', 'No Show'];
+const STATUS_COLORS: Record<string, string> = {
+  'Confirmed': '#2dd4bf',
+  'Completed': '#059669',
+  'Cancelled': '#78716c',
+  'Rescheduled': '#d97706',
+  'No Show': '#92764a',
+};
+
+const ALL_TYPES = Object.keys(TYPE_COLORS);
+const ALL_STATUSES = Object.keys(STATUS_COLORS);
 
 const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -48,7 +62,6 @@ export function isFiltersActive(f: CalendarFilterState): boolean {
   );
 }
 
-/** Build a short summary string of active filters */
 function filterSummary(f: CalendarFilterState): string {
   const parts: string[] = [];
   if (f.keyword.trim()) parts.push(`"${f.keyword.trim()}"`);
@@ -66,7 +79,6 @@ function filterSummary(f: CalendarFilterState): string {
   return parts.join(' · ');
 }
 
-/** Summary excluding keyword (shown as badge next to the live input) */
 function filterSummaryNoKeyword(f: CalendarFilterState): string {
   const parts: string[] = [];
   if (f.dateFrom && f.dateTo) parts.push(`${f.dateFrom} – ${f.dateTo}`);
@@ -94,6 +106,26 @@ interface Props {
   compact?: boolean;
 }
 
+/* ─── Accent Chip ─── */
+const AccentChip: React.FC<{
+  label: string;
+  color: string;
+  checked: boolean;
+  onClick: () => void;
+}> = ({ label, color, checked, onClick }) => (
+  <button
+    onClick={onClick}
+    className="px-2 py-1 rounded-full text-[11px] font-medium border transition-colors"
+    style={
+      checked
+        ? { borderColor: color, background: color, color: '#0f172a' }
+        : { borderColor: color, color: color, background: 'transparent' }
+    }
+  >
+    {label}
+  </button>
+);
+
 /* ─── Filter Dropdown Content ─── */
 const FilterDropdownContent: React.FC<{
   draft: CalendarFilterState;
@@ -112,6 +144,18 @@ const FilterDropdownContent: React.FC<{
 
   return (
     <div className={`space-y-3 ${compact ? 'text-xs' : 'text-sm'}`}>
+      {/* Keyword */}
+      <div>
+        <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">Keyword</label>
+        <input
+          type="text"
+          value={draft.keyword}
+          onChange={e => setDraft(prev => ({ ...prev, keyword: e.target.value }))}
+          placeholder="Type to search by title..."
+          className="w-full px-2.5 py-1.5 rounded-md border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+        />
+      </div>
+
       {/* Date Range */}
       <div>
         <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">Date Range</label>
@@ -180,20 +224,16 @@ const FilterDropdownContent: React.FC<{
           {ALL_TYPES.map(t => {
             const checked = draft.selectedTypes.includes(t);
             return (
-              <button
+              <AccentChip
                 key={t}
+                label={t}
+                color={TYPE_COLORS[t]}
+                checked={checked}
                 onClick={() => setDraft(prev => ({
                   ...prev,
                   selectedTypes: checked ? prev.selectedTypes.filter(s => s !== t) : [...prev.selectedTypes, t],
                 }))}
-                className="px-2 py-1 rounded-full text-[11px] font-medium border transition-colors"
-                style={checked
-                  ? { borderColor: TEAL, color: TEAL, background: 'rgba(45,212,191,0.08)' }
-                  : { borderColor: 'hsl(var(--border))', color: 'hsl(var(--muted-foreground))' }
-                }
-              >
-                {t}
-              </button>
+              />
             );
           })}
         </div>
@@ -206,20 +246,16 @@ const FilterDropdownContent: React.FC<{
           {ALL_STATUSES.map(s => {
             const checked = draft.selectedStatuses.includes(s);
             return (
-              <button
+              <AccentChip
                 key={s}
+                label={s}
+                color={STATUS_COLORS[s]}
+                checked={checked}
                 onClick={() => setDraft(prev => ({
                   ...prev,
                   selectedStatuses: checked ? prev.selectedStatuses.filter(x => x !== s) : [...prev.selectedStatuses, s],
                 }))}
-                className="px-2 py-1 rounded-full text-[11px] font-medium border transition-colors"
-                style={checked
-                  ? { borderColor: TEAL, color: TEAL, background: 'rgba(45,212,191,0.08)' }
-                  : { borderColor: 'hsl(var(--border))', color: 'hsl(var(--muted-foreground))' }
-                }
-              >
-                {s}
-              </button>
+              />
             );
           })}
         </div>
@@ -274,12 +310,10 @@ const CalendarFilters: React.FC<Props> = ({
   const active = isFiltersActive(filters);
   const summary = active ? filterSummary(filters) : '';
 
-  // Sync draft when filters change externally
   useEffect(() => {
     if (!open) setDraft({ ...filters });
   }, [filters, open]);
 
-  // Close dropdown on outside click (desktop only)
   useEffect(() => {
     if (!open || isMobile) return;
     const handler = (e: MouseEvent) => {
@@ -308,44 +342,33 @@ const CalendarFilters: React.FC<Props> = ({
     handleClear();
   };
 
-  // Desktop: inline dropdown
+  const handleBarClick = () => {
+    setOpen(o => !o);
+  };
+
+  const ChevronIcon = open ? ChevronUp : ChevronDown;
+
+  // Desktop
   if (!isMobile) {
     return (
       <div ref={containerRef} className={`relative ${compact ? '' : 'mb-4'}`}>
-        {/* Search bar */}
-        <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card transition-colors hover:border-[#2dd4bf]/40">
+        <div
+          onClick={handleBarClick}
+          className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card transition-colors hover:border-[#2dd4bf]/40 cursor-pointer"
+        >
           <Search size={16} className="text-muted-foreground flex-shrink-0" />
-          <input
-            type="text"
-            value={filters.keyword}
-            onChange={e => {
-              onChange({ ...filters, keyword: e.target.value });
-              setDraft(prev => ({ ...prev, keyword: e.target.value }));
-            }}
-            placeholder={active && !filters.keyword ? summary : placeholder}
-            className="flex-1 bg-transparent text-xs text-foreground placeholder:text-muted-foreground focus:outline-none min-w-0"
-          />
+          <span className="flex-1 text-xs min-w-0 truncate" style={{ color: active && summary ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))' }}>
+            {active && summary ? summary : placeholder}
+          </span>
           {active && (
-            <>
-              <span className="text-[10px] text-muted-foreground truncate max-w-[180px] hidden sm:inline">
-                {filterSummaryNoKeyword(filters)}
-              </span>
-              <button onClick={handleBarClear} className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground flex-shrink-0">
-                <X size={12} />
-                Clear
-              </button>
-            </>
+            <button onClick={handleBarClear} className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground flex-shrink-0">
+              <X size={12} />
+              Clear
+            </button>
           )}
-          <button
-            onClick={(e) => { e.stopPropagation(); setOpen(o => !o); }}
-            className="p-1 rounded hover:bg-accent/10 transition-colors flex-shrink-0"
-            title="Filters"
-          >
-            <ChevronDown size={14} className="text-muted-foreground" />
-          </button>
+          <ChevronIcon size={14} className="text-muted-foreground flex-shrink-0" />
         </div>
 
-        {/* Dropdown panel */}
         {open && (
           <div className={`absolute z-50 top-full mt-1 ${compact ? 'w-full' : 'w-[380px]'} left-0 bg-card border border-border rounded-xl shadow-lg p-4 animate-fade-in`}>
             <FilterDropdownContent
@@ -364,34 +387,24 @@ const CalendarFilters: React.FC<Props> = ({
     );
   }
 
-  // Mobile: search bar → bottom sheet
+  // Mobile
   return (
     <div className={compact ? '' : 'mb-4'}>
-      <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card">
+      <div
+        onClick={handleBarClick}
+        className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card cursor-pointer"
+      >
         <Search size={16} className="text-muted-foreground flex-shrink-0" />
-        <input
-          type="text"
-          value={filters.keyword}
-          onChange={e => {
-            onChange({ ...filters, keyword: e.target.value });
-            setDraft(prev => ({ ...prev, keyword: e.target.value }));
-          }}
-          placeholder={active && !filters.keyword ? summary : placeholder}
-          className="flex-1 bg-transparent text-xs text-foreground placeholder:text-muted-foreground focus:outline-none min-w-0"
-        />
+        <span className="flex-1 text-xs min-w-0 truncate" style={{ color: active && summary ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))' }}>
+          {active && summary ? summary : placeholder}
+        </span>
         {active && (
           <button onClick={handleBarClear} className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground flex-shrink-0">
             <X size={12} />
             Clear
           </button>
         )}
-        <button
-          onClick={(e) => { e.stopPropagation(); setOpen(o => !o); }}
-          className="p-1 rounded hover:bg-accent/10 transition-colors flex-shrink-0"
-          title="Filters"
-        >
-          <ChevronDown size={14} className="text-muted-foreground" />
-        </button>
+        <ChevronIcon size={14} className="text-muted-foreground flex-shrink-0" />
       </div>
 
       <Sheet open={open} onOpenChange={setOpen}>
