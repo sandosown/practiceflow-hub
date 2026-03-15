@@ -388,7 +388,7 @@ const CalendarPage: React.FC = () => {
       : formatDateLong(currentDate);
 
   return (
-    <AppLayout>
+    <AppLayout title="Calendar">
       <div className="px-4 md:px-6 pt-4 pb-20 max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
