@@ -1063,14 +1063,32 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
   const [location, setLocation] = useState('');
   const [virtualPlatform, setVirtualPlatform] = useState('');
   const [meetingLink, setMeetingLink] = useState('');
-  const [customLocations, setCustomLocations] = useState<string[]>([]);
   const [customPlatforms, setCustomPlatforms] = useState<string[]>([]);
-  const [addingLocation, setAddingLocation] = useState(false);
   const [addingPlatform, setAddingPlatform] = useState(false);
-  const [newLocationName, setNewLocationName] = useState('');
   const [newPlatformName, setNewPlatformName] = useState('');
 
-  const allLocations = [...DEFAULT_LOCATIONS, ...customLocations];
+  // LOG-103: Saved locations
+  const [savedLocations, setSavedLocations] = useState<SavedLocation[]>([]);
+  const [addingLocation, setAddingLocation] = useState(false);
+  const [newLocationName, setNewLocationName] = useState('');
+  const [newLocationAddress, setNewLocationAddress] = useState('');
+  const [newLocationType, setNewLocationType] = useState('Office');
+  const [saveForFuture, setSaveForFuture] = useState(true);
+
+  // Fetch saved locations
+  useEffect(() => {
+    const fetchLocations = async () => {
+      const { data } = await supabase
+        .from('hat_locations')
+        .select('*')
+        .eq('hat_id', 'w1')
+        .eq('is_active', true)
+        .order('name');
+      if (data) setSavedLocations(data as unknown as SavedLocation[]);
+    };
+    fetchLocations();
+  }, []);
+
   const allPlatforms = [...DEFAULT_PLATFORMS, ...customPlatforms];
 
   const activeStaff = DEMO_USERS.filter(u => u.practice_id === 'demo-practice-1');
