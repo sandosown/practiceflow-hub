@@ -34,6 +34,8 @@ function isoDate(dayOffset: number, hour: number, minute = 0): string {
   return d.toISOString();
 }
 
+const defaultStatus = { status: 'confirmed' as AppointmentStatus, status_updated_at: null, status_updated_by: null };
+
 export function getDemoAppointments(): DemoAppointment[] {
   return [
     // Dr. Sarah Mitchell (OWNER) — 2 Staff Meetings, 1 Personal
