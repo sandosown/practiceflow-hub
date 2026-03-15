@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Search, X, ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import { Search, X, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 
 const TEAL = '#2dd4bf';
@@ -95,6 +96,173 @@ interface Props {
   appointments?: SearchableAppointment[];
   onSelectAppointment?: (appt: SearchableAppointment) => void;
 }
+/* ─── Custom Date Picker Field ─── */
+const DAY_NAMES = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+
+function formatDisplayDate(dateStr: string): string {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function toYMD(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function todayYMD(): string {
+  return toYMD(new Date());
+}
+
+const DatePickerField: React.FC<{
+  value: string;
+  onChange: (val: string) => void;
+  label: string;
+  fieldStyle: React.CSSProperties;
+  sectionLabel: string;
+  sectionLabelStyle: React.CSSProperties;
+}> = ({ value, onChange, label, fieldStyle, sectionLabel, sectionLabelStyle }) => {
+  const [open, setOpen] = useState(false);
+  const parsed = value ? new Date(value + 'T00:00:00') : null;
+  const [viewMonth, setViewMonth] = useState(parsed ? parsed.getMonth() : new Date().getMonth());
+  const [viewYear, setViewYear] = useState(parsed ? parsed.getFullYear() : new Date().getFullYear());
+
+  useEffect(() => {
+    if (open && parsed) {
+      setViewMonth(parsed.getMonth());
+      setViewYear(parsed.getFullYear());
+    }
+  }, [open]);
+
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  const firstDow = new Date(viewYear, viewMonth, 1).getDay();
+  const today = todayYMD();
+
+  const prevMonth = () => {
+    if (viewMonth === 0) { setViewMonth(11); setViewYear(y => y - 1); }
+    else setViewMonth(m => m - 1);
+  };
+  const nextMonth = () => {
+    if (viewMonth === 11) { setViewMonth(0); setViewYear(y => y + 1); }
+    else setViewMonth(m => m + 1);
+  };
+
+  const selectDate = (day: number) => {
+    onChange(toYMD(new Date(viewYear, viewMonth, day)));
+    setOpen(false);
+  };
+
+  const clearDate = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onChange('');
+  };
+
+  const calendarPopoverStyle: React.CSSProperties = {
+    background: 'rgba(6,14,30,0.97)',
+    border: '1px solid rgba(45,212,191,0.15)',
+    borderRadius: 12,
+    boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+    padding: 12,
+    width: 260,
+  };
+
+  return (
+    <div>
+      <label className={sectionLabel} style={sectionLabelStyle}>{label}</label>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <button
+            className="flex items-center gap-2 w-full text-xs text-foreground"
+            style={fieldStyle}
+          >
+            <span className="flex-1 text-left" style={{ color: value ? undefined : 'rgba(255,255,255,0.35)' }}>
+              {value ? formatDisplayDate(value) : 'Select date'}
+            </span>
+            {value && (
+              <span onClick={clearDate} className="flex-shrink-0 text-muted-foreground hover:text-foreground cursor-pointer">
+                <X size={12} />
+              </span>
+            )}
+          </button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0 border-0 bg-transparent" align="start" sideOffset={4}>
+          <div style={calendarPopoverStyle}>
+            {/* Header */}
+            <div className="flex items-center justify-between mb-2">
+              <button onClick={prevMonth} className="p-1 rounded transition-colors" style={{ color: 'rgba(255,255,255,0.5)' }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#2dd4bf')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.5)')}
+              >
+                <ChevronLeft size={14} />
+              </button>
+              <span style={{ color: 'white', fontSize: 13 }}>
+                {MONTHS[viewMonth]} {viewYear}
+              </span>
+              <button onClick={nextMonth} className="p-1 rounded transition-colors" style={{ color: 'rgba(255,255,255,0.5)' }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#2dd4bf')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.5)')}
+              >
+                <ChevronRight size={14} />
+              </button>
+            </div>
+
+            {/* Day names */}
+            <div className="grid grid-cols-7 mb-1">
+              {DAY_NAMES.map(d => (
+                <span key={d} className="text-center" style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)' }}>
+                  {d}
+                </span>
+              ))}
+            </div>
+
+            {/* Day grid */}
+            <div className="grid grid-cols-7">
+              {Array.from({ length: firstDow }).map((_, i) => (
+                <span key={`empty-${i}`} />
+              ))}
+              {Array.from({ length: daysInMonth }, (_, i) => i + 1).map(day => {
+                const ymd = toYMD(new Date(viewYear, viewMonth, day));
+                const isSelected = ymd === value;
+                const isToday = ymd === today && !isSelected;
+                return (
+                  <button
+                    key={day}
+                    onClick={() => selectDate(day)}
+                    className="flex items-center justify-center transition-colors"
+                    style={{
+                      width: 32, height: 32, fontSize: 13, borderRadius: 6,
+                      ...(isSelected
+                        ? { background: '#2dd4bf', color: '#060e1e', fontWeight: 600 }
+                        : isToday
+                          ? { border: '1px solid rgba(45,212,191,0.4)', color: 'rgba(255,255,255,0.7)' }
+                          : { color: 'rgba(255,255,255,0.7)' }),
+                    }}
+                    onMouseEnter={e => {
+                      if (!isSelected) {
+                        e.currentTarget.style.background = 'rgba(45,212,191,0.1)';
+                        e.currentTarget.style.color = 'white';
+                      }
+                    }}
+                    onMouseLeave={e => {
+                      if (!isSelected) {
+                        e.currentTarget.style.background = 'transparent';
+                        e.currentTarget.style.color = 'rgba(255,255,255,0.7)';
+                      }
+                    }}
+                  >
+                    {day}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+};
 
 
 /* ─── Live Search Results ─── */
@@ -213,28 +381,24 @@ const FilterDropdownContent: React.FC<{
       </div>
 
       {/* Start Date */}
-      <div>
-        <label className={sectionLabel} style={sectionLabelStyle}>Start Date</label>
-        <input
-          type="date"
-          value={draft.dateFrom}
-          onChange={e => setDraft(prev => ({ ...prev, dateFrom: e.target.value }))}
-          className="w-full text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
-          style={fieldStyle}
-        />
-      </div>
+      <DatePickerField
+        value={draft.dateFrom}
+        onChange={val => setDraft(prev => ({ ...prev, dateFrom: val }))}
+        label="Start Date"
+        fieldStyle={fieldStyle}
+        sectionLabel={sectionLabel}
+        sectionLabelStyle={sectionLabelStyle}
+      />
 
       {/* End Date */}
-      <div>
-        <label className={sectionLabel} style={sectionLabelStyle}>End Date</label>
-        <input
-          type="date"
-          value={draft.dateTo}
-          onChange={e => setDraft(prev => ({ ...prev, dateTo: e.target.value }))}
-          className="w-full text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
-          style={fieldStyle}
-        />
-      </div>
+      <DatePickerField
+        value={draft.dateTo}
+        onChange={val => setDraft(prev => ({ ...prev, dateTo: val }))}
+        label="End Date"
+        fieldStyle={fieldStyle}
+        sectionLabel={sectionLabel}
+        sectionLabelStyle={sectionLabelStyle}
+      />
 
       {/* Appointment Type */}
       <div>
