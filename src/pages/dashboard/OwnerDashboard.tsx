@@ -12,8 +12,11 @@ const getGreeting = (): string => {
   return 'Good evening';
 };
 
-const WORKSPACES = [
-  { id: 'gp', label: 'Your Practice', icon: Briefcase, subtitle: 'Your practice', active: true, path: '/dashboard/owner/group-practice', accent: '#2dd4bf', second: '#0ea5e9' },
+const getWorkspaces = (workspaceName: string | null) => [
+  { id: 'gp', label: workspaceName || 'Your Practice', icon: Briefcase, subtitle: workspaceName ? 'Your practice' : 'Your practice', active: true, path: '/dashboard/owner/group-practice', accent: '#2dd4bf', second: '#0ea5e9' },
+  { id: 'coaching', label: 'Coaching', icon: GraduationCap, subtitle: 'Coming Soon', active: false, accent: '#f59e0b', second: '#f97316' },
+  { id: 'home', label: 'Home', icon: Home, subtitle: 'Coming Soon', active: false, accent: '#4ade80', second: '#22d3ee' },
+];
   { id: 'coaching', label: 'Coaching', icon: GraduationCap, subtitle: 'Coming Soon', active: false, accent: '#f59e0b', second: '#f97316' },
   { id: 'home', label: 'Home', icon: Home, subtitle: 'Coming Soon', active: false, accent: '#4ade80', second: '#22d3ee' },
 ];
