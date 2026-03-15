@@ -208,17 +208,28 @@ const FilterDropdownContent: React.FC<{
   const [monthPickerOpen, setMonthPickerOpen] = useState(false);
   const [pickerYear, setPickerYear] = useState(currentDate.getFullYear());
 
+  const fieldStyle: React.CSSProperties = {
+    background: 'rgba(255,255,255,0.05)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: 8,
+    padding: '10px 12px',
+  };
+
+  const sectionLabel = "text-[10px] font-semibold uppercase tracking-[0.08em] mb-1 block" as const;
+  const sectionLabelStyle: React.CSSProperties = { color: 'rgba(255,255,255,0.4)' };
+
   return (
-    <div className={`space-y-3 ${compact ? 'text-xs' : 'text-sm'}`}>
+    <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
       {/* Keyword */}
       <div>
-        <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">Keyword</label>
+        <label className={sectionLabel} style={sectionLabelStyle}>Keyword</label>
         <input
           type="text"
           value={draft.keyword}
           onChange={e => setDraft(prev => ({ ...prev, keyword: e.target.value }))}
           placeholder="Search..."
-          className="w-full px-2.5 py-1.5 rounded-md border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+          className="w-full text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+          style={fieldStyle}
         />
         {appointments.length > 0 && onSelectAppointment && (
           <LiveSearchResults
