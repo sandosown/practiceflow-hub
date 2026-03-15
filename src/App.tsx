@@ -12,6 +12,7 @@ import Register from "./pages/Register";
 import PasswordReset from "./pages/PasswordReset";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
+import AcceptInvitation from "./pages/AcceptInvitation";
 
 // Dashboard shells
 import OwnerDashboard from "./pages/dashboard/OwnerDashboard";
@@ -71,6 +72,7 @@ const AppRoutes = () => (
     <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
     <Route path="/password-reset" element={<PublicRoute><PasswordReset /></PublicRoute>} />
     <Route path="/reset-password" element={<ResetPassword />} />
+    <Route path="/accept-invitation" element={<AcceptInvitation />} />
 
     {/* Dashboards */}
     <Route path="/dashboard/owner" element={<ProtectedRoute><OwnerDashboard /></ProtectedRoute>} />

@@ -562,6 +562,63 @@ export type Database = {
         }
         Relationships: []
       }
+      invitations: {
+        Row: {
+          accepted_at: string | null
+          clinician_subtype: string | null
+          created_at: string
+          email: string
+          expires_at: string
+          first_name: string
+          hat_id: string
+          intern_subtype: string | null
+          invitation_id: string
+          invited_by: string
+          last_name: string
+          revoked_at: string | null
+          revoked_by: string | null
+          role: string
+          status: string
+          token: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          clinician_subtype?: string | null
+          created_at?: string
+          email: string
+          expires_at?: string
+          first_name: string
+          hat_id?: string
+          intern_subtype?: string | null
+          invitation_id?: string
+          invited_by: string
+          last_name: string
+          revoked_at?: string | null
+          revoked_by?: string | null
+          role: string
+          status?: string
+          token?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          clinician_subtype?: string | null
+          created_at?: string
+          email?: string
+          expires_at?: string
+          first_name?: string
+          hat_id?: string
+          intern_subtype?: string | null
+          invitation_id?: string
+          invited_by?: string
+          last_name?: string
+          revoked_at?: string | null
+          revoked_by?: string | null
+          role?: string
+          status?: string
+          token?: string
+        }
+        Relationships: []
+      }
       operating_profiles: {
         Row: {
           created_at: string
