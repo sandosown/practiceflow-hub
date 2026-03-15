@@ -255,7 +255,6 @@ const OwnerDashboard: React.FC = () => {
                     {/* Label */}
                     <div style={{ textAlign: isMobile ? 'left' : 'center', position: 'relative', zIndex: 1, flex: isMobile ? 1 : 'none' }}>
                       <p style={{ color: '#f1f5f9', fontWeight: 600, fontSize: isMobile ? 16 : 15, letterSpacing: '0.02em', margin: 0 }}>{w.label}</p>
-                      <p style={{ color: w.active ? w.accent : '#475569', fontSize: 12, marginTop: 4, letterSpacing: '0.04em' }}>{w.subtitle}</p>
                     </div>
 
                     {/* Coming Soon badge */}
