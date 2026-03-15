@@ -676,6 +676,8 @@ If ignored, disappears on next navigation.
 
 | LOG-095 | Management Center Recent Activity — live feed, Owner + Admin only, 10 items max | LOCKED |
 
+| LOG-096 | Calendar is a universal component — hat-configurable appointment types, same shell across all hats and engines, no redesign needed for new hats | LOCKED |
+
 ---
 
 ## OUTSTANDING DECISIONS

@@ -265,6 +265,8 @@ This means:
 
 **LOG-073 — LOCKED**
 
+GP Calendar is an instance of the universal Calendar component (LOG-096) with GP-specific appointment types passed as configuration. The calendar shell is not GP-specific — it is the same universal component used across all hats.
+
 ### GP Appointment Types (extends universal Operations Engine base)
 Universal base types (inherited): Personal, Meeting, Session, Other
 GP-specific additions:

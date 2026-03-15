@@ -220,6 +220,7 @@
 | LOG-093 | Referral Pipeline outcome bucket entry — drag or forward/back arrows, desktop and mobile, all movements logged |
 | LOG-094 | Staff Deactivation — INACTIVE status, never hard delete, immediate or date-set removal, blocked if active assignments exist |
 | LOG-095 | Management Center Recent Activity — live practice activity feed, Owner + Admin only, 10 items max, practice-level operational events only |
+| LOG-096 | Calendar is a universal component — hat-configurable appointment types, same shell across all hats and engines, no redesign needed for new hats | LOCKED |
 
 ---
 
