@@ -87,6 +87,14 @@ const ROLE_VISIBILITY: Record<EffectiveRole, Record<string, string[]>> = {
     COMMUNICATION: ['messages', 'feed'],
     SYSTEM: ['access-permissions', 'guide', 'settings'],
   },
+  PARTNER: {
+    PRACTICE: ['management', 'clients', 'insurance', 'vendors', 'compliance'],
+    CLINICAL: ['supervision'],
+    TEAM: ['directory', 'recognition'],
+    PERSONAL: ['moments'],
+    COMMUNICATION: ['messages', 'feed'],
+    SYSTEM: ['guide', 'settings'],
+  },
   ADMIN: {
     PRACTICE: ['management', 'clients', 'insurance', 'vendors', 'compliance'],
     TEAM: ['directory', 'recognition'],
