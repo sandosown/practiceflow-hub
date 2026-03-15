@@ -1,5 +1,8 @@
-import React, { useState, useMemo, useCallback } from 'react';
-import { Plus, ChevronLeft, ChevronRight, Clock, User, X, Edit2, CalendarIcon, Trash2, AlertTriangle } from 'lucide-react';
+import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { Plus, ChevronLeft, ChevronRight, Clock, User, X, Edit2, CalendarIcon, Trash2, AlertTriangle, List } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { useSessionData } from '@/context/SessionContext';
 import { DEMO_USERS } from '@/data/demoUsers';
 import { getDemoAppointments, type DemoAppointment } from '@/data/calendarDemoData';
@@ -96,6 +99,10 @@ const CalendarPage: React.FC = () => {
   const [selectedAppt, setSelectedAppt] = useState<DemoAppointment | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
+  const [panelOpen, setPanelOpen] = useState(false);
+  const [selectedPanelDate, setSelectedPanelDate] = useState<Date | null>(null);
+  const isMobile = useIsMobile();
+  const panelScrollRef = useRef<HTMLDivElement>(null);
 
   /* ── Role-scoped filtering ── */
   const visibleAppointments = useMemo(() => {
@@ -128,6 +135,40 @@ const CalendarPage: React.FC = () => {
     setCurrentDate(d);
   };
   const goToToday = () => setCurrentDate(new Date());
+
+  /* ── Scroll panel to date ── */
+  const scrollPanelToDate = useCallback((date: Date) => {
+    setSelectedPanelDate(date);
+    setTimeout(() => {
+      const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      const el = document.getElementById(`panel-date-${dateKey}`);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }, []);
+
+  /* ── Panel grouped appointments ── */
+  const panelAppointments = useMemo(() => {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const filtered = visibleAppointments.filter(a => {
+      const d = new Date(a.start_time);
+      if (view === 'day') return isSameDay(d, currentDate);
+      return d.getFullYear() === year && d.getMonth() === month;
+    });
+    filtered.sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime());
+    const grouped: Record<string, DemoAppointment[]> = {};
+    filtered.forEach(a => {
+      const d = new Date(a.start_time);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      if (!grouped[key]) grouped[key] = [];
+      grouped[key].push(a);
+    });
+    return grouped;
+  }, [visibleAppointments, currentDate, view]);
+
+  const panelDateContext = view === 'day'
+    ? formatDateLong(currentDate)
+    : formatMonthYear(currentDate);
 
   /* ── Open detail ── */
   const openDetail = (appt: DemoAppointment) => {
@@ -212,6 +253,7 @@ const CalendarPage: React.FC = () => {
                   if (cellDate) {
                     setCurrentDate(cellDate);
                     setView('day');
+                    if (panelOpen) scrollPanelToDate(cellDate);
                   }
                 }}
               >
@@ -409,6 +451,15 @@ const CalendarPage: React.FC = () => {
                 </button>
               ))}
             </div>
+            {/* Appointments panel toggle */}
+            <button
+              onClick={() => setPanelOpen(p => !p)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors hover:opacity-80"
+              style={{ border: `1.5px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
+            >
+              <List size={16} />
+              <span className="hidden sm:inline">{panelOpen ? 'Hide' : 'Appointments'}</span>
+            </button>
             {/* Add button */}
             <button
               onClick={() => setAddOpen(true)}
@@ -437,12 +488,50 @@ const CalendarPage: React.FC = () => {
           </button>
         </div>
 
-        {/* Calendar body */}
-        <div className="bg-card rounded-xl border border-border/60 overflow-hidden">
-          {view === 'month' && <MonthView />}
-          {view === 'week' && <WeekView />}
-          {view === 'day' && <DayView />}
+        {/* Calendar body + Panel layout */}
+        <div className="flex gap-4">
+          <div className={`bg-card rounded-xl border border-border/60 overflow-hidden transition-all duration-300 ${panelOpen && !isMobile ? 'flex-1 min-w-0' : 'w-full'}`}>
+            {view === 'month' && <MonthView />}
+            {view === 'week' && <WeekView />}
+            {view === 'day' && <DayView />}
+          </div>
+
+          {/* Desktop side panel */}
+          {panelOpen && !isMobile && (
+            <div
+              className="w-[280px] flex-shrink-0 rounded-xl overflow-hidden animate-fade-in"
+              style={{
+                background: 'hsl(var(--card))',
+                borderLeft: '4px solid #2dd4bf',
+                borderTop: '1px solid rgba(45,212,191,0.50)',
+                borderBottom: '1px solid rgba(45,212,191,0.50)',
+                borderRight: '1px solid rgba(45,212,191,0.35)',
+              }}
+            >
+              <AppointmentsPanel
+                grouped={panelAppointments}
+                dateContext={panelDateContext}
+                onSelect={openDetail}
+              />
+            </div>
+          )}
         </div>
+
+        {/* Mobile sheet panel */}
+        {isMobile && (
+          <Sheet open={panelOpen} onOpenChange={setPanelOpen}>
+            <SheetContent side="bottom" className="h-[70vh] p-0 rounded-t-xl">
+              <SheetHeader className="px-4 pt-4 pb-2">
+                <SheetTitle className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Appointments</SheetTitle>
+              </SheetHeader>
+              <AppointmentsPanel
+                grouped={panelAppointments}
+                dateContext={panelDateContext}
+                onSelect={(a) => { setPanelOpen(false); openDetail(a); }}
+              />
+            </SheetContent>
+          </Sheet>
+        )}
       </div>
 
       {/* ── Detail dialog ── */}
@@ -477,6 +566,69 @@ const CalendarPage: React.FC = () => {
         </DialogContent>
       </Dialog>
       <BottomNavBar />
+    </div>
+  );
+};
+
+/* ═══════════════════════════════════════════════ */
+/* ─── APPOINTMENTS PANEL ─── */
+/* ═══════════════════════════════════════════════ */
+interface PanelProps {
+  grouped: Record<string, DemoAppointment[]>;
+  dateContext: string;
+  onSelect: (a: DemoAppointment) => void;
+}
+
+const AppointmentsPanel: React.FC<PanelProps> = ({ grouped, dateContext, onSelect }) => {
+  const dateKeys = Object.keys(grouped).sort();
+
+  return (
+    <div className="flex flex-col h-full max-h-[calc(100vh-200px)]">
+      <div className="px-4 pt-4 pb-2">
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Appointments</p>
+        <p className="text-sm text-foreground/70 mt-0.5">{dateContext}</p>
+      </div>
+      <ScrollArea className="flex-1 px-4 pb-4">
+        {dateKeys.length === 0 ? (
+          <p className="text-sm text-muted-foreground py-8 text-center">No appointments this month.</p>
+        ) : (
+          dateKeys.map(dateKey => {
+            const appts = grouped[dateKey];
+            const d = new Date(dateKey + 'T12:00:00');
+            return (
+              <div key={dateKey} id={`panel-date-${dateKey}`} className="mb-4">
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 border-b border-border/30 pb-1">
+                  {d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                </p>
+                <div className="space-y-1.5">
+                  {appts.map(a => {
+                    const color = TYPE_COLORS[a.appointment_type] ?? '#64748b';
+                    return (
+                      <button
+                        key={a.appointment_id}
+                        onClick={() => onSelect(a)}
+                        className="w-full text-left rounded-lg p-2 hover:bg-accent/10 transition-colors"
+                      >
+                        <div className="flex items-start gap-2">
+                          <span className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0" style={{ background: color }} />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs text-muted-foreground">{formatTime(a.start_time)} – {formatTime(a.end_time)}</p>
+                            <p className="text-sm font-medium text-foreground truncate">{a.title}</p>
+                            <p className="text-[11px] text-muted-foreground">{a.appointment_type}</p>
+                            {a.assigned_by && a.assigned_by !== a.assigned_to && (
+                              <p className="text-[10px] text-muted-foreground">with {getNameById(a.assigned_to)}</p>
+                            )}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })
+        )}
+      </ScrollArea>
     </div>
   );
 };
