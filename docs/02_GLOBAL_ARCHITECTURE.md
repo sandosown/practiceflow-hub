@@ -503,6 +503,52 @@ Add to appointments table:
 - Participants field is optional — appointments can exist without participants
 - Custom locations and platforms are hat-scoped and editable in Settings
 
+### Location Management System (LOG-103)
+
+**LOG-103 — LOCKED**
+
+Universal location management for in-person appointments across all hats and engines.
+
+**Saved Locations:**
+
+- Locations are stored per hat in Supabase
+- Each location record contains:
+  - location_id (uuid, primary key)
+  - hat_id (required)
+  - name (text, required — e.g. "Main Office", "Downtown Branch", "Studio A")
+  - address (text, optional)
+  - type (text — office | studio | clinic | venue | home | other)
+  - created_by (uuid)
+  - created_at (timestamp)
+  - is_active (boolean, default: true)
+
+**Location selection at appointment creation:**
+
+- Dropdown shows all saved active locations for current hat
+- "+ Add New Location" option at bottom of dropdown
+- Selecting a saved location completes the field
+- Selecting "+ Add New Location" opens inline form:
+  - Location Name (required)
+  - Address (optional)
+  - Type (dropdown: Office, Studio, Clinic, Venue, Home, Other)
+  - "Save for future use?" toggle — default: on
+  - If saved: stored to hat locations, appears in all future dropdowns
+  - If not saved: used for this appointment only, not stored
+
+**Location management in Settings:**
+
+- Owner and Admin can manage saved locations in Settings
+- Add, edit, deactivate locations
+- Deactivated locations no longer appear in dropdown but historical appointments retain their location data
+
+**Rules:**
+
+- Locations are hat-scoped — no cross-hat location bleed
+- Universal across all hats — GP, Coaching, Home, all future hats
+- Multiple locations supported per hat — no limit
+- Default location can be set per hat in Settings
+- Historical appointment location data is never deleted
+
 ---
 
 ## Event Lifecycle (Operations Engine)

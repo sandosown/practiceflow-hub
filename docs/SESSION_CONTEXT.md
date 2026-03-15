@@ -690,6 +690,8 @@ If ignored, disappears on next navigation.
 
 | LOG-102 | Appointment Context Fields — participants, meeting format, location, virtual platform — universal | LOCKED |
 
+| LOG-103 | Location Management System — saved hat locations, multiple offices, Settings management | LOCKED |
+
 ---
 
 ## OUTSTANDING DECISIONS
