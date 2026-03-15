@@ -506,6 +506,18 @@ const CalendarPage: React.FC = () => {
           </button>
         </div>
 
+        {/* Calendar search bar */}
+        <div className="relative mb-4">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <input
+            type="text"
+            value={calendarSearch}
+            onChange={e => setCalendarSearch(e.target.value)}
+            placeholder="Search appointments..."
+            className="w-full pl-9 pr-3 py-2 rounded-lg border border-border bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+          />
+        </div>
+
         {/* Calendar body + Panel layout */}
         <div className="flex gap-4">
           <div className={`bg-card rounded-xl border border-border/60 overflow-hidden transition-all duration-300 ${panelOpen && !isMobile ? 'flex-1 min-w-0' : 'w-full'}`}>
