@@ -11,6 +11,8 @@ export interface ParticipantEntry {
   id?: string;        // uuid for system users
   name: string;       // display name (always present)
   external?: boolean;  // true for manually typed names
+  email?: string;      // optional email for external contacts
+  role?: string;       // role label for internal staff display
 }
 
 export interface DemoAppointment {

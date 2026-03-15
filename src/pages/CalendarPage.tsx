@@ -874,8 +874,11 @@ const AppointmentDetail: React.FC<DetailProps> = ({ appt, userId, role, onDelete
           <Users size={14} className="text-muted-foreground mt-0.5" />
           <div className="flex flex-wrap gap-1.5">
             {appt.participants.map((p, i) => (
-              <span key={i} className="px-2 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-foreground/80">
-                {p.name}{p.external ? ' (external)' : ''}
+              <span key={i} className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-foreground/80">
+                <span>{p.name}</span>
+                <span className="text-[10px] text-muted-foreground font-normal">
+                  {p.external ? 'External' : (p.role ?? '')}
+                </span>
               </span>
             ))}
           </div>
@@ -1043,6 +1046,9 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
   const [participants, setParticipants] = useState<ParticipantEntry[]>([]);
   const [participantSearch, setParticipantSearch] = useState('');
   const [participantDropdownOpen, setParticipantDropdownOpen] = useState(false);
+  const [addingExternalPerson, setAddingExternalPerson] = useState(false);
+  const [externalName, setExternalName] = useState('');
+  const [externalEmail, setExternalEmail] = useState('');
   const [meetingFormat, setMeetingFormat] = useState<MeetingFormat | null>(null);
   const [location, setLocation] = useState('');
   const [virtualPlatform, setVirtualPlatform] = useState('');
@@ -1059,43 +1065,49 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
 
   const activeStaff = DEMO_USERS.filter(u => u.practice_id === 'demo-practice-1');
 
+  // Role display labels
+  const getRoleLabel = (u: typeof DEMO_USERS[0]): string => {
+    if (u.role === 'INTERN' && u.intern_subtype === 'CLINICAL') return 'Clinical Intern';
+    if (u.role === 'INTERN' && u.intern_subtype === 'BUSINESS') return 'Business Intern';
+    if (u.role === 'CLINICIAN') return 'Clinician';
+    return u.role.charAt(0) + u.role.slice(1).toLowerCase();
+  };
+
   // Assign To options based on role
   const assignToOptions = useMemo(() => {
     if (role === 'OWNER' || role === 'ADMIN' || role === 'PARTNER') {
       return activeStaff;
     }
     if (role === 'SUPERVISOR') {
-      // Own supervisees only
       const superviseeIds = ['demo-clinician', 'demo-intern-clinical'];
       return activeStaff.filter(u => u.id === userId || superviseeIds.includes(u.id));
     }
     return [];
   }, [role, userId, activeStaff]);
 
-  // Participants options based on role
-  const participantOptions = useMemo((): { id?: string; name: string }[] => {
+  // Participants options based on role — includes role label
+  const participantOptions = useMemo((): { id: string; name: string; role: string }[] => {
     const staff = activeStaff.filter(u => u.id !== userId);
     if (role === 'OWNER' || role === 'ADMIN' || role === 'PARTNER') {
-      return staff.map(u => ({ id: u.id, name: u.full_name }));
+      return staff.map(u => ({ id: u.id, name: u.full_name, role: getRoleLabel(u) }));
     }
     if (role === 'SUPERVISOR') {
       const superviseeIds = ['demo-clinician', 'demo-intern-clinical'];
       return staff.filter(u => superviseeIds.includes(u.id) || !['INTERN', 'STAFF'].includes(u.role))
-        .map(u => ({ id: u.id, name: u.full_name }));
+        .map(u => ({ id: u.id, name: u.full_name, role: getRoleLabel(u) }));
     }
     if (role === 'CLINICIAN' || (role === 'INTERN' && internSubtype === 'CLINICAL')) {
-      return staff.map(u => ({ id: u.id, name: u.full_name }));
+      return staff.map(u => ({ id: u.id, name: u.full_name, role: getRoleLabel(u) }));
     }
-    // Staff/Business Intern — colleagues only
-    return staff.map(u => ({ id: u.id, name: u.full_name }));
+    return staff.map(u => ({ id: u.id, name: u.full_name, role: getRoleLabel(u) }));
   }, [role, internSubtype, userId, activeStaff]);
 
   const filteredParticipantOptions = useMemo(() => {
     const selectedIds = new Set(participants.map(p => p.id ?? p.name));
-    const available = participantOptions.filter(o => !selectedIds.has(o.id ?? o.name));
+    const available = participantOptions.filter(o => !selectedIds.has(o.id));
     if (!participantSearch.trim()) return available;
     const q = participantSearch.toLowerCase();
-    return available.filter(o => o.name.toLowerCase().includes(q));
+    return available.filter(o => o.name.toLowerCase().includes(q) || o.role.toLowerCase().includes(q));
   }, [participantOptions, participants, participantSearch]);
 
   const addParticipant = (entry: ParticipantEntry) => {
@@ -1107,12 +1119,28 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
     setParticipants(prev => prev.filter((_, i) => i !== index));
   };
 
-  const addExternalParticipant = () => {
-    const name = participantSearch.trim();
-    if (name && !participants.some(p => p.name === name)) {
-      addParticipant({ name, external: true });
-    }
+  const handleAddExternalPerson = () => {
+    const name = externalName.trim();
+    if (!name) return;
+    if (participants.some(p => p.name === name && p.external)) return;
+    addParticipant({ name, external: true, email: externalEmail.trim() || undefined });
+    setExternalName('');
+    setExternalEmail('');
+    setAddingExternalPerson(false);
   };
+
+  const participantRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (participantRef.current && !participantRef.current.contains(e.target as Node)) {
+        setParticipantDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -1187,19 +1215,22 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
       </div>
 
       {/* 3. With (Participants) */}
-      <div className="space-y-1.5">
+      <div className="space-y-1.5" ref={participantRef}>
         <Label>With</Label>
-        {/* Selected participants */}
+        {/* Selected participant chips */}
         {participants.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mb-1.5">
             {participants.map((p, i) => (
               <span
                 key={i}
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-foreground"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-accent/10 text-foreground"
               >
-                {p.name}{p.external ? ' ↗' : ''}
-                <button type="button" onClick={() => removeParticipant(i)} className="text-muted-foreground hover:text-foreground">
-                  <X size={10} />
+                <span>{p.name}</span>
+                <span className="text-[10px] text-muted-foreground font-normal">
+                  {p.external ? 'External' : (p.role ?? '')}
+                </span>
+                <button type="button" onClick={() => removeParticipant(i)} className="text-muted-foreground hover:text-foreground ml-0.5">
+                  <X size={12} />
                 </button>
               </span>
             ))}
@@ -1209,35 +1240,78 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
         <div className="relative">
           <Input
             value={participantSearch}
-            onChange={e => { setParticipantSearch(e.target.value); setParticipantDropdownOpen(true); }}
-            onFocus={() => setParticipantDropdownOpen(true)}
-            placeholder="Search or type a name..."
+            onChange={e => { setParticipantSearch(e.target.value); setParticipantDropdownOpen(true); setAddingExternalPerson(false); }}
+            onFocus={() => { setParticipantDropdownOpen(true); setAddingExternalPerson(false); }}
+            placeholder="Search staff or add someone..."
             className="text-sm"
           />
-          {participantDropdownOpen && (participantSearch.trim() || filteredParticipantOptions.length > 0) && (
-            <div className="absolute z-50 mt-1 left-0 right-0 bg-card border border-border rounded-lg shadow-lg max-h-40 overflow-y-auto">
-              {filteredParticipantOptions.map((o, i) => (
+          {participantDropdownOpen && (
+            <div className="absolute z-50 mt-1 left-0 right-0 bg-card border border-border rounded-lg shadow-lg max-h-52 overflow-y-auto">
+              {/* Internal staff options */}
+              {filteredParticipantOptions.map((o) => (
                 <button
-                  key={o.id ?? i}
+                  key={o.id}
                   type="button"
-                  onClick={() => { addParticipant({ id: o.id, name: o.name }); setParticipantDropdownOpen(false); }}
-                  className="w-full text-left px-3 py-1.5 text-sm hover:bg-accent/10 transition-colors text-foreground"
+                  onClick={() => { addParticipant({ id: o.id, name: o.name, role: o.role }); setParticipantDropdownOpen(false); }}
+                  className="w-full text-left px-3 py-2 text-sm hover:bg-accent/10 transition-colors flex items-center justify-between"
                 >
-                  {o.name}
+                  <span className="text-foreground font-medium">{o.name}</span>
+                  <span className="text-[11px] text-muted-foreground">{o.role}</span>
                 </button>
               ))}
-              {participantSearch.trim() && !filteredParticipantOptions.some(o => o.name.toLowerCase() === participantSearch.toLowerCase()) && (
+              {filteredParticipantOptions.length === 0 && !addingExternalPerson && (
+                <p className="text-xs text-muted-foreground px-3 py-2">No matching staff found</p>
+              )}
+
+              {/* Divider */}
+              <div className="border-t border-border my-1" />
+
+              {/* Add someone new */}
+              {!addingExternalPerson ? (
                 <button
                   type="button"
-                  onClick={() => { addExternalParticipant(); setParticipantDropdownOpen(false); }}
-                  className="w-full text-left px-3 py-1.5 text-sm hover:bg-accent/10 transition-colors flex items-center gap-1.5"
+                  onClick={() => setAddingExternalPerson(true)}
+                  className="w-full text-left px-3 py-2 text-sm hover:bg-accent/10 transition-colors flex items-center gap-1.5"
                   style={{ color: TEAL }}
                 >
-                  <Plus size={12} /> Add "{participantSearch.trim()}" as external
+                  <Plus size={13} /> Add someone new
                 </button>
-              )}
-              {filteredParticipantOptions.length === 0 && !participantSearch.trim() && (
-                <p className="text-xs text-muted-foreground px-3 py-2">No options available</p>
+              ) : (
+                <div className="px-3 py-2.5 space-y-2">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Add External Contact</p>
+                  <Input
+                    value={externalName}
+                    onChange={e => setExternalName(e.target.value)}
+                    placeholder="Name *"
+                    className="text-sm h-8"
+                    autoFocus
+                  />
+                  <Input
+                    value={externalEmail}
+                    onChange={e => setExternalEmail(e.target.value)}
+                    placeholder="Email (optional)"
+                    type="email"
+                    className="text-sm h-8"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={handleAddExternalPerson}
+                      disabled={!externalName.trim()}
+                      className="flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors disabled:opacity-40"
+                      style={{ border: `1px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
+                    >
+                      Add
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setAddingExternalPerson(false); setExternalName(''); setExternalEmail(''); }}
+                      className="px-3 py-1.5 rounded-md text-xs text-muted-foreground border border-border"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
               )}
             </div>
           )}
