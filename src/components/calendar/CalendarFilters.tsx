@@ -381,28 +381,24 @@ const FilterDropdownContent: React.FC<{
       </div>
 
       {/* Start Date */}
-      <div>
-        <label className={sectionLabel} style={sectionLabelStyle}>Start Date</label>
-        <input
-          type="date"
-          value={draft.dateFrom}
-          onChange={e => setDraft(prev => ({ ...prev, dateFrom: e.target.value }))}
-          className="w-full text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
-          style={fieldStyle}
-        />
-      </div>
+      <DatePickerField
+        value={draft.dateFrom}
+        onChange={val => setDraft(prev => ({ ...prev, dateFrom: val }))}
+        label="Start Date"
+        fieldStyle={fieldStyle}
+        sectionLabel={sectionLabel}
+        sectionLabelStyle={sectionLabelStyle}
+      />
 
       {/* End Date */}
-      <div>
-        <label className={sectionLabel} style={sectionLabelStyle}>End Date</label>
-        <input
-          type="date"
-          value={draft.dateTo}
-          onChange={e => setDraft(prev => ({ ...prev, dateTo: e.target.value }))}
-          className="w-full text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
-          style={fieldStyle}
-        />
-      </div>
+      <DatePickerField
+        value={draft.dateTo}
+        onChange={val => setDraft(prev => ({ ...prev, dateTo: val }))}
+        label="End Date"
+        fieldStyle={fieldStyle}
+        sectionLabel={sectionLabel}
+        sectionLabelStyle={sectionLabelStyle}
+      />
 
       {/* Appointment Type */}
       <div>
