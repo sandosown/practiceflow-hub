@@ -264,6 +264,21 @@ const CalendarPage: React.FC = () => {
     toast({ title: 'Reschedule requested', description: 'The supervisor has been notified.' });
   };
 
+  /* ── Update Status ── */
+  const handleStatusUpdate = useCallback((apptId: string, newStatus: AppointmentStatus) => {
+    setAppointments(prev => prev.map(a =>
+      a.appointment_id === apptId
+        ? { ...a, status: newStatus, status_updated_at: new Date().toISOString(), status_updated_by: userId }
+        : a
+    ));
+    // Also update selectedAppt if it's the one being changed
+    setSelectedAppt(prev => prev && prev.appointment_id === apptId
+      ? { ...prev, status: newStatus, status_updated_at: new Date().toISOString(), status_updated_by: userId }
+      : prev
+    );
+    toast({ title: `Status updated to ${STATUS_LABELS[newStatus]}` });
+  }, [userId]);
+
   /* ── Add appointment ── */
   const handleAddAppointment = (data: Omit<DemoAppointment, 'appointment_id'>) => {
     const newAppt: DemoAppointment = {
