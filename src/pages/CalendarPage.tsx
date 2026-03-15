@@ -1,11 +1,11 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { Plus, ChevronLeft, ChevronRight, Clock, User, X, Edit2, CalendarIcon, Trash2, AlertTriangle, List, Search, Check, RotateCcw } from 'lucide-react';
+import { Plus, ChevronLeft, ChevronRight, Clock, User, X, Edit2, CalendarIcon, Trash2, AlertTriangle, List, Search, Check, RotateCcw, MapPin, Video, Link2, Users } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useSessionData } from '@/context/SessionContext';
 import { DEMO_USERS } from '@/data/demoUsers';
-import { getDemoAppointments, type DemoAppointment, type AppointmentStatus } from '@/data/calendarDemoData';
+import { getDemoAppointments, type DemoAppointment, type AppointmentStatus, type MeetingFormat, type ParticipantEntry } from '@/data/calendarDemoData';
 import TopNavBar from '@/components/TopNavBar';
 import BottomNavBar from '@/components/BottomNavBar';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -868,6 +868,54 @@ const AppointmentDetail: React.FC<DetailProps> = ({ appt, userId, role, onDelete
       {/* Title */}
       <h2 className="text-lg font-bold text-foreground">{appt.title}</h2>
 
+      {/* Participants */}
+      {appt.participants && appt.participants.length > 0 && (
+        <div className="flex items-start gap-2 text-sm">
+          <Users size={14} className="text-muted-foreground mt-0.5" />
+          <div className="flex flex-wrap gap-1.5">
+            {appt.participants.map((p, i) => (
+              <span key={i} className="px-2 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-foreground/80">
+                {p.name}{p.external ? ' (external)' : ''}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Meeting Format */}
+      {appt.meeting_format && (
+        <div className="flex items-center gap-2 text-sm text-foreground/80">
+          {appt.meeting_format === 'in_person' ? (
+            <MapPin size={14} className="text-muted-foreground" />
+          ) : (
+            <Video size={14} className="text-muted-foreground" />
+          )}
+          <span>{appt.meeting_format === 'in_person' ? 'In-Person' : 'Virtual'}</span>
+          {appt.meeting_format === 'in_person' && appt.location && (
+            <span className="text-muted-foreground">— {appt.location}</span>
+          )}
+          {appt.meeting_format === 'virtual' && appt.virtual_platform && (
+            <span className="text-muted-foreground">— {appt.virtual_platform}</span>
+          )}
+        </div>
+      )}
+
+      {/* Meeting Link */}
+      {appt.meeting_format === 'virtual' && appt.meeting_link && (
+        <div className="flex items-center gap-2 text-sm">
+          <Link2 size={14} className="text-muted-foreground" />
+          <a
+            href={appt.meeting_link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="truncate hover:underline"
+            style={{ color: TEAL }}
+          >
+            {appt.meeting_link}
+          </a>
+        </div>
+      )}
+
       {/* Date / Time */}
       <div className="space-y-1.5">
         <div className="flex items-center gap-2 text-sm text-foreground/80">
@@ -965,6 +1013,10 @@ const AppointmentDetail: React.FC<DetailProps> = ({ appt, userId, role, onDelete
 /* ═══════════════════════════════════════════════ */
 /* ─── ADD APPOINTMENT FORM ─── */
 /* ═══════════════════════════════════════════════ */
+
+const DEFAULT_LOCATIONS = ['Office', 'External Location'];
+const DEFAULT_PLATFORMS = ['Zoom', 'SimplePractice', 'Google Meet', 'Microsoft Teams', 'FaceTime', 'Phone Call', 'Other'];
+
 interface AddFormProps {
   userId: string;
   role: string;
@@ -975,8 +1027,9 @@ interface AddFormProps {
 
 const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtype, onSave, onCancel }) => {
   const types = getTypesForRole(role, internSubtype);
-  const canAssign = role === 'OWNER' || role === 'ADMIN' || role === 'SUPERVISOR';
-  const canLinkClient = ['OWNER', 'ADMIN', 'CLINICIAN'].includes(role) || (role === 'INTERN' && internSubtype === 'CLINICAL');
+
+  // Assign To visibility per LOG-102
+  const canAssign = role === 'OWNER' || role === 'ADMIN' || role === 'PARTNER' || role === 'SUPERVISOR';
 
   const [title, setTitle] = useState('');
   const [type, setType] = useState(types[0]);
@@ -986,12 +1039,93 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
   const [assignTo, setAssignTo] = useState(userId);
   const [notes, setNotes] = useState('');
 
+  // LOG-102 context fields
+  const [participants, setParticipants] = useState<ParticipantEntry[]>([]);
+  const [participantSearch, setParticipantSearch] = useState('');
+  const [participantDropdownOpen, setParticipantDropdownOpen] = useState(false);
+  const [meetingFormat, setMeetingFormat] = useState<MeetingFormat | null>(null);
+  const [location, setLocation] = useState('');
+  const [virtualPlatform, setVirtualPlatform] = useState('');
+  const [meetingLink, setMeetingLink] = useState('');
+  const [customLocations, setCustomLocations] = useState<string[]>([]);
+  const [customPlatforms, setCustomPlatforms] = useState<string[]>([]);
+  const [addingLocation, setAddingLocation] = useState(false);
+  const [addingPlatform, setAddingPlatform] = useState(false);
+  const [newLocationName, setNewLocationName] = useState('');
+  const [newPlatformName, setNewPlatformName] = useState('');
+
+  const allLocations = [...DEFAULT_LOCATIONS, ...customLocations];
+  const allPlatforms = [...DEFAULT_PLATFORMS, ...customPlatforms];
+
   const activeStaff = DEMO_USERS.filter(u => u.practice_id === 'demo-practice-1');
+
+  // Assign To options based on role
+  const assignToOptions = useMemo(() => {
+    if (role === 'OWNER' || role === 'ADMIN' || role === 'PARTNER') {
+      return activeStaff;
+    }
+    if (role === 'SUPERVISOR') {
+      // Own supervisees only
+      const superviseeIds = ['demo-clinician', 'demo-intern-clinical'];
+      return activeStaff.filter(u => u.id === userId || superviseeIds.includes(u.id));
+    }
+    return [];
+  }, [role, userId, activeStaff]);
+
+  // Participants options based on role
+  const participantOptions = useMemo((): { id?: string; name: string }[] => {
+    const staff = activeStaff.filter(u => u.id !== userId);
+    if (role === 'OWNER' || role === 'ADMIN' || role === 'PARTNER') {
+      return staff.map(u => ({ id: u.id, name: u.full_name }));
+    }
+    if (role === 'SUPERVISOR') {
+      const superviseeIds = ['demo-clinician', 'demo-intern-clinical'];
+      return staff.filter(u => superviseeIds.includes(u.id) || !['INTERN', 'STAFF'].includes(u.role))
+        .map(u => ({ id: u.id, name: u.full_name }));
+    }
+    if (role === 'CLINICIAN' || (role === 'INTERN' && internSubtype === 'CLINICAL')) {
+      return staff.map(u => ({ id: u.id, name: u.full_name }));
+    }
+    // Staff/Business Intern — colleagues only
+    return staff.map(u => ({ id: u.id, name: u.full_name }));
+  }, [role, internSubtype, userId, activeStaff]);
+
+  const filteredParticipantOptions = useMemo(() => {
+    const selectedIds = new Set(participants.map(p => p.id ?? p.name));
+    const available = participantOptions.filter(o => !selectedIds.has(o.id ?? o.name));
+    if (!participantSearch.trim()) return available;
+    const q = participantSearch.toLowerCase();
+    return available.filter(o => o.name.toLowerCase().includes(q));
+  }, [participantOptions, participants, participantSearch]);
+
+  const addParticipant = (entry: ParticipantEntry) => {
+    setParticipants(prev => [...prev, entry]);
+    setParticipantSearch('');
+  };
+
+  const removeParticipant = (index: number) => {
+    setParticipants(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const addExternalParticipant = () => {
+    const name = participantSearch.trim();
+    if (name && !participants.some(p => p.name === name)) {
+      addParticipant({ name, external: true });
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !type || !date || !startTime || !endTime) {
       toast({ title: 'Please fill in all required fields', variant: 'destructive' });
+      return;
+    }
+    if (!meetingFormat) {
+      toast({ title: 'Please select a meeting format', variant: 'destructive' });
+      return;
+    }
+    if (meetingFormat === 'virtual' && !virtualPlatform) {
+      toast({ title: 'Please select a platform', variant: 'destructive' });
       return;
     }
 
@@ -1016,18 +1150,23 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
       status: 'confirmed',
       status_updated_at: null,
       status_updated_by: null,
+      participants,
+      meeting_format: meetingFormat,
+      location: meetingFormat === 'in_person' ? (location || null) : null,
+      virtual_platform: meetingFormat === 'virtual' ? (virtualPlatform || null) : null,
+      meeting_link: meetingFormat === 'virtual' ? (meetingLink.trim() || null) : null,
     });
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Title */}
+      {/* 1. Title */}
       <div className="space-y-1.5">
         <Label>Title *</Label>
         <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Appointment title" />
       </div>
 
-      {/* Type */}
+      {/* 2. Type */}
       <div className="space-y-1.5">
         <Label>Type *</Label>
         <Select value={type} onValueChange={setType}>
@@ -1047,13 +1186,233 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
         </Select>
       </div>
 
-      {/* Date */}
+      {/* 3. With (Participants) */}
+      <div className="space-y-1.5">
+        <Label>With</Label>
+        {/* Selected participants */}
+        {participants.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-1.5">
+            {participants.map((p, i) => (
+              <span
+                key={i}
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-foreground"
+              >
+                {p.name}{p.external ? ' ↗' : ''}
+                <button type="button" onClick={() => removeParticipant(i)} className="text-muted-foreground hover:text-foreground">
+                  <X size={10} />
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+        {/* Search input */}
+        <div className="relative">
+          <Input
+            value={participantSearch}
+            onChange={e => { setParticipantSearch(e.target.value); setParticipantDropdownOpen(true); }}
+            onFocus={() => setParticipantDropdownOpen(true)}
+            placeholder="Search or type a name..."
+            className="text-sm"
+          />
+          {participantDropdownOpen && (participantSearch.trim() || filteredParticipantOptions.length > 0) && (
+            <div className="absolute z-50 mt-1 left-0 right-0 bg-card border border-border rounded-lg shadow-lg max-h-40 overflow-y-auto">
+              {filteredParticipantOptions.map((o, i) => (
+                <button
+                  key={o.id ?? i}
+                  type="button"
+                  onClick={() => { addParticipant({ id: o.id, name: o.name }); setParticipantDropdownOpen(false); }}
+                  className="w-full text-left px-3 py-1.5 text-sm hover:bg-accent/10 transition-colors text-foreground"
+                >
+                  {o.name}
+                </button>
+              ))}
+              {participantSearch.trim() && !filteredParticipantOptions.some(o => o.name.toLowerCase() === participantSearch.toLowerCase()) && (
+                <button
+                  type="button"
+                  onClick={() => { addExternalParticipant(); setParticipantDropdownOpen(false); }}
+                  className="w-full text-left px-3 py-1.5 text-sm hover:bg-accent/10 transition-colors flex items-center gap-1.5"
+                  style={{ color: TEAL }}
+                >
+                  <Plus size={12} /> Add "{participantSearch.trim()}" as external
+                </button>
+              )}
+              {filteredParticipantOptions.length === 0 && !participantSearch.trim() && (
+                <p className="text-xs text-muted-foreground px-3 py-2">No options available</p>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 4. Meeting Format */}
+      <div className="space-y-1.5">
+        <Label>How are you meeting? *</Label>
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={() => setMeetingFormat('in_person')}
+            className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-all"
+            style={meetingFormat === 'in_person' ? {
+              border: `2px solid ${TEAL}`, color: TEAL, background: `${TEAL}11`,
+            } : {
+              border: '1.5px solid hsl(var(--border))', color: 'hsl(var(--muted-foreground))', background: 'transparent',
+            }}
+          >
+            <MapPin size={16} /> In-Person
+          </button>
+          <button
+            type="button"
+            onClick={() => setMeetingFormat('virtual')}
+            className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-all"
+            style={meetingFormat === 'virtual' ? {
+              border: `2px solid ${TEAL}`, color: TEAL, background: `${TEAL}11`,
+            } : {
+              border: '1.5px solid hsl(var(--border))', color: 'hsl(var(--muted-foreground))', background: 'transparent',
+            }}
+          >
+            <Video size={16} /> Virtual
+          </button>
+        </div>
+      </div>
+
+      {/* 5A. Location (if In-Person) */}
+      {meetingFormat === 'in_person' && (
+        <div className="space-y-1.5">
+          <Label>Where?</Label>
+          {!addingLocation ? (
+            <Select value={location} onValueChange={setLocation}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select location..." />
+              </SelectTrigger>
+              <SelectContent>
+                {allLocations.map(loc => (
+                  <SelectItem key={loc} value={loc}>{loc}</SelectItem>
+                ))}
+                <button
+                  type="button"
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); setAddingLocation(true); }}
+                  className="w-full text-left px-2 py-1.5 text-sm flex items-center gap-1.5 hover:bg-accent/10"
+                  style={{ color: TEAL }}
+                >
+                  <Plus size={12} /> Add location
+                </button>
+              </SelectContent>
+            </Select>
+          ) : (
+            <div className="flex gap-2">
+              <Input
+                value={newLocationName}
+                onChange={e => setNewLocationName(e.target.value)}
+                placeholder="Location name"
+                className="text-sm"
+                autoFocus
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  if (newLocationName.trim()) {
+                    setCustomLocations(prev => [...prev, newLocationName.trim()]);
+                    setLocation(newLocationName.trim());
+                    setNewLocationName('');
+                  }
+                  setAddingLocation(false);
+                }}
+                className="px-3 py-1.5 rounded-md text-xs font-medium"
+                style={{ border: `1px solid ${TEAL}`, color: TEAL }}
+              >
+                Add
+              </button>
+              <button
+                type="button"
+                onClick={() => { setAddingLocation(false); setNewLocationName(''); }}
+                className="px-2 py-1.5 text-muted-foreground text-xs"
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* 5B. Platform + Meeting Link (if Virtual) */}
+      {meetingFormat === 'virtual' && (
+        <>
+          <div className="space-y-1.5">
+            <Label>Platform *</Label>
+            {!addingPlatform ? (
+              <Select value={virtualPlatform} onValueChange={setVirtualPlatform}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select platform..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {allPlatforms.map(p => (
+                    <SelectItem key={p} value={p}>{p}</SelectItem>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); setAddingPlatform(true); }}
+                    className="w-full text-left px-2 py-1.5 text-sm flex items-center gap-1.5 hover:bg-accent/10"
+                    style={{ color: TEAL }}
+                  >
+                    <Plus size={12} /> Add platform
+                  </button>
+                </SelectContent>
+              </Select>
+            ) : (
+              <div className="flex gap-2">
+                <Input
+                  value={newPlatformName}
+                  onChange={e => setNewPlatformName(e.target.value)}
+                  placeholder="Platform name"
+                  className="text-sm"
+                  autoFocus
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (newPlatformName.trim()) {
+                      setCustomPlatforms(prev => [...prev, newPlatformName.trim()]);
+                      setVirtualPlatform(newPlatformName.trim());
+                      setNewPlatformName('');
+                    }
+                    setAddingPlatform(false);
+                  }}
+                  className="px-3 py-1.5 rounded-md text-xs font-medium"
+                  style={{ border: `1px solid ${TEAL}`, color: TEAL }}
+                >
+                  Add
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setAddingPlatform(false); setNewPlatformName(''); }}
+                  className="px-2 py-1.5 text-muted-foreground text-xs"
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-1.5">
+            <Label>Meeting Link</Label>
+            <Input
+              value={meetingLink}
+              onChange={e => setMeetingLink(e.target.value)}
+              placeholder="https://..."
+              type="url"
+              className="text-sm"
+            />
+          </div>
+        </>
+      )}
+
+      {/* 6. Date */}
       <div className="space-y-1.5">
         <Label>Date *</Label>
         <Input type="date" value={date} onChange={e => setDate(e.target.value)} />
       </div>
 
-      {/* Time row */}
+      {/* 7. Time row */}
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1.5">
           <Label>Start Time *</Label>
@@ -1065,7 +1424,7 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
         </div>
       </div>
 
-      {/* Assign To */}
+      {/* 8. Assign To (role-dependent) */}
       {canAssign && (
         <div className="space-y-1.5">
           <Label>Assign To</Label>
@@ -1074,7 +1433,7 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {activeStaff.map(u => (
+              {assignToOptions.map(u => (
                 <SelectItem key={u.id} value={u.id}>{u.full_name}{u.id === userId ? ' (You)' : ''}</SelectItem>
               ))}
             </SelectContent>
@@ -1082,13 +1441,13 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
         </div>
       )}
 
-      {/* Notes */}
+      {/* 9. Notes */}
       <div className="space-y-1.5">
         <Label>Notes</Label>
         <Textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Optional notes..." rows={3} />
       </div>
 
-      {/* Actions */}
+      {/* 10. Actions */}
       <div className="flex gap-2 pt-2">
         <button
           type="submit"

@@ -5,6 +5,14 @@
 
 export type AppointmentStatus = 'confirmed' | 'completed' | 'cancelled' | 'rescheduled' | 'no_show';
 
+export type MeetingFormat = 'in_person' | 'virtual';
+
+export interface ParticipantEntry {
+  id?: string;        // uuid for system users
+  name: string;       // display name (always present)
+  external?: boolean;  // true for manually typed names
+}
+
 export interface DemoAppointment {
   appointment_id: string;
   hat_id: string;
@@ -24,6 +32,12 @@ export interface DemoAppointment {
   status: AppointmentStatus;
   status_updated_at: string | null;
   status_updated_by: string | null;
+  // LOG-102 context fields
+  participants: ParticipantEntry[];
+  meeting_format: MeetingFormat | null;
+  location: string | null;
+  virtual_platform: string | null;
+  meeting_link: string | null;
 }
 
 function isoDate(dayOffset: number, hour: number, minute = 0): string {
@@ -46,6 +60,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-owner', assigned_to: 'demo-owner',
       assigned_by: null, client_id: null, supervision_session_id: null,
       notes: 'Review weekly KPIs and staff updates', needs_reschedule: false, reschedule_requested_by: null,
+      participants: [{ id: 'demo-admin', name: 'Marcus Chen' }, { id: 'demo-supervisor', name: 'Dr. Angela Torres' }],
+      meeting_format: 'in_person' as MeetingFormat, location: 'Office', virtual_platform: null, meeting_link: null,
     },
     {
       appointment_id: 'appt-owner-2',
@@ -56,6 +72,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-owner', assigned_to: 'demo-owner',
       assigned_by: null, client_id: null, supervision_session_id: null,
       notes: 'Monthly practice-wide meeting', needs_reschedule: false, reschedule_requested_by: null,
+      participants: [],
+      meeting_format: 'virtual' as MeetingFormat, location: null, virtual_platform: 'Zoom', meeting_link: 'https://zoom.us/j/123456',
     },
     {
       appointment_id: 'appt-owner-3',
@@ -66,6 +84,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-owner', assigned_to: 'demo-owner',
       assigned_by: null, client_id: null, supervision_session_id: null,
       notes: null, needs_reschedule: false, reschedule_requested_by: null,
+      participants: [{ name: 'Dr. Williams', external: true }],
+      meeting_format: 'in_person' as MeetingFormat, location: 'External Location', virtual_platform: null, meeting_link: null,
     },
 
     // Marcus Chen (ADMIN) — 2 Staff Meetings, 1 Meeting
@@ -78,6 +98,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-owner', assigned_to: 'demo-admin',
       assigned_by: 'demo-owner', client_id: null, supervision_session_id: null,
       notes: null, needs_reschedule: false, reschedule_requested_by: null,
+      participants: [{ id: 'demo-owner', name: 'Dr. Sarah Mitchell' }],
+      meeting_format: 'in_person' as MeetingFormat, location: 'Office', virtual_platform: null, meeting_link: null,
     },
     {
       appointment_id: 'appt-admin-2',
@@ -88,6 +110,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-owner', assigned_to: 'demo-admin',
       assigned_by: 'demo-owner', client_id: null, supervision_session_id: null,
       notes: null, needs_reschedule: false, reschedule_requested_by: null,
+      participants: [],
+      meeting_format: 'virtual' as MeetingFormat, location: null, virtual_platform: 'Zoom', meeting_link: 'https://zoom.us/j/123456',
     },
     {
       appointment_id: 'appt-admin-3',
@@ -98,6 +122,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-admin', assigned_to: 'demo-admin',
       assigned_by: null, client_id: null, supervision_session_id: null,
       notes: 'Annual vendor contract review', needs_reschedule: false, reschedule_requested_by: null,
+      participants: [{ name: 'EHR Rep — Sarah K.', external: true }],
+      meeting_format: 'virtual' as MeetingFormat, location: null, virtual_platform: 'Google Meet', meeting_link: null,
     },
 
     // Dr. Angela Torres (SUPERVISOR) — 3 Supervision Sessions, 1 Staff Meeting
@@ -110,6 +136,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-supervisor', assigned_to: 'demo-supervisor',
       assigned_by: null, client_id: null, supervision_session_id: null,
       notes: 'Weekly individual supervision', needs_reschedule: false, reschedule_requested_by: null,
+      participants: [{ id: 'demo-clinician', name: 'James Rivera, LCSW' }],
+      meeting_format: 'in_person' as MeetingFormat, location: 'Office', virtual_platform: null, meeting_link: null,
     },
     {
       appointment_id: 'appt-sup-2',
@@ -120,6 +148,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-supervisor', assigned_to: 'demo-supervisor',
       assigned_by: null, client_id: null, supervision_session_id: null,
       notes: 'Weekly individual supervision', needs_reschedule: false, reschedule_requested_by: null,
+      participants: [{ id: 'demo-intern-clinical', name: 'Priya Patel' }],
+      meeting_format: 'virtual' as MeetingFormat, location: null, virtual_platform: 'Zoom', meeting_link: 'https://zoom.us/j/789012',
     },
     {
       appointment_id: 'appt-sup-3',
@@ -130,6 +160,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-supervisor', assigned_to: 'demo-supervisor',
       assigned_by: null, client_id: null, supervision_session_id: null,
       notes: 'Monthly group supervision session', needs_reschedule: false, reschedule_requested_by: null,
+      participants: [{ id: 'demo-clinician', name: 'James Rivera, LCSW' }, { id: 'demo-intern-clinical', name: 'Priya Patel' }],
+      meeting_format: 'in_person' as MeetingFormat, location: 'Office', virtual_platform: null, meeting_link: null,
     },
     {
       appointment_id: 'appt-sup-4',
@@ -140,6 +172,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-owner', assigned_to: 'demo-supervisor',
       assigned_by: 'demo-owner', client_id: null, supervision_session_id: null,
       notes: null, needs_reschedule: false, reschedule_requested_by: null,
+      participants: [],
+      meeting_format: 'virtual' as MeetingFormat, location: null, virtual_platform: 'Zoom', meeting_link: 'https://zoom.us/j/123456',
     },
 
     // James Rivera (CLINICIAN) — 4 Client Sessions, 2 Supervision Sessions (from Dr. Torres)
@@ -152,6 +186,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-clinician', assigned_to: 'demo-clinician',
       assigned_by: null, client_id: null, supervision_session_id: null,
       notes: null, needs_reschedule: false, reschedule_requested_by: null,
+      participants: [{ name: 'M. Johnson', external: true }],
+      meeting_format: 'in_person' as MeetingFormat, location: 'Office', virtual_platform: null, meeting_link: null,
     },
     {
       appointment_id: 'appt-clin-2',
@@ -162,6 +198,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-clinician', assigned_to: 'demo-clinician',
       assigned_by: null, client_id: null, supervision_session_id: null,
       notes: null, needs_reschedule: false, reschedule_requested_by: null,
+      participants: [{ name: 'R. Williams', external: true }],
+      meeting_format: 'virtual' as MeetingFormat, location: null, virtual_platform: 'SimplePractice', meeting_link: null,
     },
     {
       appointment_id: 'appt-clin-3',
@@ -172,6 +210,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-clinician', assigned_to: 'demo-clinician',
       assigned_by: null, client_id: null, supervision_session_id: null,
       notes: null, needs_reschedule: false, reschedule_requested_by: null,
+      participants: [{ name: 'A. Davis', external: true }],
+      meeting_format: 'in_person' as MeetingFormat, location: 'Office', virtual_platform: null, meeting_link: null,
     },
     {
       appointment_id: 'appt-clin-4',
@@ -182,6 +222,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-clinician', assigned_to: 'demo-clinician',
       assigned_by: null, client_id: null, supervision_session_id: null,
       notes: null, needs_reschedule: false, reschedule_requested_by: null,
+      participants: [{ name: 'T. Brown', external: true }],
+      meeting_format: 'virtual' as MeetingFormat, location: null, virtual_platform: 'FaceTime', meeting_link: null,
     },
     // Supervision assigned by Dr. Torres
     {
@@ -193,6 +235,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-supervisor', assigned_to: 'demo-clinician',
       assigned_by: 'demo-supervisor', client_id: null, supervision_session_id: null,
       notes: 'Weekly individual supervision', needs_reschedule: false, reschedule_requested_by: null,
+      participants: [{ id: 'demo-supervisor', name: 'Dr. Angela Torres' }],
+      meeting_format: 'in_person' as MeetingFormat, location: 'Office', virtual_platform: null, meeting_link: null,
     },
     {
       appointment_id: 'appt-clin-sup-2',
@@ -203,6 +247,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-supervisor', assigned_to: 'demo-clinician',
       assigned_by: 'demo-supervisor', client_id: null, supervision_session_id: null,
       notes: 'Monthly group supervision session', needs_reschedule: false, reschedule_requested_by: null,
+      participants: [{ id: 'demo-supervisor', name: 'Dr. Angela Torres' }, { id: 'demo-intern-clinical', name: 'Priya Patel' }],
+      meeting_format: 'in_person' as MeetingFormat, location: 'Office', virtual_platform: null, meeting_link: null,
     },
 
     // Priya Patel (INTERN CLINICAL) — 3 Client Sessions, 1 Supervision Session (from Dr. Torres)
@@ -215,6 +261,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-intern-clinical', assigned_to: 'demo-intern-clinical',
       assigned_by: null, client_id: null, supervision_session_id: null,
       notes: null, needs_reschedule: false, reschedule_requested_by: null,
+      participants: [{ name: 'K. Martinez', external: true }],
+      meeting_format: 'in_person' as MeetingFormat, location: 'Office', virtual_platform: null, meeting_link: null,
     },
     {
       appointment_id: 'appt-intern-c-2',
@@ -225,6 +273,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-intern-clinical', assigned_to: 'demo-intern-clinical',
       assigned_by: null, client_id: null, supervision_session_id: null,
       notes: null, needs_reschedule: false, reschedule_requested_by: null,
+      participants: [{ name: 'L. Garcia', external: true }],
+      meeting_format: 'virtual' as MeetingFormat, location: null, virtual_platform: 'Google Meet', meeting_link: null,
     },
     {
       appointment_id: 'appt-intern-c-3',
@@ -235,6 +285,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-intern-clinical', assigned_to: 'demo-intern-clinical',
       assigned_by: null, client_id: null, supervision_session_id: null,
       notes: null, needs_reschedule: false, reschedule_requested_by: null,
+      participants: [{ name: 'S. Lee', external: true }],
+      meeting_format: 'in_person' as MeetingFormat, location: 'Office', virtual_platform: null, meeting_link: null,
     },
     {
       appointment_id: 'appt-intern-c-sup-1',
@@ -245,6 +297,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-supervisor', assigned_to: 'demo-intern-clinical',
       assigned_by: 'demo-supervisor', client_id: null, supervision_session_id: null,
       notes: 'Weekly individual supervision', needs_reschedule: false, reschedule_requested_by: null,
+      participants: [{ id: 'demo-supervisor', name: 'Dr. Angela Torres' }],
+      meeting_format: 'virtual' as MeetingFormat, location: null, virtual_platform: 'Zoom', meeting_link: 'https://zoom.us/j/789012',
     },
 
     // Alex Nguyen (INTERN BUSINESS) — 2 Meetings
@@ -257,6 +311,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-intern-business', assigned_to: 'demo-intern-business',
       assigned_by: null, client_id: null, supervision_session_id: null,
       notes: null, needs_reschedule: false, reschedule_requested_by: null,
+      participants: [{ name: 'Aetna Rep', external: true }],
+      meeting_format: 'virtual' as MeetingFormat, location: null, virtual_platform: 'Phone Call', meeting_link: null,
     },
     {
       appointment_id: 'appt-intern-b-2',
@@ -267,6 +323,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-intern-business', assigned_to: 'demo-intern-business',
       assigned_by: null, client_id: null, supervision_session_id: null,
       notes: null, needs_reschedule: false, reschedule_requested_by: null,
+      participants: [{ id: 'demo-admin', name: 'Marcus Chen' }],
+      meeting_format: 'in_person' as MeetingFormat, location: 'Office', virtual_platform: null, meeting_link: null,
     },
 
     // Taylor Brooks (STAFF) — 1 Meeting, 1 Personal
@@ -279,6 +337,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-staff', assigned_to: 'demo-staff',
       assigned_by: null, client_id: null, supervision_session_id: null,
       notes: null, needs_reschedule: false, reschedule_requested_by: null,
+      participants: [{ id: 'demo-admin', name: 'Marcus Chen' }],
+      meeting_format: 'in_person' as MeetingFormat, location: 'Office', virtual_platform: null, meeting_link: null,
     },
     {
       appointment_id: 'appt-staff-2',
@@ -289,6 +349,8 @@ export function getDemoAppointments(): DemoAppointment[] {
       created_by: 'demo-staff', assigned_to: 'demo-staff',
       assigned_by: null, client_id: null, supervision_session_id: null,
       notes: null, needs_reschedule: false, reschedule_requested_by: null,
+      participants: [],
+      meeting_format: 'in_person' as MeetingFormat, location: 'External Location', virtual_platform: null, meeting_link: null,
     },
   ];
   return raw.map(a => ({ ...a, status: 'confirmed' as AppointmentStatus, status_updated_at: null, status_updated_by: null }));
