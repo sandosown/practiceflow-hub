@@ -113,8 +113,10 @@ const ManagementCenter: React.FC = () => {
     );
   };
 
-  const activeStaff = useMemo(() => filterStaff(staffList.filter(s => s.status === 'active')), [staffList, staffSearch]);
+  const allActive = useMemo(() => staffList.filter(s => s.status === 'active'), [staffList]);
+  const activeStaff = useMemo(() => filterStaff(allActive), [allActive, staffSearch]);
   const inactiveStaff = useMemo(() => filterStaff(staffList.filter(s => s.status === 'inactive')), [staffList, staffSearch]);
+  const credentialAlertCount = useMemo(() => allActive.filter(s => s.licenseDaysLeft != null && s.licenseDaysLeft <= 30).length, [allActive]);
   const isOwner = currentRole === 'OWNER';
 
   const fetchInvitations = useCallback(async () => {
