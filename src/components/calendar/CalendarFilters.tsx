@@ -604,11 +604,85 @@ const CalendarFilters: React.FC<Props> = ({
     );
   }
 
-  // Mobile
+  // Mobile — use inline expand when compact (inside panel), Sheet otherwise
+  if (compact) {
+    return (
+      <div>
+        {/* Live keyword input */}
+        <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card focus-within:border-[#2dd4bf]/40 min-h-[44px]">
+          <Search size={16} className="text-muted-foreground flex-shrink-0" />
+          <input
+            type="text"
+            value={filters.keyword}
+            onChange={e => handleKeywordChange(e.target.value)}
+            placeholder={placeholder}
+            className="flex-1 text-xs min-w-0 bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none"
+          />
+          {filters.keyword && (
+            <button onClick={handleKeywordClear} className="text-muted-foreground hover:text-foreground flex-shrink-0 min-h-[44px] flex items-center">
+              <X size={12} />
+            </button>
+          )}
+        </div>
+
+        {/* Live search results */}
+        {appointments.length > 0 && onSelectAppointment && (
+          <LiveSearchResults
+            keyword={filters.keyword}
+            appointments={appointments}
+            onSelect={handleSelectAppointment}
+          />
+        )}
+
+        {/* Filters toggle — inline expand */}
+        <button
+          onClick={() => setOpen(o => !o)}
+          className="flex items-center gap-1.5 mt-2 transition-colors border border-border text-muted-foreground min-h-[44px]"
+          style={{
+            background: 'transparent',
+            borderRadius: 6,
+            padding: '4px 12px',
+            fontSize: 11,
+            textTransform: 'uppercase',
+            letterSpacing: '0.06em',
+          }}
+        >
+          Filters
+          {filtersActive && <span className="w-1.5 h-1.5 rounded-full bg-[#2dd4bf] flex-shrink-0" />}
+          <ChevronDown
+            size={10}
+            className="transition-transform"
+            style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}
+          />
+        </button>
+
+        {open && (
+          <div
+            onClick={e => e.stopPropagation()}
+            onMouseDown={e => e.stopPropagation()}
+            className="mt-1 bg-card border border-border rounded-xl animate-fade-in"
+          >
+            <FilterDropdownContent
+              draft={draft}
+              setDraft={setDraft}
+              currentDate={currentDate}
+              onMonthYearChange={onMonthYearChange}
+              role={role}
+              onSearch={handleSearch}
+              onClear={handleClear}
+              compact
+            />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Mobile full page (not inside panel)
   return (
-    <div className={compact ? '' : 'mb-4'}>
+    <div className="mb-4">
       {/* Live keyword input */}
-      <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card focus-within:border-[#2dd4bf]/40">
+      <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card focus-within:border-[#2dd4bf]/40 min-h-[44px]">
         <Search size={16} className="text-muted-foreground flex-shrink-0" />
         <input
           type="text"
@@ -618,7 +692,7 @@ const CalendarFilters: React.FC<Props> = ({
           className="flex-1 text-xs min-w-0 bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none"
         />
         {filters.keyword && (
-          <button onClick={handleKeywordClear} className="text-muted-foreground hover:text-foreground flex-shrink-0">
+          <button onClick={handleKeywordClear} className="text-muted-foreground hover:text-foreground flex-shrink-0 min-h-[44px] flex items-center">
             <X size={12} />
           </button>
         )}
@@ -636,10 +710,8 @@ const CalendarFilters: React.FC<Props> = ({
       {/* Filters toggle */}
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-1.5 mt-2 transition-colors"
+        className="flex items-center gap-1.5 mt-2 transition-colors border border-border text-muted-foreground min-h-[44px]"
         style={{
-          border: '1px solid rgba(255,255,255,0.15)',
-          color: 'rgba(255,255,255,0.5)',
           background: 'transparent',
           borderRadius: 6,
           padding: '4px 12px',
@@ -654,7 +726,7 @@ const CalendarFilters: React.FC<Props> = ({
       </button>
 
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="bottom" className="h-auto max-h-[85vh] rounded-t-xl p-0 overflow-y-auto">
+        <SheetContent side="bottom" className="h-auto max-h-[85vh] rounded-t-xl p-0 overflow-y-auto bg-card">
           <SheetHeader className="mb-3">
             <SheetTitle className="text-sm font-semibold text-foreground">Filters</SheetTitle>
           </SheetHeader>
