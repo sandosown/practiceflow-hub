@@ -573,7 +573,7 @@ const ReferralPipeline: React.FC = () => {
                     background: editMode ? 'hsl(var(--muted))' : 'transparent',
                   }}
                 >
-                  {editMode ? 'Done' : <><Settings className="w-3 h-3" /> Edit Pipeline</>}
+                  {editMode ? 'Done' : <><Settings className="w-3 h-3" /> Edit</>}
                 </button>
               </div>
             )}
