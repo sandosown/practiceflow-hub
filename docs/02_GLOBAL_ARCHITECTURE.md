@@ -381,6 +381,38 @@ HOME_TYPES = BASE_TYPES
 - Type configuration is resolved at runtime based on active hat context
 - Color coding per type is defined once in the calendar component — not per hat
 
+### Appointment Status System (LOG-097)
+
+**LOG-097 — LOCKED**
+
+Every appointment has a status field. Status is universal across all hats — no hat-specific status additions.
+
+**Universal appointment statuses:**
+
+- Confirmed — default state on creation
+- Completed — appointment occurred
+- Cancelled — appointment did not occur, preserved in record
+- Rescheduled — linked to a replacement appointment, original marked rescheduled
+- No Show — participant did not appear
+
+**Status rules:**
+
+- Default status on creation: Confirmed
+- Status is updatable inline from the appointment card — no full edit required
+- Cancelled and Rescheduled appointments are preserved in record — never hard deleted
+- Completed appointments feed into activity history and engine-specific tracking
+- No Show is clinically significant in GP — surfaces in clinician caseload and supervisor awareness
+- Status changes are logged with user + timestamp
+- Visual treatment: muted/neutral for Cancelled and No Show — never red, never alarm-style
+- Completed: subtle teal indicator
+- Rescheduled: subtle muted indicator with link to new appointment
+
+**Storage:**
+
+- status field on appointments table: confirmed | completed | cancelled | rescheduled | no_show
+- status_updated_at (timestamp)
+- status_updated_by (uuid)
+
 ---
 
 ## Event Lifecycle (Operations Engine)

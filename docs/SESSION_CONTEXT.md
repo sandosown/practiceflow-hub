@@ -678,6 +678,8 @@ If ignored, disappears on next navigation.
 
 | LOG-096 | Calendar is a universal component — hat-configurable appointment types, same shell across all hats and engines, no redesign needed for new hats | LOCKED |
 
+| LOG-097 | Appointment Status System — Confirmed, Completed, Cancelled, Rescheduled, No Show — universal across all hats, inline update, logged | LOCKED |
+
 ---
 
 ## OUTSTANDING DECISIONS
