@@ -269,6 +269,19 @@ Guide Center handles deeper reference needs.
 - Major Moments Radar
 - Compliance Records
 
+### LOG-107 — Filter Panel Layout Doctrine — LOCKED
+
+Rule:
+
+- The keyword search field is always a visible, directly typeable input at the top of every filter/search panel
+- There is no expand/collapse mechanic to reveal keyword search — it is always present and accessible
+- Filters (date range, type, status, etc.) sit permanently below the keyword input — no accordion, no toggle needed
+- This applies to all module filter panels: Calendar, Client Database, Worker Profiles, Insurance Database, Vendor Database, Document Control, and any future database module
+
+Rationale:
+
+Hiding keyword search behind an expand/collapse interaction adds friction to the most common search action. Keyword search is always the first thing a user reaches for — it must be immediately accessible without any tap to reveal.
+
 ---
 
 ## Major Moments Governance
