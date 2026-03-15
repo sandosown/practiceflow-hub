@@ -647,6 +647,7 @@ const CalendarPage: React.FC = () => {
                 currentDate={currentDate}
                 onMonthYearChange={handleMonthYearChange}
                 role={role}
+                userId={userId}
               />
             </div>
           )}
