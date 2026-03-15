@@ -226,6 +226,7 @@
 | LOG-099 | Proactive Canon Flagging Rule — Claude must flag all canon-worthy decisions during sessions without waiting to be asked | LOCKED |
 | LOG-100 | Color Variety Rule — varied colors required on all chip sets, blocks, and grouped visual elements — monotone sets rejected | LOCKED |
 | LOG-101 | UI Color Variety System — 23 approved UI colors, variety rules, banned colors, distinct from brand palette | LOCKED |
+| LOG-102 | Appointment Context Fields — participants, in-person/virtual, location, platform, meeting link — universal across all hats | LOCKED |
 
 ---
 

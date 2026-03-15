@@ -447,6 +447,62 @@ The Calendar includes a smart filter system universal across all hats and engine
 - Keyword, Date Range, Month/Year, Type, Status: visible to all roles
 - Assigned To: visible to authority roles only (Owner, Admin, Supervisor equivalents per hat)
 
+### Appointment Context Fields (LOG-102)
+
+**LOG-102 — LOCKED**
+
+Universal appointment fields available across all hats and all appointment types.
+
+**Additional fields on every appointment:**
+
+**PARTICIPANTS (With):**
+
+- Multi-select field — "Who is this with?"
+- Options vary by role:
+  - Owner/Admin/Partner: any active staff member or client in the hat
+  - Supervisor: own supervisees + colleagues
+  - Clinician: clients from own caseload + colleagues
+  - Staff/Intern: colleagues only
+  - All roles: can type in external name not in system
+- Stored as participants array on appointment object
+
+**MEETING FORMAT:**
+
+- Required field — "In-person or Virtual?"
+- Two options: In-Person | Virtual
+
+**IN-PERSON:**
+
+- Location field appears: dropdown of saved locations + "Add new location" option
+- Default saved locations: Office, External Location
+- User can add custom locations — stored per hat in Settings
+- Free text entry also permitted
+
+**VIRTUAL:**
+
+- Platform field appears: dropdown of video/call platforms
+- Options: Zoom, SimplePractice, Google Meet, Microsoft Teams, FaceTime, Phone Call, Other
+- Link field appears (optional): paste meeting link
+- User can add custom platforms — stored per hat in Settings
+
+**STORAGE:**
+
+Add to appointments table:
+
+- participants (array of uuids + optional external name strings)
+- meeting_format (text — in_person | virtual)
+- location (text, nullable — for in-person)
+- virtual_platform (text, nullable — for virtual)
+- meeting_link (text, nullable — for virtual)
+
+**RULES:**
+
+- All fields are universal — not GP specific
+- Meeting format is required on appointment creation
+- Location and platform fields are conditional based on meeting format selection
+- Participants field is optional — appointments can exist without participants
+- Custom locations and platforms are hat-scoped and editable in Settings
+
 ---
 
 ## Event Lifecycle (Operations Engine)
