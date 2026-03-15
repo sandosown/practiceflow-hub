@@ -291,4 +291,5 @@ export function getDemoAppointments(): DemoAppointment[] {
       notes: null, needs_reschedule: false, reschedule_requested_by: null,
     },
   ];
+  return raw.map(a => ({ ...a, status: 'confirmed' as AppointmentStatus, status_updated_at: null, status_updated_by: null }));
 }
