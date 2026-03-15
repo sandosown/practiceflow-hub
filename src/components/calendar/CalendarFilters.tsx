@@ -266,10 +266,11 @@ const FilterDropdownContent: React.FC<{
 
       {/* Month / Year */}
       <div>
-        <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">Month / Year</label>
+        <label className={sectionLabel} style={sectionLabelStyle}>Month / Year</label>
         <button
           onClick={() => setMonthPickerOpen(o => !o)}
-          className="flex items-center gap-1 w-full px-2.5 py-1.5 rounded-md border border-border text-xs font-medium hover:bg-accent/10 text-foreground"
+          className="flex items-center gap-1 w-full text-xs font-medium hover:bg-accent/10 text-foreground"
+          style={fieldStyle}
         >
           {MONTHS[currentDate.getMonth()]} {currentDate.getFullYear()}
           <ChevronDown size={12} className="ml-auto" />
