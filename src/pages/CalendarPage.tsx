@@ -1018,7 +1018,16 @@ const AppointmentDetail: React.FC<DetailProps> = ({ appt, userId, role, onDelete
 /* ─── ADD APPOINTMENT FORM ─── */
 /* ═══════════════════════════════════════════════ */
 
-const DEFAULT_LOCATIONS = ['Office', 'External Location'];
+interface SavedLocation {
+  location_id: string;
+  hat_id: string;
+  name: string;
+  address: string | null;
+  type: string;
+  is_active: boolean;
+}
+
+const LOCATION_TYPES = ['Office', 'Studio', 'Clinic', 'Venue', 'Home', 'Other'];
 const DEFAULT_PLATFORMS = ['Zoom', 'SimplePractice', 'Google Meet', 'Microsoft Teams', 'FaceTime', 'Phone Call', 'Other'];
 
 interface AddFormProps {
