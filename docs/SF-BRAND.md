@@ -208,6 +208,22 @@ Rules:
 - Flat uniform navy on all cards — BANNED
 - Decorative glow with no function — BANNED
 
+### Color Variety Rule (LOG-100)
+
+Color blocks, chips, tags, filter elements, and appointment entries must always use varied colors from the domain accent map. Never default to one or two colors across a set of items.
+
+Rules:
+
+- Every distinct item type must have its own unique accent color
+
+- No two adjacent or related items should share the same color where avoidable
+
+- Teal (#2dd4bf) is the primary accent — it must not dominate chip sets or block groups
+
+- Color variety is a visual doctrine requirement — monotone chip sets are explicitly rejected
+
+- Applies to: calendar appointment chips, filter chips, status badges, tag chips, module cards, radar cards, and any grouped visual elements
+
 ---
 
 ## Bottom Navigation Bar — Visual Spec

@@ -684,6 +684,8 @@ If ignored, disappears on next navigation.
 
 | LOG-099 | Proactive Canon Flagging Rule — proactive flagging of canon-worthy decisions during all sessions | LOCKED |
 
+| LOG-100 | Color Variety Rule — varied colors on all grouped visual elements | LOCKED |
+
 ---
 
 ## OUTSTANDING DECISIONS
