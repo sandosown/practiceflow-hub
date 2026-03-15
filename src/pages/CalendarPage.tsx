@@ -1,11 +1,11 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { Plus, ChevronLeft, ChevronRight, Clock, User, X, Edit2, CalendarIcon, Trash2, AlertTriangle, List, Search } from 'lucide-react';
+import { Plus, ChevronLeft, ChevronRight, Clock, User, X, Edit2, CalendarIcon, Trash2, AlertTriangle, List, Search, Check, RotateCcw } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useSessionData } from '@/context/SessionContext';
 import { DEMO_USERS } from '@/data/demoUsers';
-import { getDemoAppointments, type DemoAppointment } from '@/data/calendarDemoData';
+import { getDemoAppointments, type DemoAppointment, type AppointmentStatus } from '@/data/calendarDemoData';
 import TopNavBar from '@/components/TopNavBar';
 import BottomNavBar from '@/components/BottomNavBar';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -29,6 +29,23 @@ const TYPE_COLORS: Record<string, string> = {
 };
 
 const TEAL = '#2dd4bf';
+
+/* ─── Status colors & labels ─── */
+const STATUS_COLORS: Record<string, string> = {
+  'confirmed': '#2dd4bf',
+  'completed': '#059669',
+  'cancelled': '#78716c',
+  'rescheduled': '#d97706',
+  'no_show': '#ea580c',
+};
+
+const STATUS_LABELS: Record<string, string> = {
+  'confirmed': 'Confirmed',
+  'completed': 'Completed',
+  'cancelled': 'Cancelled',
+  'rescheduled': 'Rescheduled',
+  'no_show': 'No Show',
+};
 
 /* ─── Types available by role category ─── */
 const CLINICAL_TYPES = ['Client Session', 'Supervision Session', 'Staff Meeting', 'Intake', 'Personal', 'Meeting', 'Session', 'Other'];
@@ -111,10 +128,10 @@ function applyFilters(appts: DemoAppointment[], filters: CalendarFilterState): D
       if (!filters.selectedTypes.includes(a.appointment_type)) return false;
     }
 
-    // Status — default to 'Confirmed' for demo data since status field not yet on model
+    // Status
     if (filters.selectedStatuses.length > 0) {
-      const status = 'Confirmed'; // default — will use a.status when field exists
-      if (!filters.selectedStatuses.includes(status)) return false;
+      const statusLabel = STATUS_LABELS[a.status] ?? 'Confirmed';
+      if (!filters.selectedStatuses.includes(statusLabel)) return false;
     }
 
     // Assigned To
@@ -247,6 +264,21 @@ const CalendarPage: React.FC = () => {
     toast({ title: 'Reschedule requested', description: 'The supervisor has been notified.' });
   };
 
+  /* ── Update Status ── */
+  const handleStatusUpdate = useCallback((apptId: string, newStatus: AppointmentStatus) => {
+    setAppointments(prev => prev.map(a =>
+      a.appointment_id === apptId
+        ? { ...a, status: newStatus, status_updated_at: new Date().toISOString(), status_updated_by: userId }
+        : a
+    ));
+    // Also update selectedAppt if it's the one being changed
+    setSelectedAppt(prev => prev && prev.appointment_id === apptId
+      ? { ...prev, status: newStatus, status_updated_at: new Date().toISOString(), status_updated_by: userId }
+      : prev
+    );
+    toast({ title: `Status updated to ${STATUS_LABELS[newStatus]}` });
+  }, [userId]);
+
   /* ── Add appointment ── */
   const handleAddAppointment = (data: Omit<DemoAppointment, 'appointment_id'>) => {
     const newAppt: DemoAppointment = {
@@ -261,14 +293,29 @@ const CalendarPage: React.FC = () => {
   /* ── Appointment chip ── */
   const ApptChip: React.FC<{ appt: DemoAppointment; compact?: boolean }> = ({ appt, compact }) => {
     const color = TYPE_COLORS[appt.appointment_type] ?? '#64748b';
+    const isCancelled = appt.status === 'cancelled';
+    const isNoShow = appt.status === 'no_show';
+    const isCompleted = appt.status === 'completed';
+    const isRescheduled = appt.status === 'rescheduled';
+    const muted = isCancelled || isNoShow;
+
     return (
       <button
         onClick={(e) => { e.stopPropagation(); openDetail(appt); }}
-        className="text-left w-full truncate rounded px-1.5 py-0.5 text-xs font-medium transition-opacity hover:opacity-80"
-        style={{ background: `${color}22`, color, borderLeft: `3px solid ${color}` }}
+        className="text-left w-full truncate rounded px-1.5 py-0.5 text-xs font-medium transition-opacity hover:opacity-80 flex items-center gap-1"
+        style={{
+          background: `${color}22`,
+          color,
+          borderLeft: `3px solid ${color}`,
+          opacity: muted ? 0.5 : 1,
+        }}
         title={appt.title}
       >
-        {compact ? appt.title : `${formatTime(appt.start_time)} ${appt.title}`}
+        {isCompleted && <Check size={10} className="flex-shrink-0" />}
+        {isRescheduled && <RotateCcw size={10} className="flex-shrink-0" />}
+        <span className={isCancelled ? 'line-through' : ''}>
+          {compact ? appt.title : `${formatTime(appt.start_time)} ${appt.title}`}
+        </span>
       </button>
     );
   };
@@ -431,14 +478,25 @@ const CalendarPage: React.FC = () => {
                           borderTop: `1px solid ${color}40`,
                           borderBottom: `1px solid ${color}40`,
                           borderRight: `1px solid ${color}24`,
+                          opacity: (a.status === 'cancelled' || a.status === 'no_show') ? 0.5 : 1,
                         }}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="text-sm font-semibold text-foreground">{a.title}</span>
+                          <span className={`text-sm font-semibold text-foreground flex items-center gap-1 ${a.status === 'cancelled' ? 'line-through' : ''}`}>
+                            {a.status === 'completed' && <Check size={12} />}
+                            {a.status === 'rescheduled' && <RotateCcw size={12} />}
+                            {a.title}
+                          </span>
                           <span className="text-xs text-muted-foreground">{getDurationStr(a.start_time, a.end_time)}</span>
                         </div>
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className="text-xs" style={{ color }}>{a.appointment_type}</span>
+                          <span
+                            className="px-1.5 py-0 rounded-full text-[10px] font-medium"
+                            style={{ color: STATUS_COLORS[a.status], border: `1px solid ${STATUS_COLORS[a.status]}` }}
+                          >
+                            {STATUS_LABELS[a.status]}
+                          </span>
                           <span className="text-xs text-muted-foreground">{formatTime(a.start_time)} – {formatTime(a.end_time)}</span>
                         </div>
                         {a.assigned_by && a.assigned_by !== a.assigned_to && (
@@ -627,6 +685,7 @@ const CalendarPage: React.FC = () => {
               role={role}
               onDelete={handleDelete}
               onReschedule={handleRequestReschedule}
+              onStatusUpdate={handleStatusUpdate}
               onClose={() => setDetailOpen(false)}
             />
           )}
@@ -722,8 +781,18 @@ const AppointmentsPanel: React.FC<PanelProps> = ({ grouped, dateContext, onSelec
                       >
                         <div className="min-w-0">
                           <p className="text-xs text-muted-foreground">{formatTime(a.start_time)} – {formatTime(a.end_time)}</p>
-                          <p className="text-sm font-medium text-foreground truncate">{a.title}</p>
-                          <p className="text-[11px] text-muted-foreground">{a.appointment_type}</p>
+                          <p className={`text-sm font-medium text-foreground truncate ${a.status === 'cancelled' ? 'line-through' : ''}`}
+                            style={{ opacity: (a.status === 'cancelled' || a.status === 'no_show') ? 0.5 : 1 }}
+                          >{a.title}</p>
+                          <div className="flex items-center gap-1.5 mt-0.5">
+                            <p className="text-[11px] text-muted-foreground">{a.appointment_type}</p>
+                            <span
+                              className="px-1.5 py-0 rounded-full text-[10px] font-medium"
+                              style={{ color: STATUS_COLORS[a.status], border: `1px solid ${STATUS_COLORS[a.status]}` }}
+                            >
+                              {STATUS_LABELS[a.status]}
+                            </span>
+                          </div>
                           {a.assigned_by && a.assigned_by !== a.assigned_to && (
                             <p className="text-[10px] text-muted-foreground">with {getNameById(a.assigned_to)}</p>
                           )}
@@ -750,20 +819,34 @@ interface DetailProps {
   role: string;
   onDelete: (a: DemoAppointment) => void;
   onReschedule: (a: DemoAppointment) => void;
+  onStatusUpdate: (apptId: string, status: AppointmentStatus) => void;
   onClose: () => void;
 }
 
-const AppointmentDetail: React.FC<DetailProps> = ({ appt, userId, role, onDelete, onReschedule }) => {
+const ALL_STATUSES: AppointmentStatus[] = ['confirmed', 'completed', 'cancelled', 'rescheduled', 'no_show'];
+
+const AppointmentDetail: React.FC<DetailProps> = ({ appt, userId, role, onDelete, onReschedule, onStatusUpdate }) => {
   const color = TYPE_COLORS[appt.appointment_type] ?? '#64748b';
+  const statusColor = STATUS_COLORS[appt.status] ?? '#64748b';
   const isOwn = appt.created_by === userId || appt.assigned_to === userId;
   const isSupervisorAssigned = !!appt.assigned_by && appt.assigned_by !== appt.assigned_to;
   const canDelete = isOwn && !isSupervisorAssigned;
   const canRequestReschedule = isSupervisorAssigned && appt.assigned_to === userId;
+  const canUpdateStatus = isOwn || role === 'OWNER' || role === 'ADMIN' ||
+    (role === 'SUPERVISOR' && ['demo-clinician', 'demo-intern-clinical'].includes(appt.assigned_to));
+
+  const [statusPickerOpen, setStatusPickerOpen] = useState(false);
 
   return (
     <div className="space-y-4">
-      {/* Type badge */}
-      <div className="flex items-center gap-2">
+      {/* Status + Type badges */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <span
+          className="px-2.5 py-0.5 rounded-full text-xs font-semibold"
+          style={{ background: `${statusColor}22`, color: statusColor, border: `1px solid ${statusColor}` }}
+        >
+          {STATUS_LABELS[appt.status]}
+        </span>
         <span
           className="px-2.5 py-0.5 rounded-full text-xs font-semibold"
           style={{ background: `${color}22`, color }}
@@ -809,6 +892,42 @@ const AppointmentDetail: React.FC<DetailProps> = ({ appt, userId, role, onDelete
         <div className="bg-muted/30 rounded-lg p-3">
           <p className="text-xs text-muted-foreground mb-1 uppercase font-semibold tracking-wider">Notes</p>
           <p className="text-sm text-foreground/80">{appt.notes}</p>
+        </div>
+      )}
+
+      {/* Status Update */}
+      {canUpdateStatus && (
+        <div className="relative">
+          <button
+            onClick={() => setStatusPickerOpen(o => !o)}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors hover:opacity-80"
+            style={{ border: `1.5px solid ${statusColor}`, color: statusColor, background: 'transparent' }}
+          >
+            Update Status
+          </button>
+          {statusPickerOpen && (
+            <div className="absolute z-50 mt-1 left-0 bg-card border border-border rounded-lg shadow-lg p-1.5 min-w-[180px] animate-fade-in">
+              {ALL_STATUSES.map(s => {
+                const sc = STATUS_COLORS[s];
+                const isActive = appt.status === s;
+                return (
+                  <button
+                    key={s}
+                    onClick={() => {
+                      onStatusUpdate(appt.appointment_id, s);
+                      setStatusPickerOpen(false);
+                    }}
+                    className="w-full text-left px-3 py-1.5 rounded-md text-sm flex items-center gap-2 transition-colors hover:bg-accent/10"
+                    style={{ color: sc, fontWeight: isActive ? 700 : 500 }}
+                  >
+                    <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: sc }} />
+                    {STATUS_LABELS[s]}
+                    {isActive && <Check size={14} className="ml-auto" />}
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 
@@ -889,6 +1008,9 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
       notes: notes.trim() || null,
       needs_reschedule: false,
       reschedule_requested_by: null,
+      status: 'confirmed',
+      status_updated_at: null,
+      status_updated_by: null,
     });
   };
 

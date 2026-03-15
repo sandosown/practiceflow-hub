@@ -3,6 +3,8 @@
  * Uses demo user IDs from demoUsers.ts.
  */
 
+export type AppointmentStatus = 'confirmed' | 'completed' | 'cancelled' | 'rescheduled' | 'no_show';
+
 export interface DemoAppointment {
   appointment_id: string;
   hat_id: string;
@@ -19,6 +21,9 @@ export interface DemoAppointment {
   notes: string | null;
   needs_reschedule: boolean;
   reschedule_requested_by: string | null;
+  status: AppointmentStatus;
+  status_updated_at: string | null;
+  status_updated_by: string | null;
 }
 
 function isoDate(dayOffset: number, hour: number, minute = 0): string {
@@ -30,7 +35,7 @@ function isoDate(dayOffset: number, hour: number, minute = 0): string {
 }
 
 export function getDemoAppointments(): DemoAppointment[] {
-  return [
+  const raw = [
     // Dr. Sarah Mitchell (OWNER) — 2 Staff Meetings, 1 Personal
     {
       appointment_id: 'appt-owner-1',
@@ -286,4 +291,5 @@ export function getDemoAppointments(): DemoAppointment[] {
       notes: null, needs_reschedule: false, reschedule_requested_by: null,
     },
   ];
+  return raw.map(a => ({ ...a, status: 'confirmed' as AppointmentStatus, status_updated_at: null, status_updated_by: null }));
 }
