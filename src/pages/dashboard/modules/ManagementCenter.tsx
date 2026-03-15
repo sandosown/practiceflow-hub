@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopNavBar from '@/components/TopNavBar';
 import BottomNavBar from '@/components/BottomNavBar';
@@ -6,9 +6,11 @@ import { ArrowLeft, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cardStyle } from '@/lib/cardStyle';
 import { supabase } from '@/integrations/supabase/client';
-import { useSession } from '@/context/SessionContext';
+import { useSession, useSessionData } from '@/context/SessionContext';
 import { useToast } from '@/hooks/use-toast';
 import InviteTeamMemberModal from '@/components/InviteTeamMemberModal';
+import RemoveStaffModal from '@/components/RemoveStaffModal';
+import { DEMO_USERS } from '@/data/demoUsers';
 
 const ACCENT = '#7c3aed';
 const TEAL = '#2dd4bf';
@@ -29,14 +31,22 @@ const SUMMARY = [
   { label: 'Pending Actions', value: '4' },
 ];
 
-const STAFF = [
-  { name: 'Dr. Sarah Mitchell', role: 'OWNER' },
-  { name: 'Marcus Chen', role: 'ADMIN' },
-  { name: 'Dr. Angela Torres', role: 'SUPERVISOR' },
-  { name: 'James Rivera LCSW', role: 'CLINICIAN' },
-  { name: 'Priya Patel', role: 'INTERN CLINICAL' },
-  { name: 'Alex Nguyen', role: 'INTERN BUSINESS' },
-  { name: 'Taylor Brooks', role: 'STAFF' },
+interface StaffEntry {
+  name: string;
+  firstName: string;
+  role: string;
+  id: string;
+  status: 'active' | 'inactive';
+}
+
+const INITIAL_STAFF: StaffEntry[] = [
+  { id: 'demo-owner', name: 'Dr. Sarah Mitchell', firstName: 'Sarah', role: 'OWNER', status: 'active' },
+  { id: 'demo-admin', name: 'Marcus Chen', firstName: 'Marcus', role: 'ADMIN', status: 'active' },
+  { id: 'demo-supervisor', name: 'Dr. Angela Torres', firstName: 'Angela', role: 'SUPERVISOR', status: 'active' },
+  { id: 'demo-clinician', name: 'James Rivera LCSW', firstName: 'James', role: 'CLINICIAN', status: 'active' },
+  { id: 'demo-intern-clinical', name: 'Priya Patel', firstName: 'Priya', role: 'INTERN CLINICAL', status: 'active' },
+  { id: 'demo-intern-business', name: 'Alex Nguyen', firstName: 'Alex', role: 'INTERN BUSINESS', status: 'active' },
+  { id: 'demo-staff', name: 'Taylor Brooks', firstName: 'Taylor', role: 'STAFF', status: 'active' },
 ];
 
 const ACTIVITY = [
@@ -45,7 +55,6 @@ const ACTIVITY = [
   { title: 'Transfer request submitted', detail: 'Robert Chen — Pending approval', time: '3 days ago' },
   { title: 'Credential alert', detail: 'James Rivera LCSW — License expiring in 14 days', time: '1 day ago' },
 ];
-
 
 interface Invitation {
   invitation_id: string;
@@ -72,15 +81,58 @@ const statusColor = (status: string): React.CSSProperties => {
   }
 };
 
+/** Access rules for removal */
+function canRemove(actorRole: string, targetRole: string, actorId: string, targetId: string): boolean {
+  // Cannot remove self
+  if (actorId === targetId) return false;
+  if (actorRole === 'OWNER') {
+    return targetRole !== 'OWNER';
+  }
+  if (actorRole === 'ADMIN') {
+    const allowed = ['CLINICIAN', 'INTERN CLINICAL', 'INTERN BUSINESS', 'INTERN', 'STAFF'];
+    return allowed.includes(targetRole);
+  }
+  return false;
+}
+
+/** Mock blocking check for demo — in production this queries real data */
+function checkBlocksForStaff(staff: { name: string; role: string }): { label: string; detail: string }[] {
+  // For demo: James Rivera has active clients
+  if (staff.name.includes('James Rivera')) {
+    return [
+      { label: 'Active client assignments', detail: '3 clients currently assigned' },
+    ];
+  }
+  return [];
+}
+
 const ManagementCenter: React.FC = () => {
   const navigate = useNavigate();
-  const { session } = useSession();
+  const { session, isDemoMode } = useSession();
+  const sessionData = useSessionData();
   const { toast } = useToast();
 
   const [inviteOpen, setInviteOpen] = useState(false);
-
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [loadingInvitations, setLoadingInvitations] = useState(true);
+
+  // Staff list with status tracking
+  const [staffList, setStaffList] = useState<StaffEntry[]>(INITIAL_STAFF);
+  const [showFormerStaff, setShowFormerStaff] = useState(false);
+
+  // Staff profile view
+  const [viewingStaff, setViewingStaff] = useState<StaffEntry | null>(null);
+
+  // Removal modal
+  const [removeTarget, setRemoveTarget] = useState<StaffEntry | null>(null);
+  const [removeOpen, setRemoveOpen] = useState(false);
+
+  const currentRole = sessionData.role;
+  const currentId = sessionData.user_id;
+
+  const activeStaff = useMemo(() => staffList.filter(s => s.status === 'active'), [staffList]);
+  const inactiveStaff = useMemo(() => staffList.filter(s => s.status === 'inactive'), [staffList]);
+  const isOwner = currentRole === 'OWNER';
 
   const fetchInvitations = useCallback(async () => {
     const { data, error } = await supabase
@@ -89,7 +141,6 @@ const ManagementCenter: React.FC = () => {
       .order('created_at', { ascending: false });
 
     if (!error && data) {
-      // Auto-mark expired ones on the client
       const now = new Date();
       const processed = (data as unknown as Invitation[]).map(inv => {
         if (inv.status === 'PENDING' && new Date(inv.expires_at) < now) {
@@ -105,7 +156,6 @@ const ManagementCenter: React.FC = () => {
   useEffect(() => {
     fetchInvitations();
   }, [fetchInvitations]);
-
 
   const handleRevoke = async (invitationId: string) => {
     const { error } = await supabase
@@ -126,9 +176,104 @@ const ManagementCenter: React.FC = () => {
     fetchInvitations();
   };
 
+  const handleConfirmRemoval = useCallback(async (staff: { name: string; firstName: string; role: string; id?: string }, endDate: Date) => {
+    const staffId = staff.id;
+
+    if (!isDemoMode && staffId) {
+      // Persist to Supabase for real users
+      await supabase
+        .from('profiles')
+        .update({
+          status: 'inactive',
+          removed_at: new Date().toISOString(),
+          removed_by: session?.user_id ?? null,
+          access_end_date: endDate.toISOString().split('T')[0],
+        } as any)
+        .eq('user_id', staffId);
+    }
+
+    // Update local state
+    setStaffList(prev =>
+      prev.map(s => s.name === staff.name ? { ...s, status: 'inactive' as const } : s)
+    );
+
+    setRemoveOpen(false);
+    setRemoveTarget(null);
+    setViewingStaff(null);
+
+    toast({ title: `${staff.name} has been removed from this practice.` });
+  }, [isDemoMode, session?.user_id, toast]);
+
   const formatDate = (d: string) => {
     return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
+
+  // Staff profile view
+  if (viewingStaff) {
+    const showRemoveBtn = canRemove(currentRole, viewingStaff.role, currentId, viewingStaff.id);
+    return (
+      <div className="min-h-screen bg-background">
+        <TopNavBar />
+        <div className="max-w-3xl mx-auto px-6 py-6 pb-20">
+          <div className="flex items-center gap-3 mb-6">
+            <Button variant="ghost" size="sm" onClick={() => setViewingStaff(null)} className="text-muted-foreground">
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+            <h1 className="text-2xl font-bold text-foreground pl-3" style={{ borderLeft: `4px solid ${ACCENT}` }}>
+              {viewingStaff.name}
+            </h1>
+          </div>
+
+          <div className="p-6 rounded-xl space-y-4" style={cardStyle(ACCENT)}>
+            <div>
+              <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">Name</p>
+              <p className="text-base font-semibold text-foreground">{viewingStaff.name}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">Role</p>
+              <p className="text-base text-foreground">{viewingStaff.role}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">Status</p>
+              <span
+                className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
+                style={{
+                  color: viewingStaff.status === 'active' ? '#059669' : 'hsl(var(--muted-foreground))',
+                  border: `1px solid ${viewingStaff.status === 'active' ? '#059669' : 'hsl(var(--muted-foreground))'}`,
+                  background: 'transparent',
+                }}
+              >
+                {viewingStaff.status.toUpperCase()}
+              </span>
+            </div>
+          </div>
+
+          {showRemoveBtn && viewingStaff.status === 'active' && (
+            <div className="mt-8">
+              <button
+                onClick={() => {
+                  setRemoveTarget(viewingStaff);
+                  setRemoveOpen(true);
+                }}
+                className="text-sm font-semibold px-5 py-2 rounded-md"
+                style={{ color: TEAL, border: `1px solid ${TEAL}`, background: 'transparent' }}
+              >
+                Remove from Practice
+              </button>
+            </div>
+          )}
+        </div>
+        <BottomNavBar />
+        <RemoveStaffModal
+          open={removeOpen}
+          onOpenChange={setRemoveOpen}
+          staff={removeTarget}
+          checkBlocks={checkBlocksForStaff}
+          onConfirmRemoval={handleConfirmRemoval}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -166,7 +311,6 @@ const ManagementCenter: React.FC = () => {
             Invite Team Member
           </button>
 
-          {/* Pending Invitations List */}
           {loadingInvitations ? (
             <p className="text-sm text-muted-foreground">Loading invitations…</p>
           ) : invitations.length === 0 ? (
@@ -221,16 +365,63 @@ const ManagementCenter: React.FC = () => {
             STAFF OVERVIEW
           </h2>
           <div className="flex flex-col gap-3">
-            {STAFF.map((s, i) => (
-              <div key={i} className="p-4 flex items-center justify-between gap-4" style={cardStyle(ACCENT)}>
+            {activeStaff.map((s) => (
+              <div key={s.id} className="p-4 flex items-center justify-between gap-4" style={cardStyle(ACCENT)}>
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-foreground">{s.name}</p>
                   <p className="text-xs text-muted-foreground">{s.role}</p>
                 </div>
-                <button className="text-xs font-semibold uppercase px-4 py-1.5 rounded shrink-0" style={outlineBtn(ACCENT)}>View Profile</button>
+                <button
+                  onClick={() => setViewingStaff(s)}
+                  className="text-xs font-semibold uppercase px-4 py-1.5 rounded shrink-0"
+                  style={outlineBtn(ACCENT)}
+                >
+                  View Profile
+                </button>
               </div>
             ))}
           </div>
+
+          {/* Former Staff toggle — Owner only */}
+          {isOwner && inactiveStaff.length > 0 && (
+            <div className="mt-6">
+              <button
+                onClick={() => setShowFormerStaff(prev => !prev)}
+                className="text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-md"
+                style={{ color: 'hsl(var(--muted-foreground))', border: '1px solid hsl(var(--border))', background: 'transparent' }}
+              >
+                {showFormerStaff ? 'Hide' : 'Show'} Former Staff ({inactiveStaff.length})
+              </button>
+
+              {showFormerStaff && (
+                <div className="flex flex-col gap-3 mt-3">
+                  {inactiveStaff.map((s) => (
+                    <div key={s.id} className="p-4 flex items-center justify-between gap-4 opacity-60" style={cardStyle(ACCENT)}>
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-foreground">{s.name}</p>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <p className="text-xs text-muted-foreground">{s.role}</p>
+                          <span
+                            className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
+                            style={{ color: 'hsl(var(--muted-foreground))', border: '1px solid hsl(var(--muted-foreground))', background: 'transparent' }}
+                          >
+                            INACTIVE
+                          </span>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => setViewingStaff(s)}
+                        className="text-xs font-semibold uppercase px-4 py-1.5 rounded shrink-0"
+                        style={outlineBtn(ACCENT)}
+                      >
+                        View Profile
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </section>
 
         {/* Recent Activity */}
@@ -251,6 +442,13 @@ const ManagementCenter: React.FC = () => {
       <BottomNavBar />
 
       <InviteTeamMemberModal open={inviteOpen} onOpenChange={setInviteOpen} onInviteSent={fetchInvitations} />
+      <RemoveStaffModal
+        open={removeOpen}
+        onOpenChange={setRemoveOpen}
+        staff={removeTarget}
+        checkBlocks={checkBlocksForStaff}
+        onConfirmRemoval={handleConfirmRemoval}
+      />
     </div>
   );
 };
