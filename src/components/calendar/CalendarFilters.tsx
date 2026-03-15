@@ -343,45 +343,80 @@ const CalendarFilters: React.FC<Props> = ({
     setOpen(false);
   };
 
-  const handleBarClear = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    handleClear();
-  };
-
-  const handleBarClick = () => {
-    setOpen(o => !o);
-  };
-
   const handleSelectAppointment = (appt: SearchableAppointment) => {
-    setOpen(false);
     onSelectAppointment?.(appt);
   };
 
-  const ChevronIcon = open ? ChevronUp : ChevronDown;
+  // Live keyword change — update draft and propagate immediately
+  const handleKeywordChange = (value: string) => {
+    const next = { ...filters, keyword: value };
+    setDraft(prev => ({ ...prev, keyword: value }));
+    onChange(next);
+  };
+
+  const handleKeywordClear = () => {
+    handleKeywordChange('');
+  };
+
+  const filtersActive = isFiltersActive({ ...filters, keyword: '' }); // active ignoring keyword
 
   // Desktop
   if (!isMobile) {
     return (
       <div ref={containerRef} className={`relative ${compact ? '' : 'mb-4'}`}>
-        <div
-          onClick={handleBarClick}
-          className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card transition-colors hover:border-[#2dd4bf]/40 cursor-pointer"
-        >
+        {/* CHANGE 1 — Live keyword input */}
+        <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card transition-colors focus-within:border-[#2dd4bf]/40">
           <Search size={16} className="text-muted-foreground flex-shrink-0" />
-          <span className="flex-1 text-xs min-w-0 truncate" style={{ color: active && summary ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))' }}>
-            {active && summary ? summary : placeholder}
-          </span>
-          {active && (
-            <button onClick={handleBarClear} className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground flex-shrink-0">
+          <input
+            type="text"
+            value={filters.keyword}
+            onChange={e => handleKeywordChange(e.target.value)}
+            placeholder={placeholder}
+            className="flex-1 text-xs min-w-0 bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none"
+          />
+          {filters.keyword && (
+            <button onClick={handleKeywordClear} className="text-muted-foreground hover:text-foreground flex-shrink-0">
               <X size={12} />
-              Clear
             </button>
           )}
-          <ChevronIcon size={14} className="text-muted-foreground flex-shrink-0" />
         </div>
 
+        {/* Live search results */}
+        {appointments.length > 0 && onSelectAppointment && (
+          <LiveSearchResults
+            keyword={filters.keyword}
+            appointments={appointments}
+            onSelect={handleSelectAppointment}
+          />
+        )}
+
+        {/* CHANGE 2 — Filters toggle button */}
+        <button
+          onClick={() => setOpen(o => !o)}
+          className="flex items-center gap-1.5 mt-2 transition-colors"
+          style={{
+            border: '1px solid rgba(255,255,255,0.15)',
+            color: 'rgba(255,255,255,0.5)',
+            background: 'transparent',
+            borderRadius: 6,
+            padding: '4px 12px',
+            fontSize: 11,
+            textTransform: 'uppercase',
+            letterSpacing: '0.06em',
+          }}
+        >
+          Filters
+          {filtersActive && <span className="w-1.5 h-1.5 rounded-full bg-[#2dd4bf] flex-shrink-0" />}
+          <ChevronDown
+            size={10}
+            className="transition-transform"
+            style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}
+          />
+        </button>
+
+        {/* CHANGE 3 — Filter panel */}
         {open && (
-          <div className={`absolute z-50 top-full mt-1 ${compact ? 'w-full' : 'w-[380px]'} left-0 bg-card border border-border rounded-xl shadow-lg animate-fade-in`}>
+          <div className={`absolute z-50 top-full mt-1 ${compact ? 'w-full' : 'w-[380px]'} left-0 bg-card border border-border rounded-xl shadow-lg animate-fade-in`} style={{ top: 'auto', position: 'relative' }}>
             <FilterDropdownContent
               draft={draft}
               setDraft={setDraft}
@@ -391,8 +426,6 @@ const CalendarFilters: React.FC<Props> = ({
               onSearch={handleSearch}
               onClear={handleClear}
               compact={compact}
-              appointments={appointments}
-              onSelectAppointment={handleSelectAppointment}
             />
           </div>
         )}
@@ -403,22 +436,51 @@ const CalendarFilters: React.FC<Props> = ({
   // Mobile
   return (
     <div className={compact ? '' : 'mb-4'}>
-      <div
-        onClick={handleBarClick}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card cursor-pointer"
-      >
+      {/* Live keyword input */}
+      <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card focus-within:border-[#2dd4bf]/40">
         <Search size={16} className="text-muted-foreground flex-shrink-0" />
-        <span className="flex-1 text-xs min-w-0 truncate" style={{ color: active && summary ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))' }}>
-          {active && summary ? summary : placeholder}
-        </span>
-        {active && (
-          <button onClick={handleBarClear} className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground flex-shrink-0">
+        <input
+          type="text"
+          value={filters.keyword}
+          onChange={e => handleKeywordChange(e.target.value)}
+          placeholder={placeholder}
+          className="flex-1 text-xs min-w-0 bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none"
+        />
+        {filters.keyword && (
+          <button onClick={handleKeywordClear} className="text-muted-foreground hover:text-foreground flex-shrink-0">
             <X size={12} />
-            Clear
           </button>
         )}
-        <ChevronIcon size={14} className="text-muted-foreground flex-shrink-0" />
       </div>
+
+      {/* Live search results */}
+      {appointments.length > 0 && onSelectAppointment && (
+        <LiveSearchResults
+          keyword={filters.keyword}
+          appointments={appointments}
+          onSelect={handleSelectAppointment}
+        />
+      )}
+
+      {/* Filters toggle */}
+      <button
+        onClick={() => setOpen(true)}
+        className="flex items-center gap-1.5 mt-2 transition-colors"
+        style={{
+          border: '1px solid rgba(255,255,255,0.15)',
+          color: 'rgba(255,255,255,0.5)',
+          background: 'transparent',
+          borderRadius: 6,
+          padding: '4px 12px',
+          fontSize: 11,
+          textTransform: 'uppercase',
+          letterSpacing: '0.06em',
+        }}
+      >
+        Filters
+        {filtersActive && <span className="w-1.5 h-1.5 rounded-full bg-[#2dd4bf] flex-shrink-0" />}
+        <ChevronDown size={10} />
+      </button>
 
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="bottom" className="h-auto max-h-[85vh] rounded-t-xl p-0 overflow-y-auto">
@@ -434,8 +496,6 @@ const CalendarFilters: React.FC<Props> = ({
             onSearch={handleSearch}
             onClear={handleClear}
             compact
-            appointments={appointments}
-            onSelectAppointment={handleSelectAppointment}
           />
         </SheetContent>
       </Sheet>
