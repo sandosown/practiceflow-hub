@@ -157,8 +157,31 @@ const ModuleGridSelector: React.FC<{
     setSelected(prev => prev.includes(m) ? prev.filter(x => x !== m) : [...prev, m]);
   };
 
+  const availableModules = ALL_MODULES.filter(m => !disabledModules.includes(m));
+  const allAvailableSelected = availableModules.length > 0 && availableModules.every(m => selected.includes(m));
+
+  const handleToggleAll = () => {
+    if (allAvailableSelected) {
+      setSelected([]);
+    } else {
+      setSelected(availableModules);
+    }
+  };
+
   return (
     <div className="space-y-4 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+      <div className="flex items-center justify-between mb-1">
+        <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: '#5a8ab0' }}>Select Modules</span>
+        {availableModules.length > 0 && (
+          <button
+            onClick={handleToggleAll}
+            className="text-[11px] font-medium transition-colors hover:underline"
+            style={{ color: '#2dd4bf', background: 'transparent', border: 'none' }}
+          >
+            {allAvailableSelected ? 'Deselect All' : 'Select All'}
+          </button>
+        )}
+      </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
         {ALL_MODULES.map(m => {
           const disabled = disabledModules.includes(m);
@@ -185,15 +208,16 @@ const ModuleGridSelector: React.FC<{
 
       <div className="flex items-center gap-4">
         <span className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: '#5a8ab0' }}>Access Type</span>
-        <div className="flex rounded-md overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.1)' }}>
+        <div className="flex rounded-md overflow-hidden gap-2">
           {(['view', 'full'] as const).map(t => (
             <button
               key={t}
               onClick={() => setAccessType(t)}
-              className="text-[11px] px-3 py-1.5 transition-colors"
+              className="text-[11px] px-3 py-1.5 rounded-md transition-colors font-medium"
               style={{
-                background: accessType === t ? 'rgba(45,212,191,0.15)' : 'transparent',
-                color: accessType === t ? '#2dd4bf' : '#64748b',
+                background: accessType === t ? '#2dd4bf' : 'transparent',
+                color: accessType === t ? '#0a1628' : '#2dd4bf',
+                border: '1px solid #2dd4bf',
               }}
             >
               {t === 'view' ? 'View Only' : 'Full Access'}
