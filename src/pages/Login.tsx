@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useSession } from '@/context/SessionContext';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,6 +19,14 @@ const Login: React.FC = () => {
   const { login, loginDemo } = useSession();
   const navigate = useNavigate();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+  const showDevMode = searchParams.get('devmode') === 'true';
+
+  // --- DEV TEST MODE state (separate from main login form) ---
+  const [devEmail, setDevEmail] = useState('');
+  const [devPassword, setDevPassword] = useState('');
+  const [devError, setDevError] = useState('');
+  const [devLoading, setDevLoading] = useState(false);
 
   const handleDemoLogin = (userId: string) => {
     const demo = DEMO_USERS.find(u => u.id === userId);
@@ -51,6 +59,19 @@ const Login: React.FC = () => {
       setError(loginError);
     }
     setLoading(false);
+  };
+
+  // --- DEV TEST MODE: Real Supabase auth for testing ---
+  // TODO: Remove or gate behind environment variable before production launch
+  const handleDevLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setDevLoading(true);
+    setDevError('');
+    const { error: loginError } = await login(devEmail, devPassword);
+    if (loginError) {
+      setDevError(loginError);
+    }
+    setDevLoading(false);
   };
 
   const roleLabel = (u: typeof DEMO_USERS[0]) => {
@@ -171,6 +192,59 @@ const Login: React.FC = () => {
             </div>
           </form>
         </div>
+
+        {/* DEV TEST MODE — only rendered with ?devmode=true URL parameter */}
+        {/* TODO: Remove or gate behind environment variable before production launch */}
+        {showDevMode && (
+          <div className="mt-4">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="flex-1 h-px" style={{ background: '#e2e8f0' }} />
+              <span style={{ fontSize: '10px', color: '#94a3b8', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                Dev Test Mode
+              </span>
+              <div className="flex-1 h-px" style={{ background: '#e2e8f0' }} />
+            </div>
+            <div
+              className="rounded-xl p-6"
+              style={{
+                background: '#ffffff',
+                border: '1px solid #e2e8f0',
+              }}
+            >
+              <form onSubmit={handleDevLogin} className="space-y-3">
+                <div>
+                  <Label htmlFor="dev-email" style={{ color: '#94a3b8' }}>Email</Label>
+                  <Input
+                    id="dev-email" type="email" value={devEmail}
+                    onChange={e => { setDevEmail(e.target.value); setDevError(''); }}
+                    placeholder="test@example.com"
+                    className="mt-1"
+                    style={{ background: '#ffffff', borderColor: '#e2e8f0', color: '#1a2a5e' }}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="dev-password" style={{ color: '#94a3b8' }}>Password</Label>
+                  <Input
+                    id="dev-password" type="password" value={devPassword}
+                    onChange={e => { setDevPassword(e.target.value); setDevError(''); }}
+                    placeholder="••••••••"
+                    className="mt-1"
+                    style={{ background: '#ffffff', borderColor: '#e2e8f0', color: '#1a2a5e' }}
+                  />
+                </div>
+                {devError && <p className="text-sm" style={{ color: '#f59e0b' }}>{devError}</p>}
+                <button
+                  type="submit"
+                  disabled={devLoading}
+                  className="w-full py-2.5 rounded-lg font-semibold text-sm transition-all"
+                  style={{ background: 'transparent', color: '#2dd4bf', border: '1.5px solid #2dd4bf' }}
+                >
+                  {devLoading ? 'Signing in…' : 'Sign In'}
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
