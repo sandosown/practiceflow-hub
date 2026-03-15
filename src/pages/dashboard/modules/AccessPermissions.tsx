@@ -1,13 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { ArrowLeft, Search, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import TopNavBar from '@/components/TopNavBar';
 import BottomNavBar from '@/components/BottomNavBar';
-import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useSession } from '@/context/SessionContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -37,6 +32,11 @@ const ROLE_DEFAULT_MODULES: Record<string, string[]> = {
   STAFF: [],
 };
 
+const ROLE_LABELS: Record<string, string> = {
+  OWNER: 'Owner', ADMIN: 'Admin', SUPERVISOR: 'Supervisor', CLINICIAN: 'Clinician',
+  INTERN_CLINICAL: 'Clinical Intern', INTERN_BUSINESS: 'Business Intern', STAFF: 'Staff',
+};
+
 interface Grant {
   grant_id: string;
   granted_to: string;
@@ -54,7 +54,278 @@ interface StaffMember {
   clinician_subtype?: string | null;
 }
 
-const TEAL = '#2dd4bf';
+// --- Sub-components ---
+
+const PersonSearch: React.FC<{
+  staffList: StaffMember[];
+  onSelect: (s: StaffMember) => void;
+  selected: StaffMember | null;
+}> = ({ staffList, onSelect, selected }) => {
+  const [query, setQuery] = useState('');
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const filtered = useMemo(() => {
+    if (!query.trim()) return staffList;
+    const q = query.toLowerCase();
+    return staffList.filter(s => s.full_name.toLowerCase().includes(q));
+  }, [query, staffList]);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  return (
+    <div ref={ref} className="relative">
+      <div
+        className="flex items-center gap-2 rounded-lg px-3 py-2.5"
+        style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)' }}
+      >
+        <Search className="h-4 w-4 shrink-0" style={{ color: '#64748b' }} />
+        <input
+          className="flex-1 bg-transparent text-sm outline-none placeholder:text-[#64748b]"
+          style={{ color: '#f1f5f9' }}
+          placeholder="Search team member..."
+          value={query}
+          onChange={e => { setQuery(e.target.value); setOpen(true); }}
+          onFocus={() => setOpen(true)}
+        />
+        {query && (
+          <button onClick={() => { setQuery(''); setOpen(false); }} className="p-0.5 rounded hover:bg-white/10">
+            <X className="h-3.5 w-3.5" style={{ color: '#64748b' }} />
+          </button>
+        )}
+      </div>
+
+      {open && filtered.length > 0 && (
+        <div
+          className="absolute z-50 mt-1 w-full rounded-lg py-1 shadow-xl max-h-60 overflow-y-auto"
+          style={{ background: '#0f1d32', border: '1px solid rgba(255,255,255,0.1)' }}
+        >
+          {filtered.map(s => (
+            <button
+              key={s.id}
+              className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-white/5 transition-colors"
+              onClick={() => { onSelect(s); setOpen(false); setQuery(s.full_name); }}
+            >
+              <span
+                className="flex items-center justify-center h-7 w-7 rounded-full text-[10px] font-bold shrink-0"
+                style={{ background: 'rgba(45,212,191,0.15)', color: '#2dd4bf' }}
+              >
+                {s.full_name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+              </span>
+              <div className="min-w-0">
+                <p className="text-sm font-medium truncate" style={{ color: '#f1f5f9' }}>{s.full_name}</p>
+                <p className="text-[10px]" style={{ color: '#64748b' }}>{ROLE_LABELS[s.role] ?? s.role}</p>
+              </div>
+              {selected?.id === s.id && (
+                <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(45,212,191,0.15)', color: '#2dd4bf' }}>
+                  Selected
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {open && filtered.length === 0 && query.trim() && (
+        <div
+          className="absolute z-50 mt-1 w-full rounded-lg py-4 text-center text-xs shadow-xl"
+          style={{ background: '#0f1d32', border: '1px solid rgba(255,255,255,0.1)', color: '#64748b' }}
+        >
+          No team members found.
+        </div>
+      )}
+    </div>
+  );
+};
+
+const ModuleGridSelector: React.FC<{
+  disabledModules: string[];
+  onConfirm: (modules: string[], accessType: 'view' | 'full') => void;
+  onCancel: () => void;
+}> = ({ disabledModules, onConfirm, onCancel }) => {
+  const [selected, setSelected] = useState<string[]>([]);
+  const [accessType, setAccessType] = useState<'view' | 'full'>('view');
+
+  const toggle = (m: string) => {
+    if (disabledModules.includes(m)) return;
+    setSelected(prev => prev.includes(m) ? prev.filter(x => x !== m) : [...prev, m]);
+  };
+
+  return (
+    <div className="space-y-4 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+        {ALL_MODULES.map(m => {
+          const disabled = disabledModules.includes(m);
+          const active = selected.includes(m);
+          return (
+            <button
+              key={m}
+              disabled={disabled}
+              onClick={() => toggle(m)}
+              className="text-[11px] rounded-md px-2.5 py-2 text-left transition-all"
+              style={{
+                background: active ? 'rgba(45,212,191,0.12)' : disabled ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.04)',
+                border: active ? '1px solid #2dd4bf' : '1px solid rgba(255,255,255,0.08)',
+                color: disabled ? '#475569' : active ? '#2dd4bf' : '#94a3b8',
+                cursor: disabled ? 'not-allowed' : 'pointer',
+                opacity: disabled ? 0.5 : 1,
+              }}
+            >
+              {m}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="flex items-center gap-4">
+        <span className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: '#5a8ab0' }}>Access Type</span>
+        <div className="flex rounded-md overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.1)' }}>
+          {(['view', 'full'] as const).map(t => (
+            <button
+              key={t}
+              onClick={() => setAccessType(t)}
+              className="text-[11px] px-3 py-1.5 transition-colors"
+              style={{
+                background: accessType === t ? 'rgba(45,212,191,0.15)' : 'transparent',
+                color: accessType === t ? '#2dd4bf' : '#64748b',
+              }}
+            >
+              {t === 'view' ? 'View Only' : 'Full Access'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <button
+          disabled={selected.length === 0}
+          onClick={() => onConfirm(selected, accessType)}
+          className="text-xs font-semibold px-4 py-1.5 rounded-md transition-colors disabled:opacity-40"
+          style={{ color: '#2dd4bf', border: '1px solid #2dd4bf', background: 'transparent' }}
+        >
+          Grant Access
+        </button>
+        <button
+          onClick={onCancel}
+          className="text-xs px-3 py-1.5 rounded-md transition-colors hover:bg-white/5"
+          style={{ color: '#64748b' }}
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const PersonAccessPanel: React.FC<{
+  staff: StaffMember;
+  grants: Grant[];
+  onGrant: (modules: string[], accessType: 'view' | 'full') => void;
+  onRevoke: (grant: Grant) => void;
+}> = ({ staff, grants, onGrant, onRevoke }) => {
+  const [showGrantSelector, setShowGrantSelector] = useState(false);
+  const defaultModules = ROLE_DEFAULT_MODULES[staff.role] ?? [];
+  const activeGrants = grants.filter(g => g.granted_to === staff.id && g.is_active);
+  const disabledModules = [...defaultModules, ...activeGrants.map(g => g.module)];
+
+  const handleConfirm = (modules: string[], accessType: 'view' | 'full') => {
+    onGrant(modules, accessType);
+    setShowGrantSelector(false);
+  };
+
+  const initials = staff.full_name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+
+  return (
+    <div
+      className="rounded-xl p-5 space-y-5"
+      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}
+    >
+      {/* Person header */}
+      <div className="flex items-center gap-3">
+        <span
+          className="flex items-center justify-center h-10 w-10 rounded-full text-sm font-bold"
+          style={{ background: 'rgba(45,212,191,0.15)', color: '#2dd4bf' }}
+        >
+          {initials}
+        </span>
+        <div>
+          <p className="text-sm font-semibold" style={{ color: '#f1f5f9' }}>{staff.full_name}</p>
+          <p className="text-[11px]" style={{ color: '#64748b' }}>{ROLE_LABELS[staff.role] ?? staff.role}</p>
+        </div>
+      </div>
+
+      {/* Section A — Default Access */}
+      <div>
+        <p className="text-[10px] font-semibold uppercase tracking-wider mb-2" style={{ color: '#5a8ab0' }}>Default Access</p>
+        <p className="text-[10px] mb-2" style={{ color: '#475569' }}>Default access based on role — cannot be changed</p>
+        {defaultModules.length > 0 ? (
+          <div className="flex flex-wrap gap-1.5">
+            {defaultModules.map(m => (
+              <span key={m} className="text-[10px] px-2 py-0.5 rounded-full" style={{ border: '1px solid rgba(255,255,255,0.1)', color: '#64748b' }}>
+                {m}
+              </span>
+            ))}
+          </div>
+        ) : (
+          <span className="text-[11px]" style={{ color: '#475569' }}>No default modules for this role.</span>
+        )}
+      </div>
+
+      {/* Section B — Granted Access */}
+      <div>
+        <p className="text-[10px] font-semibold uppercase tracking-wider mb-2" style={{ color: '#5a8ab0' }}>Granted Access</p>
+        {activeGrants.length > 0 ? (
+          <div className="space-y-1.5">
+            {activeGrants.map(g => (
+              <div key={g.grant_id} className="flex items-center justify-between rounded-md px-3 py-2" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs" style={{ color: '#e2eaf4' }}>{g.module}</span>
+                  <span className="text-[9px] px-1.5 py-0 rounded-full" style={{ background: 'rgba(45,212,191,0.12)', color: '#2dd4bf' }}>
+                    {g.access_type === 'full' ? 'FULL' : 'VIEW'}
+                  </span>
+                </div>
+                <button
+                  onClick={() => onRevoke(g)}
+                  className="text-[11px] font-medium transition-colors hover:underline"
+                  style={{ color: '#2dd4bf' }}
+                >
+                  Revoke
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-[11px]" style={{ color: '#475569' }}>No additional access granted yet.</p>
+        )}
+      </div>
+
+      {/* Section C — Grant Access */}
+      {!showGrantSelector ? (
+        <button
+          onClick={() => setShowGrantSelector(true)}
+          className="text-xs font-semibold px-4 py-1.5 rounded-md transition-colors hover:bg-white/5"
+          style={{ color: '#2dd4bf', border: '1px solid #2dd4bf', background: 'transparent' }}
+        >
+          + Grant Access
+        </button>
+      ) : (
+        <ModuleGridSelector
+          disabledModules={disabledModules}
+          onConfirm={handleConfirm}
+          onCancel={() => setShowGrantSelector(false)}
+        />
+      )}
+    </div>
+  );
+};
+
+// --- Main Page ---
 
 const AccessPermissions: React.FC = () => {
   const navigate = useNavigate();
@@ -64,9 +335,6 @@ const AccessPermissions: React.FC = () => {
   const [grants, setGrants] = useState<Grant[]>([]);
   const [staffList, setStaffList] = useState<StaffMember[]>([]);
   const [selectedStaff, setSelectedStaff] = useState<StaffMember | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [grantModule, setGrantModule] = useState('');
-  const [grantAccessType, setGrantAccessType] = useState<'view' | 'full'>('view');
 
   const loadData = useCallback(async () => {
     if (isDemoMode) {
@@ -85,11 +353,11 @@ const AccessPermissions: React.FC = () => {
 
     const [profilesRes, grantsRes] = await Promise.all([
       supabase.from('profiles').select('*'),
-      supabase.from('permission_grants' as any).select('*').eq('is_active', true),
+      supabase.from('permission_grants').select('*').eq('is_active', true),
     ]);
 
     if (profilesRes.data) {
-      const staff = profilesRes.data
+      setStaffList(profilesRes.data
         .filter((p: any) => p.user_id !== session?.user_id)
         .map((p: any) => ({
           id: p.user_id,
@@ -97,72 +365,57 @@ const AccessPermissions: React.FC = () => {
           role: p.role === 'INTERN' ? (p.intern_subtype === 'BUSINESS' ? 'INTERN_BUSINESS' : 'INTERN_CLINICAL') : p.role,
           intern_subtype: p.intern_subtype,
           clinician_subtype: p.clinician_subtype,
-        }));
-      setStaffList(staff);
+        })));
     }
-
-    if (grantsRes.data) {
-      setGrants(grantsRes.data as any);
-    }
+    if (grantsRes.data) setGrants(grantsRes.data as any);
   }, [isDemoMode, session?.user_id]);
 
   useEffect(() => { loadData(); }, [loadData]);
 
-  const getDefaultModules = (staff: StaffMember) => ROLE_DEFAULT_MODULES[staff.role] ?? [];
-
-  const getActiveGrants = (staffId: string) => grants.filter(g => g.granted_to === staffId && g.is_active);
-
-  const getAvailableModules = (staff: StaffMember) => {
-    const defaults = getDefaultModules(staff);
-    const granted = getActiveGrants(staff.id).map(g => g.module);
-    return ALL_MODULES.filter(m => !defaults.includes(m) && !granted.includes(m));
-  };
-
-  const handleGrant = async () => {
-    if (!grantModule || !selectedStaff || !session) return;
-
-    const newGrant: Grant = {
-      grant_id: crypto.randomUUID(),
-      granted_to: selectedStaff.id,
-      module: grantModule,
-      access_type: grantAccessType,
-      is_active: true,
-      created_at: new Date().toISOString(),
-    };
+  const handleGrant = async (modules: string[], accessType: 'view' | 'full') => {
+    if (!selectedStaff || !session) return;
 
     if (isDemoMode) {
-      const updated = [...grants, newGrant];
+      const newGrants = modules.map(m => ({
+        grant_id: crypto.randomUUID(),
+        granted_to: selectedStaff.id,
+        module: m,
+        access_type: accessType,
+        is_active: true,
+        created_at: new Date().toISOString(),
+      }));
+      const updated = [...grants, ...newGrants];
       setGrants(updated);
       localStorage.setItem('pf_permission_grants', JSON.stringify(updated));
     } else {
-      const { error } = await (supabase.from('permission_grants' as any) as any).insert({
-        hat_id: 'w1',
-        granted_by: session.user_id,
-        granted_to: selectedStaff.id,
-        module: grantModule,
-        access_type: grantAccessType,
-      });
-      if (error) {
-        toast({ title: 'Error', description: error.message, variant: 'destructive' });
-        return;
+      for (const m of modules) {
+        const { error } = await supabase.from('permission_grants').insert({
+          granted_by: session.user_id,
+          granted_to: selectedStaff.id,
+          module: m,
+          access_type: accessType,
+        });
+        if (error) {
+          toast({ title: 'Error', description: error.message, variant: 'destructive' });
+          return;
+        }
       }
     }
 
-    toast({ title: 'Access granted', description: `${selectedStaff.full_name} now has ${grantAccessType} access to ${grantModule}.` });
-    setGrantModule('');
-    setGrantAccessType('view');
+    toast({
+      title: 'Access granted',
+      description: `${selectedStaff.full_name} now has ${accessType} access to ${modules.length} module${modules.length > 1 ? 's' : ''}.`,
+    });
     loadData();
   };
 
   const handleRevoke = async (grant: Grant) => {
     if (isDemoMode) {
-      const updated = grants.map(g =>
-        g.grant_id === grant.grant_id ? { ...g, is_active: false } : g
-      );
+      const updated = grants.map(g => g.grant_id === grant.grant_id ? { ...g, is_active: false } : g);
       setGrants(updated.filter(g => g.is_active));
       localStorage.setItem('pf_permission_grants', JSON.stringify(updated));
     } else {
-      await (supabase.from('permission_grants' as any) as any).update({
+      await supabase.from('permission_grants').update({
         is_active: false,
         revoked_at: new Date().toISOString(),
         revoked_by: session?.user_id,
@@ -173,16 +426,11 @@ const AccessPermissions: React.FC = () => {
     loadData();
   };
 
-  const roleLabelMap: Record<string, string> = {
-    OWNER: 'Owner', ADMIN: 'Admin', SUPERVISOR: 'Supervisor', CLINICIAN: 'Clinician',
-    INTERN_CLINICAL: 'Clinical Intern', INTERN_BUSINESS: 'Business Intern', STAFF: 'Staff',
-  };
-
   return (
     <div className="min-h-screen" style={{ background: '#0a1628' }}>
       <TopNavBar />
 
-      <div className="max-w-3xl mx-auto px-4 py-6 space-y-6 pb-24">
+      <div className="max-w-2xl mx-auto px-4 py-6 space-y-6 pb-24">
         {/* Header */}
         <div className="flex items-center gap-3">
           <button onClick={() => navigate(-1)} className="p-1.5 rounded-md hover:bg-white/10 transition-colors">
@@ -194,133 +442,27 @@ const AccessPermissions: React.FC = () => {
           </div>
         </div>
 
-        {/* Staff list */}
-        <div className="space-y-2">
-          {staffList.map(staff => (
-            <div
-              key={staff.id}
-              className="flex items-center justify-between rounded-lg p-3"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
-            >
-              <div>
-                <p className="text-sm font-medium" style={{ color: '#f1f5f9' }}>{staff.full_name}</p>
-                <p className="text-xs" style={{ color: '#64748b' }}>{roleLabelMap[staff.role] ?? staff.role}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                {getActiveGrants(staff.id).length > 0 && (
-                  <span className="text-[10px] px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(45,212,191,0.15)', color: TEAL }}>
-                    {getActiveGrants(staff.id).length} grant{getActiveGrants(staff.id).length > 1 ? 's' : ''}
-                  </span>
-                )}
-                <button
-                  onClick={() => { setSelectedStaff(staff); setModalOpen(true); setGrantModule(''); setGrantAccessType('view'); }}
-                  className="text-xs font-semibold px-3 py-1.5 rounded-md transition-colors hover:bg-white/5"
-                  style={{ color: TEAL, border: `1px solid ${TEAL}`, background: 'transparent' }}
-                >
-                  Manage Access
-                </button>
-              </div>
-            </div>
-          ))}
-          {staffList.length === 0 && (
-            <p className="text-sm text-center py-8" style={{ color: '#64748b' }}>No team members found.</p>
-          )}
-        </div>
+        {/* Search */}
+        <PersonSearch staffList={staffList} onSelect={setSelectedStaff} selected={selectedStaff} />
+
+        {/* Person Panel */}
+        {selectedStaff && (
+          <PersonAccessPanel
+            staff={selectedStaff}
+            grants={grants}
+            onGrant={handleGrant}
+            onRevoke={handleRevoke}
+          />
+        )}
+
+        {!selectedStaff && (
+          <div className="text-center py-12">
+            <p className="text-sm" style={{ color: '#475569' }}>Search for a team member above to manage their access.</p>
+          </div>
+        )}
       </div>
 
       <BottomNavBar />
-
-      {/* Manage Access Modal */}
-      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-        <DialogContent className="sm:max-w-md" style={{ background: '#0f1d32', border: '1px solid rgba(255,255,255,0.1)' }}>
-          <DialogHeader>
-            <DialogTitle style={{ color: '#f1f5f9' }}>{selectedStaff?.full_name}</DialogTitle>
-            <DialogDescription style={{ color: '#64748b' }}>
-              {roleLabelMap[selectedStaff?.role ?? 'STAFF']} — manage additional module access
-            </DialogDescription>
-          </DialogHeader>
-
-          {selectedStaff && (
-            <div className="space-y-5">
-              {/* Default access */}
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#5a8ab0' }}>Default Access</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {getDefaultModules(selectedStaff).length > 0 ? getDefaultModules(selectedStaff).map(m => (
-                    <span key={m} className="text-[10px] px-2 py-0.5 rounded-full" style={{ border: '1px solid rgba(255,255,255,0.15)', color: '#94a3b8' }}>{m}</span>
-                  )) : (
-                    <span className="text-xs" style={{ color: '#64748b' }}>No default modules</span>
-                  )}
-                </div>
-              </div>
-
-              {/* Current grants */}
-              {getActiveGrants(selectedStaff.id).length > 0 && (
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#5a8ab0' }}>Additional Access</p>
-                  <div className="space-y-1.5">
-                    {getActiveGrants(selectedStaff.id).map(g => (
-                      <div key={g.grant_id} className="flex items-center justify-between rounded px-2.5 py-1.5" style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs" style={{ color: '#e2eaf4' }}>{g.module}</span>
-                          <span className="text-[9px] px-1.5 py-0 rounded-full" style={{ background: 'rgba(45,212,191,0.15)', color: TEAL }}>
-                            {g.access_type === 'full' ? 'Full' : 'View'}
-                          </span>
-                        </div>
-                        <button
-                          onClick={() => handleRevoke(g)}
-                          className="text-[10px] font-medium px-2 py-0.5 rounded transition-colors hover:bg-red-500/10"
-                          style={{ color: '#ef4444', border: '1px solid rgba(239,68,68,0.3)' }}
-                        >
-                          Revoke
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Grant new access */}
-              {getAvailableModules(selectedStaff).length > 0 && (
-                <div className="space-y-3 pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-                  <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#5a8ab0' }}>Grant Access</p>
-
-                  <Select value={grantModule} onValueChange={setGrantModule}>
-                    <SelectTrigger className="h-9 text-xs" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#e2eaf4' }}>
-                      <SelectValue placeholder="Select module…" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {getAvailableModules(selectedStaff).map(m => (
-                        <SelectItem key={m} value={m} className="text-xs">{m}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  <RadioGroup value={grantAccessType} onValueChange={(v) => setGrantAccessType(v as 'view' | 'full')} className="flex gap-4">
-                    <div className="flex items-center gap-1.5">
-                      <RadioGroupItem value="view" id="perm-view" />
-                      <Label htmlFor="perm-view" className="text-xs" style={{ color: '#e2eaf4' }}>View Only</Label>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <RadioGroupItem value="full" id="perm-full" />
-                      <Label htmlFor="perm-full" className="text-xs" style={{ color: '#e2eaf4' }}>Full Access</Label>
-                    </div>
-                  </RadioGroup>
-
-                  <button
-                    onClick={handleGrant}
-                    disabled={!grantModule}
-                    className="text-xs font-semibold px-4 py-1.5 rounded-md transition-colors disabled:opacity-40"
-                    style={{ color: TEAL, border: `1px solid ${TEAL}`, background: 'transparent' }}
-                  >
-                    Grant Access
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
