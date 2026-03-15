@@ -24,6 +24,7 @@ const ALL_MODULES = [
 
 const ROLE_DEFAULT_MODULES: Record<string, string[]> = {
   OWNER: ALL_MODULES,
+  PARTNER: ALL_MODULES,
   ADMIN: ['Management Center', 'Client Database', 'Insurance Database', 'Vendor Database', 'Charts Requiring Action'],
   SUPERVISOR: ['Client Database', 'Supervision Structure', 'Charts Requiring Action'],
   CLINICIAN: ['Supervision Structure', 'Charts Requiring Action'],
@@ -33,7 +34,7 @@ const ROLE_DEFAULT_MODULES: Record<string, string[]> = {
 };
 
 const ROLE_LABELS: Record<string, string> = {
-  OWNER: 'Owner', ADMIN: 'Admin', SUPERVISOR: 'Supervisor', CLINICIAN: 'Clinician',
+  OWNER: 'Owner', PARTNER: 'Partner', ADMIN: 'Admin', SUPERVISOR: 'Supervisor', CLINICIAN: 'Clinician',
   INTERN_CLINICAL: 'Clinical Intern', INTERN_BUSINESS: 'Business Intern', STAFF: 'Staff',
 };
 

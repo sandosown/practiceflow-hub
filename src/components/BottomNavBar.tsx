@@ -68,12 +68,13 @@ const ALL_SECTIONS: DrawerSection[] = [
 ];
 
 // Effective role key that distinguishes intern subtypes
-type EffectiveRole = 'OWNER' | 'ADMIN' | 'SUPERVISOR' | 'CLINICIAN' | 'INTERN_CLINICAL' | 'INTERN_BUSINESS' | 'STAFF';
+type EffectiveRole = 'OWNER' | 'PARTNER' | 'ADMIN' | 'SUPERVISOR' | 'CLINICIAN' | 'INTERN_CLINICAL' | 'INTERN_BUSINESS' | 'STAFF';
 
 function getEffectiveRole(role: AppRole, internSubtype: InternSubtype): EffectiveRole {
   if (role === 'INTERN') {
     return internSubtype === 'BUSINESS' ? 'INTERN_BUSINESS' : 'INTERN_CLINICAL';
   }
+  if (role === 'PARTNER') return 'PARTNER';
   return role as EffectiveRole;
 }
 
@@ -86,6 +87,14 @@ const ROLE_VISIBILITY: Record<EffectiveRole, Record<string, string[]>> = {
     PERSONAL: ['moments'],
     COMMUNICATION: ['messages', 'feed'],
     SYSTEM: ['access-permissions', 'guide', 'settings'],
+  },
+  PARTNER: {
+    PRACTICE: ['management', 'clients', 'insurance', 'vendors', 'compliance'],
+    CLINICAL: ['supervision'],
+    TEAM: ['directory', 'recognition'],
+    PERSONAL: ['moments'],
+    COMMUNICATION: ['messages', 'feed'],
+    SYSTEM: ['guide', 'settings'],
   },
   ADMIN: {
     PRACTICE: ['management', 'clients', 'insurance', 'vendors', 'compliance'],
@@ -173,6 +182,7 @@ const BottomNavBar: React.FC = () => {
 
   const roleLabelMap: Record<string, string> = {
     OWNER: 'Owner',
+    PARTNER: 'Partner',
     CLINICIAN: 'Clinician',
     INTERN_CLINICAL: 'Clinical Intern',
     INTERN_BUSINESS: 'Business Intern',

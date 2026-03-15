@@ -670,6 +670,33 @@ export type Database = {
         }
         Relationships: []
       }
+      partner_preferences: {
+        Row: {
+          created_at: string
+          hat_id: string
+          hidden_modules: string[]
+          preference_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          hat_id?: string
+          hidden_modules?: string[]
+          preference_id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          hat_id?: string
+          hidden_modules?: string[]
+          preference_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       permission_grants: {
         Row: {
           access_type: string

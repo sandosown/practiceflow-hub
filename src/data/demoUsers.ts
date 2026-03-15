@@ -13,6 +13,17 @@ export const DEMO_USERS: DemoUser[] = [
     onboarding_complete: true,
   },
   {
+    id: 'demo-partner',
+    full_name: 'Dr. Kevin Park',
+    email: 'kevin@practiceflow.io',
+    role: 'PARTNER',
+    clinician_subtype: null,
+    intern_subtype: null,
+    practice_id: 'demo-practice-1',
+    workspace_name: 'Clarity Counseling Group',
+    onboarding_complete: true,
+  },
+  {
     id: 'demo-admin',
     full_name: 'Marcus Chen',
     email: 'marcus@practiceflow.io',
