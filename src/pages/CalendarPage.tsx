@@ -476,7 +476,8 @@ const CalendarPage: React.FC = () => {
           />
         </DialogContent>
       </Dialog>
-    </AppLayout>
+      <BottomNavBar />
+    </div>
   );
 };
 
