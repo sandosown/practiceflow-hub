@@ -238,6 +238,8 @@ const ManagementCenter: React.FC = () => {
                 staff={s}
                 contextInfo={getStaffContextInfo(s)}
                 onViewProfile={setViewingStaff}
+                onRemove={setRemoveTarget}
+                showRemove={canRemoveStaff(s)}
               />
             ))}
           </div>
