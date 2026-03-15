@@ -30,6 +30,9 @@ export type Database = {
           notes: string | null
           reschedule_requested_by: string | null
           start_time: string
+          status: string
+          status_updated_at: string | null
+          status_updated_by: string | null
           supervision_session_id: string | null
           title: string
         }
@@ -48,6 +51,9 @@ export type Database = {
           notes?: string | null
           reschedule_requested_by?: string | null
           start_time: string
+          status?: string
+          status_updated_at?: string | null
+          status_updated_by?: string | null
           supervision_session_id?: string | null
           title: string
         }
@@ -66,6 +72,9 @@ export type Database = {
           notes?: string | null
           reschedule_requested_by?: string | null
           start_time?: string
+          status?: string
+          status_updated_at?: string | null
+          status_updated_by?: string | null
           supervision_session_id?: string | null
           title?: string
         }
