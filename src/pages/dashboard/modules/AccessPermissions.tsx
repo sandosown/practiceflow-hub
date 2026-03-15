@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { ArrowLeft, Search, X, ChevronDown, ChevronUp } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import TopNavBar from '@/components/TopNavBar';
 import BottomNavBar from '@/components/BottomNavBar';
 import { useToast } from '@/hooks/use-toast';
@@ -354,12 +354,14 @@ const PersonAccessPanel: React.FC<{
 
 const AccessPermissions: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const { session, isDemoMode } = useSession();
 
   const [grants, setGrants] = useState<Grant[]>([]);
   const [staffList, setStaffList] = useState<StaffMember[]>([]);
   const [selectedStaff, setSelectedStaff] = useState<StaffMember | null>(null);
+  const preselectedApplied = useRef(false);
 
   const loadData = useCallback(async () => {
     if (isDemoMode) {
@@ -396,6 +398,19 @@ const AccessPermissions: React.FC = () => {
   }, [isDemoMode, session?.user_id]);
 
   useEffect(() => { loadData(); }, [loadData]);
+
+  // Auto-select staff member from route state
+  useEffect(() => {
+    if (preselectedApplied.current || staffList.length === 0) return;
+    const state = location.state as { preselectedUserId?: string } | null;
+    if (state?.preselectedUserId) {
+      const match = staffList.find(s => s.id === state.preselectedUserId);
+      if (match) {
+        setSelectedStaff(match);
+        preselectedApplied.current = true;
+      }
+    }
+  }, [staffList, location.state]);
 
   const handleGrant = async (modules: string[], accessType: 'view' | 'full') => {
     if (!selectedStaff || !session) return;

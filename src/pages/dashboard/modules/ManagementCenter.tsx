@@ -88,9 +88,17 @@ const ManagementCenter: React.FC = () => {
   const [staffList, setStaffList] = useState<StaffEntry[]>(INITIAL_STAFF);
   const [showFormerStaff, setShowFormerStaff] = useState(false);
   const [viewingStaff, setViewingStaff] = useState<StaffEntry | null>(null);
+  const [removeTarget, setRemoveTarget] = useState<StaffEntry | null>(null);
 
   const currentRole = sessionData.role;
   const currentId = sessionData.user_id;
+
+  const canRemoveStaff = (target: StaffEntry): boolean => {
+    if (target.id === currentId) return false;
+    if (currentRole === 'OWNER') return target.role !== 'OWNER';
+    if (currentRole === 'ADMIN') return ['CLINICIAN', 'INTERN CLINICAL', 'INTERN BUSINESS', 'STAFF'].includes(target.role);
+    return false;
+  };
 
   const activeStaff = useMemo(() => staffList.filter(s => s.status === 'active'), [staffList]);
   const inactiveStaff = useMemo(() => staffList.filter(s => s.status === 'inactive'), [staffList]);
@@ -230,6 +238,8 @@ const ManagementCenter: React.FC = () => {
                 staff={s}
                 contextInfo={getStaffContextInfo(s)}
                 onViewProfile={setViewingStaff}
+                onRemove={setRemoveTarget}
+                showRemove={canRemoveStaff(s)}
               />
             ))}
           </div>
@@ -276,6 +286,21 @@ const ManagementCenter: React.FC = () => {
       </div>
       <BottomNavBar />
       <InviteTeamMemberModal open={inviteOpen} onOpenChange={setInviteOpen} onInviteSent={fetchInvitations} />
+      {removeTarget && (
+        <RemoveStaffModal
+          open={!!removeTarget}
+          onOpenChange={(open) => { if (!open) setRemoveTarget(null); }}
+          staff={{ name: removeTarget.name, firstName: removeTarget.firstName, role: removeTarget.role, id: removeTarget.id }}
+          checkBlocks={(staff) => {
+            const blocks: { label: string; detail: string }[] = [];
+            const entry = staffList.find(s => s.name === staff.name);
+            if (entry?.activeClients && entry.activeClients > 0) blocks.push({ label: 'Active client assignments', detail: `${entry.activeClients} active client(s)` });
+            if (entry?.superviseeCount && entry.superviseeCount > 0) blocks.push({ label: 'Open supervision assignments', detail: `${entry.superviseeCount} supervisee(s)` });
+            return blocks;
+          }}
+          onConfirmRemoval={(staff, endDate) => handleConfirmRemoval(staff, endDate)}
+        />
+      )}
     </div>
   );
 };
