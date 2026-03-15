@@ -19,6 +19,14 @@ const Login: React.FC = () => {
   const { login, loginDemo } = useSession();
   const navigate = useNavigate();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+  const showDevMode = searchParams.get('devmode') === 'true';
+
+  // --- DEV TEST MODE state (separate from main login form) ---
+  const [devEmail, setDevEmail] = useState('');
+  const [devPassword, setDevPassword] = useState('');
+  const [devError, setDevError] = useState('');
+  const [devLoading, setDevLoading] = useState(false);
 
   const handleDemoLogin = (userId: string) => {
     const demo = DEMO_USERS.find(u => u.id === userId);
