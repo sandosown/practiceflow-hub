@@ -66,6 +66,23 @@ function filterSummary(f: CalendarFilterState): string {
   return parts.join(' · ');
 }
 
+/** Summary excluding keyword (shown as badge next to the live input) */
+function filterSummaryNoKeyword(f: CalendarFilterState): string {
+  const parts: string[] = [];
+  if (f.dateFrom && f.dateTo) parts.push(`${f.dateFrom} – ${f.dateTo}`);
+  else if (f.dateFrom) parts.push(`From ${f.dateFrom}`);
+  else if (f.dateTo) parts.push(`To ${f.dateTo}`);
+  if (f.selectedTypes.length === 1) parts.push(f.selectedTypes[0]);
+  else if (f.selectedTypes.length > 1) parts.push(`${f.selectedTypes.length} types`);
+  if (f.selectedStatuses.length === 1) parts.push(f.selectedStatuses[0]);
+  else if (f.selectedStatuses.length > 1) parts.push(`${f.selectedStatuses.length} statuses`);
+  if (f.assignedTo !== 'all') {
+    const name = DEMO_USERS.find(u => u.id === f.assignedTo)?.full_name;
+    if (name) parts.push(name);
+  }
+  return parts.join(' · ');
+}
+
 interface Props {
   filters: CalendarFilterState;
   onChange: (f: CalendarFilterState) => void;
