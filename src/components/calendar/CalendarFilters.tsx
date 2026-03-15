@@ -513,7 +513,7 @@ const CalendarFilters: React.FC<Props> = ({
       </div>
 
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="bottom" className="h-auto max-h-[85vh] rounded-t-xl p-4 overflow-y-auto">
+        <SheetContent side="bottom" className="h-auto max-h-[85vh] rounded-t-xl p-0 overflow-y-auto">
           <SheetHeader className="mb-3">
             <SheetTitle className="text-sm font-semibold text-foreground">Filters</SheetTitle>
           </SheetHeader>
