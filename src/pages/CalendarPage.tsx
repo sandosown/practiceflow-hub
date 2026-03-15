@@ -1343,50 +1343,87 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
     });
   };
 
+  const glassCard: React.CSSProperties = {
+    background: 'rgba(255,255,255,0.03)',
+    border: '1px solid rgba(255,255,255,0.07)',
+    borderRadius: 10,
+    padding: 16,
+  };
+
+  const glassInput: React.CSSProperties = {
+    background: 'rgba(255,255,255,0.05)',
+    border: '1px solid rgba(255,255,255,0.1)',
+    borderRadius: 8,
+    padding: '10px 14px',
+    color: 'white',
+    fontSize: 14,
+  };
+
+  const glassInputFocusClass = 'focus:!border-[rgba(45,212,191,0.6)] focus-visible:ring-0 focus-visible:ring-offset-0';
+
+  const sectionLabel: React.CSSProperties = {
+    textTransform: 'uppercase' as const,
+    fontSize: 10,
+    letterSpacing: '0.08em',
+    color: 'rgba(255,255,255,0.4)',
+    fontWeight: 600,
+    marginBottom: 6,
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {/* 1. Title */}
-      <div className="space-y-1.5">
-        <Label>Title *</Label>
-        <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Appointment title" />
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      {/* Group 1: Title + Type */}
+      <div style={glassCard} className="flex flex-col gap-2">
+        <div>
+          <p style={sectionLabel}>Title *</p>
+          <Input
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+            placeholder="Appointment title"
+            className={glassInputFocusClass}
+            style={{ ...glassInput, width: '100%', height: 'auto' }}
+          />
+        </div>
+        <div>
+          <p style={sectionLabel}>Type *</p>
+          <Select value={type} onValueChange={setType}>
+            <SelectTrigger
+              className={`${glassInputFocusClass} text-white`}
+              style={{ ...glassInput, height: 40 }}
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {types.map(t => (
+                <SelectItem key={t} value={t}>
+                  <span className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full" style={{ background: TYPE_COLORS[t] ?? '#64748b' }} />
+                    {t}
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      {/* 2. Type */}
-      <div className="space-y-1.5">
-        <Label>Type *</Label>
-        <Select value={type} onValueChange={setType}>
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {types.map(t => (
-              <SelectItem key={t} value={t}>
-                <span className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full" style={{ background: TYPE_COLORS[t] ?? '#64748b' }} />
-                  {t}
-                </span>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* 3. With (Participants) */}
-      <div className="space-y-1.5" ref={participantRef}>
-        <Label>With</Label>
+      {/* Group 2: With (Participants) */}
+      <div style={glassCard} ref={participantRef}>
+        <p style={sectionLabel}>With</p>
         {/* Selected participant chips */}
         {participants.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mb-1.5">
+          <div className="flex flex-wrap gap-1.5 mb-2">
             {participants.map((p, i) => (
               <span
                 key={i}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-accent/10 text-foreground"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium"
+                style={{ background: 'rgba(45,212,191,0.12)', color: '#2dd4bf' }}
               >
                 <span>{p.name}</span>
-                <span className="text-[10px] text-muted-foreground font-normal">
+                <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>
                   {p.external ? 'External' : (p.role ?? '')}
                 </span>
-                <button type="button" onClick={() => removeParticipant(i)} className="text-muted-foreground hover:text-foreground ml-0.5">
+                <button type="button" onClick={() => removeParticipant(i)} style={{ color: 'rgba(255,255,255,0.35)' }} className="hover:opacity-80 ml-0.5">
                   <X size={12} />
                 </button>
               </span>
@@ -1400,28 +1437,30 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
             onChange={e => { setParticipantSearch(e.target.value); setParticipantDropdownOpen(true); setAddingExternalPerson(false); }}
             onFocus={() => { setParticipantDropdownOpen(true); setAddingExternalPerson(false); }}
             placeholder="Search staff or add someone..."
-            className="text-sm"
+            className={`text-sm ${glassInputFocusClass}`}
+            style={{ ...glassInput, width: '100%', height: 'auto', placeholder: 'rgba(255,255,255,0.35)' } as React.CSSProperties}
           />
           {participantDropdownOpen && (
-            <div className="absolute z-50 mt-1 left-0 right-0 bg-card border border-border rounded-lg shadow-lg max-h-52 overflow-y-auto">
+            <div className="absolute z-50 mt-1 left-0 right-0 rounded-lg shadow-lg max-h-52 overflow-y-auto" style={{ background: 'rgba(6,14,30,0.98)', border: '1px solid rgba(255,255,255,0.1)' }}>
               {/* Add someone new — at top */}
               {!addingExternalPerson ? (
                 <button
                   type="button"
                   onClick={() => setAddingExternalPerson(true)}
-                  className="w-full text-left px-3 py-2 text-sm hover:bg-accent/10 transition-colors flex items-center gap-1.5"
+                  className="w-full text-left px-3 py-2 text-sm transition-colors flex items-center gap-1.5 hover:bg-white/5"
                   style={{ color: TEAL }}
                 >
                   <Plus size={13} /> Add someone new
                 </button>
               ) : (
                 <div className="px-3 py-2.5 space-y-2">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Add External Contact</p>
+                  <p style={{ ...sectionLabel, marginBottom: 4 }}>Add External Contact</p>
                   <Input
                     value={externalName}
                     onChange={e => setExternalName(e.target.value)}
                     placeholder="Name *"
-                    className="text-sm h-8"
+                    className={`text-sm ${glassInputFocusClass}`}
+                    style={{ ...glassInput, height: 32, width: '100%' }}
                     autoFocus
                   />
                   <Input
@@ -1429,14 +1468,15 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
                     onChange={e => setExternalEmail(e.target.value)}
                     placeholder="Email (optional)"
                     type="email"
-                    className="text-sm h-8"
+                    className={`text-sm ${glassInputFocusClass}`}
+                    style={{ ...glassInput, height: 32, width: '100%' }}
                   />
                   <div className="flex gap-2">
                     <button
                       type="button"
                       onClick={handleAddExternalPerson}
                       disabled={!externalName.trim()}
-                      className="flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors disabled:opacity-40"
+                      className="flex-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors disabled:opacity-40"
                       style={{ border: `1px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
                     >
                       Add
@@ -1444,7 +1484,8 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
                     <button
                       type="button"
                       onClick={() => { setAddingExternalPerson(false); setExternalName(''); setExternalEmail(''); }}
-                      className="px-3 py-1.5 rounded-md text-xs text-muted-foreground border border-border"
+                      className="px-3 py-1.5 rounded-lg text-xs"
+                      style={{ color: 'rgba(255,255,255,0.4)' }}
                     >
                       Cancel
                     </button>
@@ -1453,7 +1494,7 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
               )}
 
               {/* Divider */}
-              <div className="border-t border-border my-1" />
+              <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', margin: '4px 0' }} />
 
               {/* Internal staff options */}
               {filteredParticipantOptions.map((o) => (
@@ -1461,32 +1502,33 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
                   key={o.id}
                   type="button"
                   onClick={() => { addParticipant({ id: o.id, name: o.name, role: o.role }); setParticipantDropdownOpen(false); }}
-                  className="w-full text-left px-3 py-2 text-sm hover:bg-accent/10 transition-colors flex items-center justify-between"
+                  className="w-full text-left px-3 py-2 text-sm transition-colors flex items-center justify-between hover:bg-white/5"
+                  style={{ color: 'white' }}
                 >
-                  <span className="text-foreground font-medium">{o.name}</span>
-                  <span className="text-[11px] text-muted-foreground">{o.role}</span>
+                  <span className="font-medium">{o.name}</span>
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{o.role}</span>
                 </button>
               ))}
               {filteredParticipantOptions.length === 0 && !addingExternalPerson && (
-                <p className="text-xs text-muted-foreground px-3 py-2">No matching staff found</p>
+                <p className="text-xs px-3 py-2" style={{ color: 'rgba(255,255,255,0.35)' }}>No matching staff found</p>
               )}
             </div>
           )}
         </div>
       </div>
 
-      {/* 4. Meeting Format */}
-      <div className="space-y-1.5">
-        <Label>How are you meeting? *</Label>
+      {/* Group 3: How are you meeting? */}
+      <div style={glassCard}>
+        <p style={sectionLabel}>How are you meeting? *</p>
         <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
             onClick={() => setMeetingFormat('in_person')}
-            className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-all"
+            className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-all"
             style={meetingFormat === 'in_person' ? {
-              border: `2px solid ${TEAL}`, color: TEAL, background: `${TEAL}11`,
+              border: `1px solid ${TEAL}`, color: TEAL, background: 'rgba(45,212,191,0.15)', borderRadius: 8,
             } : {
-              border: '1.5px solid hsl(var(--border))', color: 'hsl(var(--muted-foreground))', background: 'transparent',
+              border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.05)', borderRadius: 8,
             }}
           >
             <MapPin size={16} /> In-Person
@@ -1494,11 +1536,11 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
           <button
             type="button"
             onClick={() => setMeetingFormat('virtual')}
-            className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-all"
+            className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-all"
             style={meetingFormat === 'virtual' ? {
-              border: `2px solid ${TEAL}`, color: TEAL, background: `${TEAL}11`,
+              border: `1px solid ${TEAL}`, color: TEAL, background: 'rgba(45,212,191,0.15)', borderRadius: 8,
             } : {
-              border: '1.5px solid hsl(var(--border))', color: 'hsl(var(--muted-foreground))', background: 'transparent',
+              border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.05)', borderRadius: 8,
             }}
           >
             <Video size={16} /> Virtual
