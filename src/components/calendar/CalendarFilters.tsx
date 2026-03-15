@@ -367,22 +367,31 @@ const CalendarFilters: React.FC<Props> = ({
   // Mobile: search bar → bottom sheet
   return (
     <div className={compact ? '' : 'mb-4'}>
-      <div
-        className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card cursor-text"
-        onClick={() => setOpen(true)}
-      >
+      <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card">
         <Search size={16} className="text-muted-foreground flex-shrink-0" />
-        {active ? (
-          <span className="text-xs text-foreground truncate flex-1">{summary}</span>
-        ) : (
-          <span className="text-xs text-muted-foreground flex-1">{placeholder}</span>
-        )}
+        <input
+          type="text"
+          value={filters.keyword}
+          onChange={e => {
+            onChange({ ...filters, keyword: e.target.value });
+            setDraft(prev => ({ ...prev, keyword: e.target.value }));
+          }}
+          placeholder={active && !filters.keyword ? summary : placeholder}
+          className="flex-1 bg-transparent text-xs text-foreground placeholder:text-muted-foreground focus:outline-none min-w-0"
+        />
         {active && (
           <button onClick={handleBarClear} className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground flex-shrink-0">
             <X size={12} />
             Clear
           </button>
         )}
+        <button
+          onClick={(e) => { e.stopPropagation(); setOpen(o => !o); }}
+          className="p-1 rounded hover:bg-accent/10 transition-colors flex-shrink-0"
+          title="Filters"
+        >
+          <ChevronDown size={14} className="text-muted-foreground" />
+        </button>
       </div>
 
       <Sheet open={open} onOpenChange={setOpen}>
