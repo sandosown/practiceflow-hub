@@ -43,6 +43,7 @@ const OwnerDashboard: React.FC = () => {
   const firstName = rawFirst.endsWith('.') ? rawFirst.slice(0, -1) : rawFirst;
   const displayName = session.full_name?.startsWith('Dr.') ? `Dr. ${session.full_name.split(' ').slice(1).join(' ').split(' ')[0]}` : firstName;
 
+  const WORKSPACES = useMemo(() => getWorkspaces(session.workspace_name), [session.workspace_name]);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
