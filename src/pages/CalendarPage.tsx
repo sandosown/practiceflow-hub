@@ -513,7 +513,7 @@ const CalendarPage: React.FC = () => {
             type="text"
             value={calendarSearch}
             onChange={e => setCalendarSearch(e.target.value)}
-            placeholder="Search appointments..."
+            placeholder="Search calendar..."
             className="w-full pl-9 pr-3 py-2 rounded-lg border border-border bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
           />
         </div>
