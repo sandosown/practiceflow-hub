@@ -354,12 +354,14 @@ const PersonAccessPanel: React.FC<{
 
 const AccessPermissions: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const { session, isDemoMode } = useSession();
 
   const [grants, setGrants] = useState<Grant[]>([]);
   const [staffList, setStaffList] = useState<StaffMember[]>([]);
   const [selectedStaff, setSelectedStaff] = useState<StaffMember | null>(null);
+  const preselectedApplied = useRef(false);
 
   const loadData = useCallback(async () => {
     if (isDemoMode) {
