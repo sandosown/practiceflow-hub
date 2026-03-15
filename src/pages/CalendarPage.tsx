@@ -728,7 +728,7 @@ interface PanelProps {
   userId: string;
 }
 
-const AppointmentsPanel: React.FC<PanelProps> = ({ grouped, dateContext, onSelect, filters, onFiltersChange, onFiltersClear, currentDate, onMonthYearChange, role }) => {
+const AppointmentsPanel: React.FC<PanelProps> = ({ grouped, dateContext, onSelect, filters, onFiltersChange, onFiltersClear, currentDate, onMonthYearChange, role, userId }) => {
   const dateKeys = Object.keys(grouped).sort();
 
   return (
