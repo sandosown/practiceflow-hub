@@ -242,13 +242,14 @@ const FilterDropdownContent: React.FC<{
 
       {/* Date Range */}
       <div>
-        <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">Date Range</label>
+        <label className={sectionLabel} style={sectionLabelStyle}>Date Range</label>
         <div className="flex items-center gap-1.5">
           <input
             type="date"
             value={draft.dateFrom}
             onChange={e => setDraft(prev => ({ ...prev, dateFrom: e.target.value }))}
-            className="flex-1 px-2 py-1.5 rounded-md border border-border bg-background text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+            className="flex-1 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+            style={fieldStyle}
             title="From"
           />
           <span className="text-xs text-muted-foreground">–</span>
@@ -256,7 +257,8 @@ const FilterDropdownContent: React.FC<{
             type="date"
             value={draft.dateTo}
             onChange={e => setDraft(prev => ({ ...prev, dateTo: e.target.value }))}
-            className="flex-1 px-2 py-1.5 rounded-md border border-border bg-background text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+            className="flex-1 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+            style={fieldStyle}
             title="To"
           />
         </div>
