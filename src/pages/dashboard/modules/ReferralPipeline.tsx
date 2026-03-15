@@ -668,9 +668,12 @@ const ReferralPipeline: React.FC = () => {
 
           {/* Outcome Buckets — now droppable */}
           <section className="mt-8">
-            <h2 className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3 text-muted-foreground" style={{ borderLeft: `4px solid ${ACCENT}` }}>
+            <h2 className="text-xs font-semibold uppercase tracking-widest mb-1 pl-3 text-muted-foreground" style={{ borderLeft: `4px solid ${ACCENT}` }}>
               OUTCOMES
             </h2>
+            <p className="text-[11px] pl-3 mb-4" style={{ color: 'hsl(var(--muted-foreground))' }}>
+              Drag and drop a card here, or click Outcome on any card to choose.
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {(['Declined', 'No Response', 'Intake Complete'] as Outcome[]).map(outcome => (
                 <DroppableOutcomeBucket
