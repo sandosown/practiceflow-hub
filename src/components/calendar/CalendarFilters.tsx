@@ -306,8 +306,8 @@ const FilterDropdownContent: React.FC<{
 
       {/* Appointment Type */}
       <div>
-        <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">Appointment Type</label>
-        <div className="flex flex-wrap gap-1.5">
+        <label className={sectionLabel} style={sectionLabelStyle}>Appointment Type</label>
+        <div className="flex flex-wrap gap-2">
           {ALL_TYPES.map(t => {
             const checked = draft.selectedTypes.includes(t);
             return (
