@@ -2,7 +2,7 @@
 
 **App:** SympoFlo / PracticeFlow
 
-**Last Updated:** 03/14/2026
+**Last Updated:** 03/15/2026
 
 **Repo:** github.com/sandosount/practiceflow-hub
 
@@ -14,11 +14,37 @@
 
 ## HOW TO USE THIS FILE
 
-Copy the full contents of this file and paste into a new Claude chat with:
+This is a handoff document. A new Claude chat should:
 
-> "Read this and orient yourself before we continue."
+1. Read this file fully
 
-Claude will confirm it has read the file and is ready to continue.
+2. Request all canon files from /docs before doing anything else:
+
+   - 00_APP_IDENTITY.md
+
+   - 01_CORE_SYSTEM_PHILOSOPHY.md
+
+   - 02_GLOBAL_ARCHITECTURE.md
+
+   - 03_OPERATING_PROFILE_ENGINE.md
+
+   - 04_GROUP_PRACTICE_DOMAIN.md
+
+   - 05_DEVELOPMENT_GOVERNANCE.md
+
+   - 06_CURRENT_DEVELOPMENT_STATE.md
+
+   - SF-BRAND.md
+
+   - CHANGELOG.md
+
+3. Confirm full alignment before any build prompts are written
+
+4. This is a continuation session — do not restart, do not reintroduce, do not re-ask decisions already made
+
+Say: "I have read SESSION_CONTEXT.md. Please share the canon files so I can get fully aligned before we continue."
+
+Canon > Chat. Always.
 
 ---
 
@@ -36,299 +62,57 @@ It is not a productivity app. It is not a project manager. It is a calm command 
 
 The user should feel: "I'm stepping into command." — not "I'm checking another productivity app."
 
-SympoFlo should feel like walking into a command center that's ON — not one that's powered down.
-
 **Capitalization rule:**
 
 SympoFlo — S and F capitalized only. Always. No exceptions.
 
-**The 10-Second Trust Moment:**
+---
 
-Within the first seconds, the user asks:
+## WHAT WE ARE BUILDING
 
-1. "Does this system understand what I actually do?"
+SympoFlo is being built in Lovable (lovable.dev) connected to a GitHub repo and Supabase backend. The build workflow is:
 
-2. "Do I know where to start?"
+1. Claude generates a Lovable prompt in a code block
 
-3. "Is this calm or chaotic?"
+2. User pastes prompt into Lovable
 
-If answered correctly: "This system understands my work. I can rely on this."
+3. Lovable renders the result
+
+4. User takes a screenshot and shares with Claude
+
+5. Claude reviews and approves or flags issues
+
+6. If approved → push to GitHub
+
+7. If issues → Claude generates fix prompt → repeat
+
+**Build rules:**
+
+- Surgical patches only — never broad rewrites
+
+- One fix at a time — complete and verify before moving to next
+
+- Always pull before pushing: git pull --no-rebase origin main
+
+- Canon > Chat. Always.
+
+- Back buttons: arrow only — no "Back" text — apply to every page touched
+
+- No red, rose, or pink anywhere — ever
+
+- Resolve/action buttons: border-only in accent color — no solid fill
+
+- Proactive canon flagging: Claude must flag all canon-worthy decisions immediately (LOG-099)
 
 ---
 
 ## ENGINE PHILOSOPHY
 
-**Foundational doctrine:**
-
 Hats are contextual lenses. Engines are structural systems.
 
 Hats never generate engines. Engines power hats.
 
-**Full hierarchy:** User → Hats (context lenses — named by the user) → Engines (fixed, predefined universal infrastructure) → Radars (awareness panels) → Actions (execution flows) ### 6 Universal Engines (user-selectable per hat)
-
-| # | Engine | Core Purpose |
-
-|---|---|---|
-
-| 1 | People Engine | Worker profiles, roles, status, responsibilities |
-
-| 2 | Operations Engine | Tasks, workflows, events, asset tracker, Calendar & Appointments |
-
-| 3 | Revenue Engine | Income, lightweight expenses, simple profit snapshot |
-
-| 4 | Growth Engine | Goals, KPIs, pipeline awareness, marketing visibility |
-
-| 5 | Compliance Engine | Contracts, licenses, expiration tracking, renewal reminders |
-
-| 6 | Personal/Life Engine | Household tasks, family events, personal goals, lightweight health |
-
-### 2 Specialized Engines (not user-selectable)
-
-| # | Engine | Scope |
-
-|---|---|---|
-
-| 7 | Document Control System | Cross-hat infrastructure, always active, hat-isolated UX |
-
-| 8 | Training Engine | Group Practice only — clinical intern lifecycle |
-
-### Context Isolation Principle (Non-Negotiable)
-
-Everything in SympoFlo is hat-scoped at the UI layer.
-
-No cross-hat bleed in the user experience.
-
-Rule: Hat → Radar → Engine → Objects. Only.
-
-Every object must store: hat_id + engine_source. No floating objects.
-
----
-
-## WORKSPACES
-
-| Workspace | Status | Accent |
-
-|---|---|---|
-
-| Group Practice | ✅ Active — first-class workspace | #2dd4bf |
-
-| Coaching | 🔜 Coming Soon | #f59e0b |
-
-| Home | 🔜 Coming Soon | #4ade80 |
-
-| Custom 1 | 🔜 Coming Soon (non-routable) | — |
-
-| Custom 2 | 🔜 Coming Soon (non-routable) | — |
-
-### Workspace Naming Rules
-
-- Owner names each workspace to reflect actual company/life context
-
-- Default labels (e.g. "Group Practice") are fallbacks only
-
-- Employees see the actual company name — not the default category label
-
-- Name is editable anytime in Settings — no locks
-
-- Owner may upload a logo per workspace — appears on workspace card alongside company name
-
-- If no logo uploaded: "S" placeholder renders as fallback
-
----
-
-## ROLE SYSTEM
-
-| System Role | Description |
-
-|---|---|
-
-| OWNER | CEO / Owner — full system visibility |
-
-| ADMIN | Admin / Management — operational oversight |
-
-| SUPERVISOR | Clinical supervision authority |
-
-| CLINICIAN | Licensed therapist — has caseload |
-
-| INTERN | Clinical or Business subtype |
-
-| STAFF | Non-clinical operational staff |
-
-### Clinician Subtypes
-
-- LICENSED — full licensure, standard clinical routing
-
-- LP (Limited Permit) — state-regulated compliance, routes to Compliance Engine
-
-### Intern Subtypes
-
-- CLINICAL — has caseload, routes to Training Engine, clinical supervision required
-
-- BUSINESS — no caseload, operational staff only, routes to People Engine
-
----
-
-## DEMO USERS
-
-| Name | Role | Subtype |
-
-|---|---|---|
-
-| Dr. Sarah Mitchell | OWNER | — |
-
-| Marcus Chen | ADMIN | — |
-
-| Dr. Angela Torres | SUPERVISOR | — |
-
-| James Rivera LCSW | CLINICIAN | LICENSED |
-
-| Priya Patel | INTERN | CLINICAL |
-
-| Alex Nguyen | INTERN | BUSINESS |
-
-| Taylor Brooks | STAFF | — |
-
----
-
-## VISUAL DOCTRINE
-
-### Light Mode Token System (Default — LOG-070)
-
-| Token | Value | Usage |
-
-|---|---|---|
-
-| Page background | #f1f4f8 | All screen backgrounds |
-
-| Surface (cards) | #ffffff | All card interiors |
-
-| Header / Nav bar | #1a2a5e | Top bar, bottom nav bar |
-
-| Text Primary | #1a2a5e | Headings, card labels |
-
-| Text Secondary | #94a3b8 | Subtitles, metadata |
-
-| Section labels | #94a3b8 | UPPERCASE section headers |
-
-| Accent / Primary | #2dd4bf | Active states, CTAs, highlights |
-
-### Dark Mode Token System (User-selectable via Settings — LOG-070)
-
-| Token | Value | Usage |
-
-|---|---|---|
-
-| Page background | #1e3a5f | All screen backgrounds |
-
-| Surface (cards) | #1a3254 | All card interiors |
-
-| Header / Nav bar | #152d4e | Top bar, bottom nav bar |
-
-| Top bar | #243f6a | Secondary header surfaces |
-
-| Text Primary | #f1f5f9 | Headings, card labels |
-
-| Text Secondary | #7ea8c9 | Subtitles, metadata |
-
-| Section labels | #5a8ab0 | UPPERCASE section headers |
-
-| Accent / Primary | #2dd4bf | Active states, CTAs, highlights |
-
-### Legacy Dark Mode (current build — preserved until fully replaced)
-
-| Token | Value |
-
-|---|---|
-
-| Background (opening screen) | #060e1e |
-
-| Background (app) | #0a1628 |
-
-| Surface | #1a2a4a |
-
-| Accent/Primary | #2dd4bf |
-
-| Text Primary | #f1f5f9 |
-
-| Text Secondary | #94a3b8 |
-
-| Text Muted | #64748b |
-
-| Major Moments accent | #a78bfa |
-
-### Card Border System — Asymmetric Accent Border (LOG-071)
-
-border-left:   4px solid [domain accent] — full opacity
-
-border-top:    1px solid [domain accent at 25%] — subtle
-
-border-bottom: 1px solid [domain accent at 25%] — subtle
-
-border-right:  1px solid [domain accent at 15%] — whisper
-
-Interior stays clean — color lives in border only. No colored card fills. Ever.
-
-### Non-Negotiable Visual Rules
-
-- No red, rose, or pink — anywhere — ever
-
-- Section labels: UPPERCASE, muted color
-
-- Resolve buttons: border-only in accent color — no solid fill
-
-- Radar section label: "Radar" with 4px teal left border — never "Attention"
-
-- Glow states: resting / hover / active
-
-- No decorative glow with no function
-
-- Back buttons: arrow only — no "Back" text label anywhere in the app
-
-### Domain Accent Map — GP Modules
-
-| Module | Accent |
-
-|---|---|
-
-| Charts Requiring Action | #d97706 |
-
-| Message Board | #0ea5e9 |
-
-| Management Center | #7c3aed |
-
-| Client Database | #0d9488 |
-
-| Referral Pipeline | #0ea5e9 |
-
-| Treatment Plan Tracker | #059669 |
-
-| Supervision Structure | #4f46e5 |
-
-| Insurance Database | #78716c |
-
-| Vendor Database | #92764a |
-
-| Major Moments | #a78bfa |
-
-| Finance | #059669 |
-
-### Radar Signal Accents
-
-| Signal | Accent |
-
-|---|---|
-
-| License/Credential | #d97706 |
-
-| Verification overdue | #ea580c |
-
-| Unassigned referral | #0ea5e9 |
-
-| Discharge deadline | #7c3aed |
-
-| Onboarding stuck | #3b82f6 |
-
-| Missing credentials | #78716c |
+Full hierarchy: User → Hats → Engines → Radars → Actions
 
 ---
 
@@ -350,349 +134,193 @@ Interior stays clean — color lives in border only. No colored card fills. Ever
 
 | Phase 6 | Role-Specific Dashboard Content | ✅ COMPLETE |
 
-| Phase 7 | Module Pages — Real Content | ✅ COMPLETE |
+| Phase 7 | Module Pages — Real Content | 🔜 PENDING |
 
-| Phase 8 | Action Mode | ✅ COMPLETE |
+| Phase 8 | Action Mode | 🔜 PENDING |
 
 | Phase 9 | Navigation System + Light/Dark Mode | ✅ COMPLETE |
 
-| Phase 10 | Calendar & Appointments | 🔄 IN PROGRESS |
+| Phase 10 | Calendar & Appointments | ✅ COMPLETE |
+
+| Phase 11 | People Engine + Worker Profiles | 🔜 NEXT |
 
 ---
 
-## NEXT BUILD
+## NEXT BUILD — Phase 11
 
-**Currently building:** Phase 10 — Calendar & Appointments
+**Resume at:** Phase 11 — People Engine + Worker Profiles
 
-Base calendar shell in progress.
+**Pending items to complete before Phase 11:**
 
----
+1. Verify duplicate appointment detection in live environment (was in build mode during session — save button inactive)
 
-## MAJOR MOMENTS SPEC
+2. Verify Supervisor auto-assign rule in live environment — Supervision Session created by Supervisor appears on supervisee calendar
 
-### Locked Copy
+3. Verify Manage Access pre-selection routing from Management Center — person should be pre-loaded when clicking Manage Access from staff row
 
-| Element | Copy |
+**Phase 11 build order:**
 
-|---|---|
+1. Worker Profile pages — full 7-section wizard with real data
 
-| Feature name | Major Moments |
+2. Client Database — real client records, search, status lifecycle
 
-| Subtitle | Your milestones and achievements. |
+3. Treatment Plan Tracker — real data, approve/review flow
 
-| Core prompt | What happened on this day? |
+4. Charts Requiring Action — real data
 
-| Supporting prompt | Take a moment to reflect and record it. You'll be glad you did. |
+5. Insurance Database — real data
 
-| Primary CTA | Let's Capture This Moment |
+6. Vendor Database — real data
 
-### Capture Form Fields (in order)
-
-| Field | Required |
-
-|---|---|
-
-| Name Your Moment | Yes |
-
-| Date It Happened | Yes |
-
-| Time It Happened | Yes — not optional |
-
-| Why Was This Moment Important? | Yes |
-
-| Did You Receive an Award or Recognition? | Yes — Yes/No; if Yes → "What award or recognition?" |
-
-| Anything Else You'd Like to Remember? | No — optional |
-
-### Engine-Specific Reflection Messaging
-
-**Business engines:**
-
-> "You've come a long way. Take a moment to appreciate what you've built and achieved."
-
-**Life/Personal engine:**
-
-> "These are the moments that made you who you are. Take a moment and reflect."
-
-### Behavioral Rules
-
-- Automatic capture is silent background only — no prompts, no chips, no interruption
-
-- Reflection Banner visible to workspace owner only
-
-- Reflection Banner is session-dismissible — never persistent across sessions
-
-- No tagging required — engine context defines category automatically
-
-- Visual treatment: scrapbook aesthetic within dark navy doctrine — no light backgrounds ever
-
-- Accent: #a78bfa throughout
-
-- Lives in More drawer under PERSONAL section — not on main module grid
+7. Management Center — complete staff profile pages with credentials
 
 ---
 
-## AUTOMATION MODEL
+## DEMO USERS
 
-### Suggestion Chip Rules
-
-- Maximum 2–3 chips displayed contextually at bottom of screen
-
-- Disappear on navigation — no guilt, no stacking
-
-- Template-based — not a rule-builder
-
-- User always remains in control
-
-- Never interrupt active workflow
-
-### Recurring Logic
-
-Supported in V1 via suggestive prompts only.
-
-When a user creates something that could recur, a suggestion chip appears: "Make this recurring?"
-
-If ignored, disappears on next navigation.
-
----
-
-## BUILD WORKFLOW
-
-1. Claude generates the prompt
-
-2. Paste prompt into Lovable
-
-3. Lovable renders the result
-
-4. Take a screenshot
-
-5. Paste screenshot back to Claude for review
-
-6. Claude approves or flags issues
-
-7. If approved → push to GitHub
-
-8. If issues → Claude generates fix → repeat from step 2
-
-### Important Protection Rules
-
-- Never paste a broad rewrite prompt into Lovable — surgical patches only
-
-- One fix at a time — complete and verify before moving to the next
-
-- Always pull before pushing: git pull --no-rebase origin main
-
-- Canon > Chat. Always. If something in chat contradicts a canon file, the canon file wins.
-
-- No architectural decisions live only in conversation — everything goes into /docs
-
-- Back buttons: arrow only — no "Back" text — apply to every page touched in every prompt
-
----
-
-## GIT WORKFLOW
-
-### Standard Push ---
-
-## KEY FILES IN CODEBASE
-
-| File | Purpose | Status |
+| Name | Role | Subtype |
 
 |---|---|---|
 
-| src/pages/Index.tsx | Opening dashboard — Owner hat selector | ✅ Built |
+| Dr. Sarah Mitchell | OWNER | — |
 
-| src/pages/GroupPractice.tsx | GP workspace surface | ✅ Built |
+| Jordan Mitchell | PARTNER | — |
 
-| src/pages/Login.tsx | Login page — all 7 demo users — Light Mode | ✅ Built |
+| Marcus Chen | ADMIN | — |
 
-| src/components/SympoFloIcon.tsx | Logo SVG placeholder | ✅ Built (placeholder) |
+| Dr. Angela Torres | SUPERVISOR | — |
 
-| src/components/BottomNavBar.tsx | Persistent 5-item bottom nav | ✅ Built |
+| James Rivera LCSW | CLINICIAN | LICENSED |
 
-| src/components/MoreDrawer.tsx | More drawer — grid layout, role sections | ✅ Built |
+| Priya Patel | INTERN | CLINICAL |
 
-| src/context/SessionContext.tsx | Session + role context | ✅ Built |
+| Alex Nguyen | INTERN | BUSINESS |
 
-| src/dashboards/ClinicianDashboard.tsx | Clinician role dashboard | ✅ Approved |
-
-| src/dashboards/AdminDashboard.tsx | Admin role dashboard | ✅ Approved |
-
-| src/dashboards/SupervisorDashboard.tsx | Supervisor role dashboard | ✅ Approved |
-
-| src/dashboards/InternClinicalDashboard.tsx | Clinical Intern dashboard | ✅ Approved |
-
-| src/dashboards/InternBusinessDashboard.tsx | Business Intern dashboard | ✅ Approved |
-
-| src/dashboards/StaffDashboard.tsx | Staff dashboard | ✅ Approved |
-
-| src/pages/dashboard/modules/ChartsRequiringAction.tsx | Charts module | ✅ Built |
-
-| src/pages/dashboard/modules/ClientDatabase.tsx | Client database module | ✅ Built |
-
-| src/pages/dashboard/modules/ReferralPipeline.tsx | Referral Pipeline — kanban board | ✅ Built |
-
-| src/pages/dashboard/modules/TreatmentPlanTracker.tsx | Treatment plan module | ✅ Built |
-
-| src/pages/dashboard/modules/SupervisionStructure.tsx | Supervision module — More drawer | ✅ Built |
-
-| src/pages/dashboard/modules/ManagementCenter.tsx | Management center module | ✅ Built |
-
-| src/pages/dashboard/modules/InsuranceDatabase.tsx | Insurance module | ✅ Built |
-
-| src/pages/dashboard/modules/VendorDatabase.tsx | Vendor database module | ✅ Built |
-
-| src/pages/dashboard/modules/MajorMoments.tsx | Major Moments — More drawer | ✅ Built |
-
-| src/pages/dashboard/modules/Finance.tsx | Finance module — Owner + Admin only | ✅ Built |
-
-| src/pages/dashboard/MessageBoard.tsx | Message Board | ✅ Built |
-
-| supabase/ | Supabase RLS config | ✅ Built |
+| Taylor Brooks | STAFF | — |
 
 ---
 
-## CANON FILES
+## WORKSPACES
 
-| File | Contains | Status |
+| Workspace | Status | Accent |
 
 |---|---|---|
 
-| 00_APP_IDENTITY.md | App name, emotional target, capitalization rules | ✅ Locked |
+| Group Practice (Clarity Counseling Group) | ✅ Active | #2dd4bf |
 
-| 01_CORE_SYSTEM_PHILOSOPHY.md | Core philosophy, language doctrine | ✅ Locked |
+| Coaching | 🔜 Coming Soon | #f59e0b |
 
-| 02_GLOBAL_ARCHITECTURE.md | Engine architecture, role system, Calendar & Appointments | ✅ Updated 03/13/2026 |
+| Home | 🔜 Coming Soon | #4ade80 |
 
-| 03_OPERATING_PROFILE_ENGINE.md | Owner config layer, onboarding, Owner Active Workload Flag | ✅ Updated 03/13/2026 |
+| Custom 1 | 🔜 Coming Soon | — |
 
-| 04_GROUP_PRACTICE_DOMAIN.md | GP modules, Referral Pipeline, Finance, Calendar layer | ✅ Updated 03/14/2026 |
-
-| 05_DEVELOPMENT_GOVERNANCE.md | Canon protocol, nav governance, More drawer rules | ✅ Updated 03/14/2026 |
-
-| 06_CURRENT_DEVELOPMENT_STATE.md | Phase status, what's built, full LOG table | ✅ Updated 03/14/2026 |
-
-| CHANGELOG.md | Full version history, all LOG entries through LOG-080 | ✅ Updated 03/14/2026 |
-
-| SF-BRAND.md | Visual doctrine, Light/Dark tokens, nav visual spec | ✅ Updated 03/13/2026 |
-
-| PF-CANON.md | Master canon source | ✅ Locked |
-
-| README.md | Repo index | ✅ Locked |
-
-| SESSION_CONTEXT.md | This file — session continuity | ✅ Updated 03/14/2026 |
-
-**Canon rule:** Canon > Chat. Always. Nothing architectural lives only in conversation.
+| Custom 2 | 🔜 Coming Soon | — |
 
 ---
 
-## LOCKED COPY
+## VISUAL DOCTRINE SUMMARY
 
-| Element | Locked Copy |
+- Light Mode is default — Dark Mode user-selectable via Settings only
 
-|---|---|
+- No red, rose, pink — ever
 
-| Onboarding orientation | "Which role are you stepping into?" |
+- No "Group Practice" or "Workspaces" anywhere in UI — ever (LOG-087)
 
-| Onboarding support line | "Choose the role you want to step into." |
+- Breadcrumbs show page name only — no parent prefix
 
-| Owner onboarding tone 1 | "Where in your life do you need steady support right now?" |
+- Back buttons: arrow only — no text
 
-| Owner onboarding tone 2 | "Choose the areas you'd like help managing. We organize these as your hats." |
+- Resolve/action buttons: border-only — no solid fill
 
-| Boot loading state | "Preparing your workspace…" |
+- Asymmetric accent border system (LOG-071): 4px left full, 1px top/bottom 25%, 1px right 15%
 
-| Major Moments feature name | Major Moments |
+- UI Color Variety System (LOG-100/101): 23 approved colors, varied sets, no monotone
 
-| Major Moments subtitle | Your milestones and achievements. |
+- Section labels: UPPERCASE, muted color
 
-| Major Moments core prompt | What happened on this day? |
+- Radar section label: "Radar" with 4px teal left border — never "Attention"
 
-| Major Moments support prompt | Take a moment to reflect and record it. You'll be glad you did. |
-
-| Major Moments CTA | Let's Capture This Moment |
-
-| Business engine reflection | You've come a long way. Take a moment to appreciate what you've built and achieved. |
-
-| Life engine reflection | These are the moments that made you who you are. Take a moment and reflect. |
-
-| Owner workload flag question | Do you personally carry an active workload in this practice — such as clients, cases, or sessions? |
-
-| Radar section label | Radar |
-
-| Wordmark font | Georgia, serif — not bold, not sans-serif |
-
-| Referral Pipeline subtitle | Referral intake to assignment. |
-
-| Finance subtitle | Income, expenses & practice health. |
-
-| Greeting banner format | "Good [morning/afternoon/evening], Dr. [First Name]. — You currently have [X] signals requiring your attention." |
+- Wordmark font: Georgia, serif — not bold
 
 ---
 
-## DECISION LOG — THIS SESSION (03/14/2026)
+## DECISION LOG — THIS SESSION (03/14/2026 — 03/15/2026)
 
 | ID | Description | Status |
 
 |---|---|---|
 
-| LOG-076 | Referral Pipeline replaces Caseload Integration — kanban, 5 stages, 3 outcome buckets, manual workflow only, accent #0ea5e9 | LOCKED |
-
-| LOG-077 | Finance module — Owner + Admin only, replaces Supervision Structure on GP grid, income/expenses/profit/due, accent #059669 | LOCKED |
-
-| LOG-078 | Supervision Structure moves from GP grid to More drawer CLINICAL section | LOCKED |
-
-| LOG-079 | More drawer CLINICAL section added between PRACTICE and TEAM — V1 contents: Supervision Structure | LOCKED |
-
-| LOG-080 | Guide Center Video Tutorials tab — second tab alongside Written Guides, grid of tutorial cards | LOCKED |
-
-| LOG-081 | Greeting banner added to GP dashboard — centered, single line, dynamic time of day, live signal count in teal | LOCKED |
-
-| LOG-082 | Major Moments moved from GP module grid to More drawer PERSONAL section | LOCKED |
-
-| LOG-083 | Avatar dropdown — DS initials in teal circle, chevron indicator, Profile/Settings/Log out in correct order | LOCKED |
-
-| LOG-084 | Back buttons app-wide — arrow only, no "Back" text label, apply to every page touched | LOCKED |
-
-| LOG-085 | Referral Pipeline outcome buckets — Declined (muted), No Response (muted), Intake Complete (#059669 Active badge) | LOCKED |
-
-| LOG-086 | Add Referral modal — source field is dropdown: Web Form, Phone Call, Email, Walk-in, Referral from provider, Other | LOCKED |
-
-| LOG-087 | "Group Practice" and "Workspaces" permanently banned from all UI surfaces. Breadcrumbs show page name only. Top bar center shows owner's company name only. | LOCKED |
+| LOG-087 | "Group Practice" and "Workspaces" permanently banned from all UI surfaces | LOCKED |
 
 | LOG-088 | Finance data pipeline future-proofed — source field on all entries from V1 | LOCKED |
 
 | LOG-089 | Partner role — co-owner level, full access, self-configures visible tabs per hat | LOCKED |
 
-| LOG-090 | Permission Grant System — Owner grants View Only or Full Access per module per staff member | LOCKED |
+| LOG-090 | Permission Grant System — Owner grants View Only or Full Access per module per staff | LOCKED |
 
 | LOG-091 | Invitation System — only entry point for staff, single-use link, 72hr expiry | LOCKED |
 
 | LOG-092 | Custom Pipeline Stages — Owner adds stages anywhere, drag-reorderable, names editable | LOCKED |
 
-| LOG-093 | Referral Pipeline outcome bucket entry — drag or Outcome button, all stages, logged | LOCKED |
+| LOG-093 | Referral Pipeline outcome bucket entry — Outcome button on all cards, all stages | LOCKED |
 
 | LOG-094 | Staff Deactivation — INACTIVE status, never hard delete, immediate or date-set removal | LOCKED |
 
 | LOG-095 | Management Center Recent Activity — live feed, Owner + Admin only, 10 items max | LOCKED |
 
-| LOG-096 | Calendar is a universal component — hat-configurable appointment types, same shell across all hats and engines, no redesign needed for new hats | LOCKED |
+| LOG-096 | Calendar universal component — hat-configurable appointment types, same shell all hats | LOCKED |
 
-| LOG-097 | Appointment Status System — Confirmed, Completed, Cancelled, Rescheduled, No Show — universal across all hats, inline update, logged | LOCKED |
+| LOG-097 | Appointment Status System — Confirmed, Completed, Cancelled, Rescheduled, No Show | LOCKED |
 
-| LOG-098 | Calendar Filter System — universal smart filters across all hats and engines | LOCKED |
+| LOG-098 | Calendar Filter System — keyword, date range, month/year, type, status, assigned to | LOCKED |
 
-| LOG-099 | Proactive Canon Flagging Rule — proactive flagging of canon-worthy decisions during all sessions | LOCKED |
+| LOG-099 | Proactive Canon Flagging Rule — Claude flags all canon-worthy decisions immediately | LOCKED |
 
-| LOG-100 | Color Variety Rule — varied colors on all grouped visual elements | LOCKED |
+| LOG-100 | Color Variety Rule — varied colors required on all chip sets and grouped elements | LOCKED |
 
-| LOG-101 | UI Color Variety System — 23 UI variety colors locked, not brand palette | LOCKED |
+| LOG-101 | UI Color Variety System — 23 approved UI colors, pairing rules, not brand palette | LOCKED |
 
-| LOG-102 | Appointment Context Fields — participants, meeting format, location, virtual platform — universal | LOCKED |
+| LOG-102 | Appointment Context Fields — participants, meeting format, location, virtual platform | LOCKED |
 
-| LOG-103 | Location Management System — saved hat locations, multiple offices, Settings management | LOCKED |
+| LOG-103 | Location Management System — saved locations per hat, multiple offices, Settings management | LOCKED |
 
-| LOG-104 | Appointment Shared Ownership Rule — equal ownership for all participants, independent copies, linked | LOCKED |
+| LOG-104 | Appointment Shared Ownership Rule — equal ownership for all participants, linked via group_id | LOCKED |
+
+---
+
+## APPROVED THIS SESSION
+
+- Finance module — manual entry, Supabase persistence, custom categories ✅
+
+- Referral Pipeline — drag and drop, column collapse, arrows, Outcome button, Edit Mode, custom stages, outcome buckets, instructional text ✅
+
+- Mobile hamburger menu ✅
+
+- Settings page + Dark Mode toggle + persistence ✅
+
+- LOG-071 asymmetric border system ✅
+
+- LOG-087 applied — Group Practice and Workspaces removed from all UI ✅
+
+- More drawer role-filtered for all 8 roles ✅
+
+- Invitation System — Management Center ✅
+
+- Permission Grant System — Access & Permissions search-first redesign ✅
+
+- Partner role — dashboard, Customize My View, direct hat routing ✅
+
+- Staff Removal flow — INACTIVE status, confirmation modal, blocking check ✅
+
+- Management Center — search-first, rich staff rows, Recent Activity, Remove button ✅
+
+- Opening dashboard — workspace name only, no subtitle ✅
+
+- Calendar Phase 10 — full build: month/week/day views, appointments panel, smart filters, live search, color-coded chips, status system, shared ownership, duplicate detection, location management, participant fields, meeting format ✅
+
+- SF-BRAND.md — UI Color Variety System added ✅
+
+- Phase 9 ✅ Phase 10 ✅
 
 ---
 
@@ -706,77 +334,79 @@ If ignored, disappears on next navigation.
 
 | LOG-039 | Thin executive layer (hat-level goal summary + KPI snapshot) | DEFERRED |
 
-| LOG-017 | Logo SVG recreation | DEFERRED — needs original vector/PNG file |
+| LOG-017 | Logo SVG recreation | DEFERRED — needs original vector/PNG |
 
 ---
 
-## APPROVED THIS SESSION
+## ITEMS TO VERIFY NEXT SESSION
 
-- LOG-086 verified — Add Referral source dropdown ✅
+1. Duplicate appointment detection — verify in live environment (save was inactive during build)
 
-- Finance module page — approved ✅
+2. Supervisor auto-assign — verify Supervision Session appears on supervisee calendar automatically
 
-- Redundant page labels removed app-wide ✅
+3. Manage Access pre-selection routing from Management Center staff rows
 
-- Back button text removed app-wide ✅
-
-- Referral Pipeline drag and drop + column collapse ✅
-
-- Mobile hamburger menu ✅
-
-- Settings page + route fix ✅
-
-- Dark Mode toggle + persistence across sessions ✅
-
-- LOG-071 asymmetric border system applied ✅
-
-- LOG-087 applied — Group Practice and Workspaces removed from all UI surfaces ✅
-
-- More drawer role-filtered for all 7 roles ✅
-
-- Finance manual entry + Supabase persistence ✅
-
-- Finance custom categories ✅
-
-- Referral Pipeline forward/back arrows desktop and mobile ✅
-
-- Referral Pipeline Outcome button on all cards ✅
-
-- Referral Pipeline Edit Mode + stage renaming ✅
-
-- Referral Pipeline + Add Stage modal ✅
-
-- Referral Pipeline Return to Pipeline from outcome buckets ✅
-
-- Referral Pipeline Outcomes instructional text ✅
-
-- Invitation System — Management Center ✅
-
-- Permission Grant System — Access & Permissions page ✅
-
-- Partner role — dashboard, Customize My View, direct hat routing ✅
-
-- Staff Removal flow — INACTIVE status, confirmation modal, blocking check ✅
-
-- Management Center — search-first, rich staff rows, Recent Activity ✅
-
-- Opening dashboard — workspace name only, no subtitle ✅
-
-- Phase 9 complete ✅
+4. Finance Supabase persistence — confirm entries save and compute correctly in live environment
 
 ---
 
-## DESIGN SCOPE REFERENCE
+## BUILD WORKFLOW
 
-SympoFlo is built for entrepreneurs and small business operators across many types:
+1. Claude generates prompt in a code block
 
-group practice owners, coaches, consultants, speakers, outdoor guides, yoga instructors, and others.
+2. Paste into Lovable
 
-**This is a marketing and positioning consideration — not a canon architectural concern.**
+3. Lovable renders
 
-The engine architecture already serves all of these user types without modification.
+4. Screenshot back to Claude
 
-New entrepreneur types do not require new engines — they bring their own content to the existing infrastructure.
+5. Claude approves or flags
+
+6. If approved → push to GitHub
+
+7. If issues → fix prompt → repeat
+
+**Important Protection Rules:**
+
+- Never paste a broad rewrite — surgical patches only
+
+- One fix at a time
+
+- Always pull before pushing: git pull --no-rebase origin main
+
+- Canon > Chat. Always.
+
+- Nothing architectural lives only in conversation
+
+---
+
+## CANON FILES
+
+| File | Contains | Status |
+
+|---|---|---|
+
+| 00_APP_IDENTITY.md | App name, emotional target, capitalization rules | ✅ Locked |
+
+| 01_CORE_SYSTEM_PHILOSOPHY.md | Core philosophy, language doctrine | ✅ Locked |
+
+| 02_GLOBAL_ARCHITECTURE.md | Engine architecture, role system, Calendar, LOG-089 through LOG-104 | ✅ Updated 03/15/2026 |
+
+| 03_OPERATING_PROFILE_ENGINE.md | Owner config layer, onboarding, Owner Active Workload Flag | ✅ Updated 03/13/2026 |
+
+| 04_GROUP_PRACTICE_DOMAIN.md | GP modules, Referral Pipeline, Finance, Calendar layer, LOG-092 through LOG-095 | ✅ Updated 03/15/2026 |
+
+| 05_DEVELOPMENT_GOVERNANCE.md | Canon protocol, nav governance, Proactive Canon Flagging Rule (LOG-099) | ✅ Updated 03/15/2026 |
+
+| 06_CURRENT_DEVELOPMENT_STATE.md | Phase status, full LOG table through LOG-104 | ✅ Updated 03/15/2026 |
+
+| CHANGELOG.md | Full version history | ✅ Updated 03/15/2026 |
+
+| SF-BRAND.md | Visual doctrine, Light/Dark tokens, UI Color Variety System (LOG-100/101) | ✅ Updated 03/15/2026 |
+
+| SESSION_CONTEXT.md | This file — session continuity and handoff | ✅ Updated 03/15/2026 |
+
+**Canon rule:** Canon > Chat. Always. Nothing architectural lives only in conversation.
 
 ---
 
