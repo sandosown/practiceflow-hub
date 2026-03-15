@@ -937,6 +937,9 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
       notes: notes.trim() || null,
       needs_reschedule: false,
       reschedule_requested_by: null,
+      status: 'confirmed',
+      status_updated_at: null,
+      status_updated_by: null,
     });
   };
 
