@@ -487,7 +487,11 @@ const CalendarFilters: React.FC<Props> = ({
   useEffect(() => {
     if (!open || isMobile) return;
     const handler = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      if (containerRef.current && !containerRef.current.contains(target)) {
+        // Don't close if clicking inside a popover portal (date pickers, etc.)
+        const popoverEl = (target as Element)?.closest?.('[data-radix-popper-content-wrapper]');
+        if (popoverEl) return;
         setOpen(false);
       }
     };
@@ -580,7 +584,12 @@ const CalendarFilters: React.FC<Props> = ({
 
         {/* CHANGE 3 — Filter panel */}
         {open && (
-          <div className={`absolute z-50 top-full mt-1 ${compact ? 'w-full' : 'w-[380px]'} left-0 bg-card border border-border rounded-xl shadow-lg animate-fade-in`} style={{ top: 'auto', position: 'relative' }}>
+          <div
+            onClick={e => e.stopPropagation()}
+            onMouseDown={e => e.stopPropagation()}
+            className={`absolute z-50 top-full mt-1 ${compact ? 'w-full' : 'w-[380px]'} left-0 bg-card border border-border rounded-xl shadow-lg animate-fade-in`}
+            style={{ top: 'auto', position: 'relative' }}
+          >
             <FilterDropdownContent
               draft={draft}
               setDraft={setDraft}
