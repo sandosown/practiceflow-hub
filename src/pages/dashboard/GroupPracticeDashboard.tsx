@@ -184,6 +184,7 @@ const GroupPracticeDashboard: React.FC = () => {
         </div>
       </div>
       <BottomNavBar />
+      <InviteTeamMemberModal open={inviteOpen} onOpenChange={setInviteOpen} />
     </div>
   );
 };
