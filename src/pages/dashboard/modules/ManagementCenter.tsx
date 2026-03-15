@@ -46,14 +46,6 @@ const ACTIVITY = [
   { title: 'Credential alert', detail: 'James Rivera LCSW — License expiring in 14 days', time: '1 day ago' },
 ];
 
-const ROLE_OPTIONS = [
-  { value: 'PARTNER', label: 'Partner' },
-  { value: 'ADMIN', label: 'Admin' },
-  { value: 'SUPERVISOR', label: 'Supervisor' },
-  { value: 'CLINICIAN', label: 'Clinician' },
-  { value: 'INTERN', label: 'Intern' },
-  { value: 'STAFF', label: 'Staff' },
-];
 
 interface Invitation {
   invitation_id: string;
