@@ -328,8 +328,8 @@ const FilterDropdownContent: React.FC<{
 
       {/* Status */}
       <div>
-        <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">Status</label>
-        <div className="flex flex-wrap gap-1.5">
+        <label className={sectionLabel} style={sectionLabelStyle}>Status</label>
+        <div className="flex flex-wrap gap-2">
           {ALL_STATUSES.map(s => {
             const checked = draft.selectedStatuses.includes(s);
             return (
