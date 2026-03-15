@@ -7,22 +7,22 @@ import { DEMO_USERS } from '@/data/demoUsers';
 const TEAL = '#2dd4bf';
 
 const TYPE_COLORS: Record<string, string> = {
-  'Client Session': '#0d9488',
-  'Supervision Session': '#4f46e5',
-  'Staff Meeting': '#7c3aed',
-  'Intake': '#0ea5e9',
-  'Personal': '#94a3b8',
-  'Meeting': '#2dd4bf',
-  'Session': '#059669',
-  'Other': '#64748b',
+  'Client Session': '#2dd4bf',
+  'Supervision Session': '#818cf8',
+  'Staff Meeting': '#fb923c',
+  'Intake': '#34d399',
+  'Personal': '#e879f9',
+  'Meeting': '#38bdf8',
+  'Session': '#a3e635',
+  'Other': '#94a3b8',
 };
 
 const STATUS_COLORS: Record<string, string> = {
-  'Confirmed': '#2dd4bf',
-  'Completed': '#059669',
-  'Cancelled': '#78716c',
-  'Rescheduled': '#d97706',
-  'No Show': '#c026d3',
+  'Confirmed': '#4ade80',
+  'Completed': '#94a3b8',
+  'Cancelled': '#cbd5e1',
+  'Rescheduled': '#fb923c',
+  'No Show': '#e879f9',
 };
 
 const ALL_TYPES = Object.keys(TYPE_COLORS);
@@ -100,25 +100,46 @@ interface Props {
   onSelectAppointment?: (appt: SearchableAppointment) => void;
 }
 
-/* ─── Accent Chip ─── */
+/** Convert hex to r,g,b string */
+function hexToRgb(hex: string): string {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.substring(0, 2), 16);
+  const g = parseInt(h.substring(2, 4), 16);
+  const b = parseInt(h.substring(4, 6), 16);
+  return `${r},${g},${b}`;
+}
+
+/* ─── Accent Chip (LOG-105) ─── */
 const AccentChip: React.FC<{
   label: string;
   color: string;
   checked: boolean;
   onClick: () => void;
-}> = ({ label, color, checked, onClick }) => (
-  <button
-    onClick={onClick}
-    className="px-2 py-1 rounded-full text-[11px] font-medium border transition-colors"
-    style={
-      checked
-        ? { borderColor: color, background: color, color: '#0f172a' }
-        : { borderColor: color, color: color, background: 'transparent' }
-    }
-  >
-    {label}
-  </button>
-);
+}> = ({ label, color, checked, onClick }) => {
+  const rgb = hexToRgb(color);
+  return (
+    <button
+      onClick={onClick}
+      className="rounded-[20px] text-[11px] font-medium border transition-colors"
+      style={{
+        padding: '5px 12px',
+        ...(checked
+          ? {
+              borderColor: color,
+              color: color,
+              background: `rgba(${rgb},0.1)`,
+            }
+          : {
+              borderColor: `rgba(${rgb},0.45)`,
+              color: `rgba(${rgb},0.45)`,
+              background: 'transparent',
+            }),
+      }}
+    >
+      {label}
+    </button>
+  );
+};
 
 /* ─── Live Search Results ─── */
 const LiveSearchResults: React.FC<{
@@ -187,17 +208,28 @@ const FilterDropdownContent: React.FC<{
   const [monthPickerOpen, setMonthPickerOpen] = useState(false);
   const [pickerYear, setPickerYear] = useState(currentDate.getFullYear());
 
+  const fieldStyle: React.CSSProperties = {
+    background: 'rgba(255,255,255,0.05)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: 8,
+    padding: '10px 12px',
+  };
+
+  const sectionLabel = "text-[10px] font-semibold uppercase tracking-[0.08em] mb-1 block" as const;
+  const sectionLabelStyle: React.CSSProperties = { color: 'rgba(255,255,255,0.4)' };
+
   return (
-    <div className={`space-y-3 ${compact ? 'text-xs' : 'text-sm'}`}>
+    <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
       {/* Keyword */}
       <div>
-        <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">Keyword</label>
+        <label className={sectionLabel} style={sectionLabelStyle}>Keyword</label>
         <input
           type="text"
           value={draft.keyword}
           onChange={e => setDraft(prev => ({ ...prev, keyword: e.target.value }))}
           placeholder="Search..."
-          className="w-full px-2.5 py-1.5 rounded-md border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+          className="w-full text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+          style={fieldStyle}
         />
         {appointments.length > 0 && onSelectAppointment && (
           <LiveSearchResults
@@ -210,13 +242,14 @@ const FilterDropdownContent: React.FC<{
 
       {/* Date Range */}
       <div>
-        <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">Date Range</label>
+        <label className={sectionLabel} style={sectionLabelStyle}>Date Range</label>
         <div className="flex items-center gap-1.5">
           <input
             type="date"
             value={draft.dateFrom}
             onChange={e => setDraft(prev => ({ ...prev, dateFrom: e.target.value }))}
-            className="flex-1 px-2 py-1.5 rounded-md border border-border bg-background text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+            className="flex-1 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+            style={fieldStyle}
             title="From"
           />
           <span className="text-xs text-muted-foreground">–</span>
@@ -224,7 +257,8 @@ const FilterDropdownContent: React.FC<{
             type="date"
             value={draft.dateTo}
             onChange={e => setDraft(prev => ({ ...prev, dateTo: e.target.value }))}
-            className="flex-1 px-2 py-1.5 rounded-md border border-border bg-background text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+            className="flex-1 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+            style={fieldStyle}
             title="To"
           />
         </div>
@@ -232,10 +266,11 @@ const FilterDropdownContent: React.FC<{
 
       {/* Month / Year */}
       <div>
-        <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">Month / Year</label>
+        <label className={sectionLabel} style={sectionLabelStyle}>Month / Year</label>
         <button
           onClick={() => setMonthPickerOpen(o => !o)}
-          className="flex items-center gap-1 w-full px-2.5 py-1.5 rounded-md border border-border text-xs font-medium hover:bg-accent/10 text-foreground"
+          className="flex items-center gap-1 w-full text-xs font-medium hover:bg-accent/10 text-foreground"
+          style={fieldStyle}
         >
           {MONTHS[currentDate.getMonth()]} {currentDate.getFullYear()}
           <ChevronDown size={12} className="ml-auto" />
@@ -271,8 +306,8 @@ const FilterDropdownContent: React.FC<{
 
       {/* Appointment Type */}
       <div>
-        <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">Appointment Type</label>
-        <div className="flex flex-wrap gap-1.5">
+        <label className={sectionLabel} style={sectionLabelStyle}>Appointment Type</label>
+        <div className="flex flex-wrap gap-2">
           {ALL_TYPES.map(t => {
             const checked = draft.selectedTypes.includes(t);
             return (
@@ -293,8 +328,8 @@ const FilterDropdownContent: React.FC<{
 
       {/* Status */}
       <div>
-        <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">Status</label>
-        <div className="flex flex-wrap gap-1.5">
+        <label className={sectionLabel} style={sectionLabelStyle}>Status</label>
+        <div className="flex flex-wrap gap-2">
           {ALL_STATUSES.map(s => {
             const checked = draft.selectedStatuses.includes(s);
             return (
@@ -316,11 +351,12 @@ const FilterDropdownContent: React.FC<{
       {/* Assigned To */}
       {isOwnerAdmin && (
         <div>
-          <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">Assigned To</label>
+          <label className={sectionLabel} style={sectionLabelStyle}>Assigned To</label>
           <select
             value={draft.assignedTo}
             onChange={e => setDraft(prev => ({ ...prev, assignedTo: e.target.value }))}
-            className="w-full px-2.5 py-1.5 rounded-md border border-border bg-background text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+            className="w-full text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+            style={fieldStyle}
           >
             <option value="all">All Staff</option>
             {staff.map(s => (
@@ -331,17 +367,26 @@ const FilterDropdownContent: React.FC<{
       )}
 
       {/* Actions */}
-      <div className="flex items-center gap-2 pt-1">
+      <div className="flex items-center gap-3 pt-1">
         <button
           onClick={onSearch}
-          className="flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors hover:opacity-80"
-          style={{ border: `1.5px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
+          className="flex-1 text-xs font-medium transition-colors"
+          style={{
+            border: '1.5px solid #2dd4bf',
+            color: '#2dd4bf',
+            background: 'transparent',
+            borderRadius: 8,
+            padding: 10,
+          }}
+          onMouseEnter={e => (e.currentTarget.style.background = 'rgba(45,212,191,0.08)')}
+          onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
         >
           Search
         </button>
         <button
           onClick={onClear}
-          className="text-xs font-medium hover:opacity-80 transition-opacity text-muted-foreground"
+          className="text-xs font-medium hover:opacity-80 transition-opacity"
+          style={{ color: 'rgba(255,255,255,0.4)', background: 'transparent', border: 'none' }}
         >
           Clear
         </button>
@@ -428,7 +473,7 @@ const CalendarFilters: React.FC<Props> = ({
         </div>
 
         {open && (
-          <div className={`absolute z-50 top-full mt-1 ${compact ? 'w-full' : 'w-[380px]'} left-0 bg-card border border-border rounded-xl shadow-lg p-4 animate-fade-in`}>
+          <div className={`absolute z-50 top-full mt-1 ${compact ? 'w-full' : 'w-[380px]'} left-0 bg-card border border-border rounded-xl shadow-lg animate-fade-in`}>
             <FilterDropdownContent
               draft={draft}
               setDraft={setDraft}
@@ -468,7 +513,7 @@ const CalendarFilters: React.FC<Props> = ({
       </div>
 
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="bottom" className="h-auto max-h-[85vh] rounded-t-xl p-4 overflow-y-auto">
+        <SheetContent side="bottom" className="h-auto max-h-[85vh] rounded-t-xl p-0 overflow-y-auto">
           <SheetHeader className="mb-3">
             <SheetTitle className="text-sm font-semibold text-foreground">Filters</SheetTitle>
           </SheetHeader>
