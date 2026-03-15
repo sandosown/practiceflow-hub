@@ -776,17 +776,33 @@ const CalendarPage: React.FC = () => {
 
       {/* ── Add dialog ── */}
       <Dialog open={addOpen} onOpenChange={setAddOpen}>
-        <DialogContent className="max-w-md max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Add Appointment</DialogTitle>
-          </DialogHeader>
-          <AddAppointmentForm
-            userId={userId}
-            role={role}
-            internSubtype={internSubtype}
-            onSave={handleAddAppointment}
-            onCancel={() => setAddOpen(false)}
-          />
+        <DialogContent
+          className="max-h-[85vh] overflow-y-auto p-0 border-0 bg-transparent shadow-none"
+          style={{ maxWidth: 560 }}
+        >
+          <div
+            className="rounded-xl p-6"
+            style={{
+              background: 'rgba(6, 14, 30, 0.97)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(45, 212, 191, 0.12)',
+            }}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between mb-5">
+              <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 18, color: 'white', fontWeight: 400 }}>
+                Add Appointment
+              </h2>
+            </div>
+            <AddAppointmentForm
+              userId={userId}
+              role={role}
+              internSubtype={internSubtype}
+              onSave={handleAddAppointment}
+              onCancel={() => setAddOpen(false)}
+            />
+          </div>
         </DialogContent>
       </Dialog>
 
@@ -1327,50 +1343,87 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
     });
   };
 
+  const glassCard: React.CSSProperties = {
+    background: 'rgba(255,255,255,0.03)',
+    border: '1px solid rgba(255,255,255,0.07)',
+    borderRadius: 10,
+    padding: 16,
+  };
+
+  const glassInput: React.CSSProperties = {
+    background: 'rgba(255,255,255,0.05)',
+    border: '1px solid rgba(255,255,255,0.1)',
+    borderRadius: 8,
+    padding: '10px 14px',
+    color: 'white',
+    fontSize: 14,
+  };
+
+  const glassInputFocusClass = 'focus:!border-[rgba(45,212,191,0.6)] focus-visible:ring-0 focus-visible:ring-offset-0';
+
+  const sectionLabel: React.CSSProperties = {
+    textTransform: 'uppercase' as const,
+    fontSize: 10,
+    letterSpacing: '0.08em',
+    color: 'rgba(255,255,255,0.4)',
+    fontWeight: 600,
+    marginBottom: 6,
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {/* 1. Title */}
-      <div className="space-y-1.5">
-        <Label>Title *</Label>
-        <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Appointment title" />
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      {/* Group 1: Title + Type */}
+      <div style={glassCard} className="flex flex-col gap-2">
+        <div>
+          <p style={sectionLabel}>Title *</p>
+          <Input
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+            placeholder="Appointment title"
+            className={glassInputFocusClass}
+            style={{ ...glassInput, width: '100%', height: 'auto' }}
+          />
+        </div>
+        <div>
+          <p style={sectionLabel}>Type *</p>
+          <Select value={type} onValueChange={setType}>
+            <SelectTrigger
+              className={`${glassInputFocusClass} text-white`}
+              style={{ ...glassInput, height: 40 }}
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {types.map(t => (
+                <SelectItem key={t} value={t}>
+                  <span className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full" style={{ background: TYPE_COLORS[t] ?? '#64748b' }} />
+                    {t}
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      {/* 2. Type */}
-      <div className="space-y-1.5">
-        <Label>Type *</Label>
-        <Select value={type} onValueChange={setType}>
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {types.map(t => (
-              <SelectItem key={t} value={t}>
-                <span className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full" style={{ background: TYPE_COLORS[t] ?? '#64748b' }} />
-                  {t}
-                </span>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* 3. With (Participants) */}
-      <div className="space-y-1.5" ref={participantRef}>
-        <Label>With</Label>
+      {/* Group 2: With (Participants) */}
+      <div style={glassCard} ref={participantRef}>
+        <p style={sectionLabel}>With</p>
         {/* Selected participant chips */}
         {participants.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mb-1.5">
+          <div className="flex flex-wrap gap-1.5 mb-2">
             {participants.map((p, i) => (
               <span
                 key={i}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-accent/10 text-foreground"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium"
+                style={{ background: 'rgba(45,212,191,0.12)', color: '#2dd4bf' }}
               >
                 <span>{p.name}</span>
-                <span className="text-[10px] text-muted-foreground font-normal">
+                <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>
                   {p.external ? 'External' : (p.role ?? '')}
                 </span>
-                <button type="button" onClick={() => removeParticipant(i)} className="text-muted-foreground hover:text-foreground ml-0.5">
+                <button type="button" onClick={() => removeParticipant(i)} style={{ color: 'rgba(255,255,255,0.35)' }} className="hover:opacity-80 ml-0.5">
                   <X size={12} />
                 </button>
               </span>
@@ -1384,28 +1437,30 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
             onChange={e => { setParticipantSearch(e.target.value); setParticipantDropdownOpen(true); setAddingExternalPerson(false); }}
             onFocus={() => { setParticipantDropdownOpen(true); setAddingExternalPerson(false); }}
             placeholder="Search staff or add someone..."
-            className="text-sm"
+            className={`text-sm ${glassInputFocusClass}`}
+            style={{ ...glassInput, width: '100%', height: 'auto', placeholder: 'rgba(255,255,255,0.35)' } as React.CSSProperties}
           />
           {participantDropdownOpen && (
-            <div className="absolute z-50 mt-1 left-0 right-0 bg-card border border-border rounded-lg shadow-lg max-h-52 overflow-y-auto">
+            <div className="absolute z-50 mt-1 left-0 right-0 rounded-lg shadow-lg max-h-52 overflow-y-auto" style={{ background: 'rgba(6,14,30,0.98)', border: '1px solid rgba(255,255,255,0.1)' }}>
               {/* Add someone new — at top */}
               {!addingExternalPerson ? (
                 <button
                   type="button"
                   onClick={() => setAddingExternalPerson(true)}
-                  className="w-full text-left px-3 py-2 text-sm hover:bg-accent/10 transition-colors flex items-center gap-1.5"
+                  className="w-full text-left px-3 py-2 text-sm transition-colors flex items-center gap-1.5 hover:bg-white/5"
                   style={{ color: TEAL }}
                 >
                   <Plus size={13} /> Add someone new
                 </button>
               ) : (
                 <div className="px-3 py-2.5 space-y-2">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Add External Contact</p>
+                  <p style={{ ...sectionLabel, marginBottom: 4 }}>Add External Contact</p>
                   <Input
                     value={externalName}
                     onChange={e => setExternalName(e.target.value)}
                     placeholder="Name *"
-                    className="text-sm h-8"
+                    className={`text-sm ${glassInputFocusClass}`}
+                    style={{ ...glassInput, height: 32, width: '100%' }}
                     autoFocus
                   />
                   <Input
@@ -1413,14 +1468,15 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
                     onChange={e => setExternalEmail(e.target.value)}
                     placeholder="Email (optional)"
                     type="email"
-                    className="text-sm h-8"
+                    className={`text-sm ${glassInputFocusClass}`}
+                    style={{ ...glassInput, height: 32, width: '100%' }}
                   />
                   <div className="flex gap-2">
                     <button
                       type="button"
                       onClick={handleAddExternalPerson}
                       disabled={!externalName.trim()}
-                      className="flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors disabled:opacity-40"
+                      className="flex-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors disabled:opacity-40"
                       style={{ border: `1px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
                     >
                       Add
@@ -1428,7 +1484,8 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
                     <button
                       type="button"
                       onClick={() => { setAddingExternalPerson(false); setExternalName(''); setExternalEmail(''); }}
-                      className="px-3 py-1.5 rounded-md text-xs text-muted-foreground border border-border"
+                      className="px-3 py-1.5 rounded-lg text-xs"
+                      style={{ color: 'rgba(255,255,255,0.4)' }}
                     >
                       Cancel
                     </button>
@@ -1437,7 +1494,7 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
               )}
 
               {/* Divider */}
-              <div className="border-t border-border my-1" />
+              <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', margin: '4px 0' }} />
 
               {/* Internal staff options */}
               {filteredParticipantOptions.map((o) => (
@@ -1445,32 +1502,33 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
                   key={o.id}
                   type="button"
                   onClick={() => { addParticipant({ id: o.id, name: o.name, role: o.role }); setParticipantDropdownOpen(false); }}
-                  className="w-full text-left px-3 py-2 text-sm hover:bg-accent/10 transition-colors flex items-center justify-between"
+                  className="w-full text-left px-3 py-2 text-sm transition-colors flex items-center justify-between hover:bg-white/5"
+                  style={{ color: 'white' }}
                 >
-                  <span className="text-foreground font-medium">{o.name}</span>
-                  <span className="text-[11px] text-muted-foreground">{o.role}</span>
+                  <span className="font-medium">{o.name}</span>
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{o.role}</span>
                 </button>
               ))}
               {filteredParticipantOptions.length === 0 && !addingExternalPerson && (
-                <p className="text-xs text-muted-foreground px-3 py-2">No matching staff found</p>
+                <p className="text-xs px-3 py-2" style={{ color: 'rgba(255,255,255,0.35)' }}>No matching staff found</p>
               )}
             </div>
           )}
         </div>
       </div>
 
-      {/* 4. Meeting Format */}
-      <div className="space-y-1.5">
-        <Label>How are you meeting? *</Label>
+      {/* Group 3: How are you meeting? */}
+      <div style={glassCard}>
+        <p style={sectionLabel}>How are you meeting? *</p>
         <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
             onClick={() => setMeetingFormat('in_person')}
-            className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-all"
+            className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-all"
             style={meetingFormat === 'in_person' ? {
-              border: `2px solid ${TEAL}`, color: TEAL, background: `${TEAL}11`,
+              border: `1px solid ${TEAL}`, color: TEAL, background: 'rgba(45,212,191,0.15)', borderRadius: 8,
             } : {
-              border: '1.5px solid hsl(var(--border))', color: 'hsl(var(--muted-foreground))', background: 'transparent',
+              border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.05)', borderRadius: 8,
             }}
           >
             <MapPin size={16} /> In-Person
@@ -1478,11 +1536,11 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
           <button
             type="button"
             onClick={() => setMeetingFormat('virtual')}
-            className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-all"
+            className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-all"
             style={meetingFormat === 'virtual' ? {
-              border: `2px solid ${TEAL}`, color: TEAL, background: `${TEAL}11`,
+              border: `1px solid ${TEAL}`, color: TEAL, background: 'rgba(45,212,191,0.15)', borderRadius: 8,
             } : {
-              border: '1.5px solid hsl(var(--border))', color: 'hsl(var(--muted-foreground))', background: 'transparent',
+              border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.05)', borderRadius: 8,
             }}
           >
             <Video size={16} /> Virtual
@@ -1490,58 +1548,44 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
         </div>
       </div>
 
-      {/* 5A. Location (if In-Person) — LOG-103 */}
+      {/* Location / Virtual conditional sections — inside glass cards */}
       {meetingFormat === 'in_person' && (
-        <div className="space-y-1.5">
-          <Label>Where?</Label>
+        <div style={glassCard}>
+          <p style={sectionLabel}>Where?</p>
           {!addingLocation ? (
-            <>
-              <Select value={location} onValueChange={(val) => {
-                if (val === '__add_new__') {
-                  setAddingLocation(true);
-                } else {
-                  setLocation(val);
-                }
-              }}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select location..." />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="__add_new__">
-                    <span className="flex items-center gap-1.5" style={{ color: TEAL }}>
-                      <Plus size={12} /> Add New Location
-                    </span>
+            <Select value={location} onValueChange={(val) => {
+              if (val === '__add_new__') {
+                setAddingLocation(true);
+              } else {
+                setLocation(val);
+              }
+            }}>
+              <SelectTrigger className={`${glassInputFocusClass} text-white`} style={{ ...glassInput, height: 40 }}>
+                <SelectValue placeholder="Select location..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__add_new__">
+                  <span className="flex items-center gap-1.5" style={{ color: TEAL }}>
+                    <Plus size={12} /> Add New Location
+                  </span>
+                </SelectItem>
+                {savedLocations.map(loc => (
+                  <SelectItem key={loc.location_id} value={loc.name}>
+                    <div className="flex flex-col">
+                      <span>{loc.name}</span>
+                      {loc.address && <span className="text-[11px] text-muted-foreground">{loc.address}</span>}
+                    </div>
                   </SelectItem>
-                  {savedLocations.map(loc => (
-                    <SelectItem key={loc.location_id} value={loc.name}>
-                      <div className="flex flex-col">
-                        <span>{loc.name}</span>
-                        {loc.address && <span className="text-[11px] text-muted-foreground">{loc.address}</span>}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              
-            </>
+                ))}
+              </SelectContent>
+            </Select>
           ) : (
-            <div className="space-y-2 rounded-lg border border-border p-3">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">New Location</p>
-              <Input
-                value={newLocationName}
-                onChange={e => setNewLocationName(e.target.value)}
-                placeholder="Location name *"
-                className="text-sm"
-                autoFocus
-              />
-              <Input
-                value={newLocationAddress}
-                onChange={e => setNewLocationAddress(e.target.value)}
-                placeholder="Address (optional)"
-                className="text-sm"
-              />
+            <div className="space-y-2 rounded-lg p-3" style={{ border: '1px solid rgba(255,255,255,0.07)' }}>
+              <p style={{ ...sectionLabel, marginBottom: 4 }}>New Location</p>
+              <Input value={newLocationName} onChange={e => setNewLocationName(e.target.value)} placeholder="Location name *" className={`text-sm ${glassInputFocusClass}`} style={{ ...glassInput, width: '100%', height: 'auto' }} autoFocus />
+              <Input value={newLocationAddress} onChange={e => setNewLocationAddress(e.target.value)} placeholder="Address (optional)" className={`text-sm ${glassInputFocusClass}`} style={{ ...glassInput, width: '100%', height: 'auto' }} />
               <Select value={newLocationType} onValueChange={setNewLocationType}>
-                <SelectTrigger className="h-8 text-sm">
+                <SelectTrigger className={`h-8 text-sm ${glassInputFocusClass} text-white`} style={{ ...glassInput, height: 32 }}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -1551,13 +1595,8 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
                 </SelectContent>
               </Select>
               <div className="flex items-center justify-between">
-                <label className="flex items-center gap-2 text-xs text-foreground/80 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={saveForFuture}
-                    onChange={e => setSaveForFuture(e.target.checked)}
-                    className="rounded border-border"
-                  />
+                <label className="flex items-center gap-2 text-xs cursor-pointer" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  <input type="checkbox" checked={saveForFuture} onChange={e => setSaveForFuture(e.target.checked)} className="rounded" />
                   Save for future use?
                 </label>
               </div>
@@ -1570,13 +1609,7 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
                     if (saveForFuture) {
                       const { data, error } = await supabase
                         .from('hat_locations')
-                        .insert({
-                          hat_id: 'w1',
-                          name,
-                          address: newLocationAddress.trim() || null,
-                          type: newLocationType.toLowerCase(),
-                          created_by: userId,
-                        })
+                        .insert({ hat_id: 'w1', name, address: newLocationAddress.trim() || null, type: newLocationType.toLowerCase(), created_by: userId })
                         .select()
                         .single();
                       if (!error && data) {
@@ -1585,23 +1618,15 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
                       }
                     }
                     setLocation(name);
-                    setNewLocationName('');
-                    setNewLocationAddress('');
-                    setNewLocationType('Office');
-                    setSaveForFuture(true);
-                    setAddingLocation(false);
+                    setNewLocationName(''); setNewLocationAddress(''); setNewLocationType('Office'); setSaveForFuture(true); setAddingLocation(false);
                   }}
                   disabled={!newLocationName.trim()}
-                  className="flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors disabled:opacity-40"
+                  className="flex-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors disabled:opacity-40"
                   style={{ border: `1px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
                 >
                   Add
                 </button>
-                <button
-                  type="button"
-                  onClick={() => { setAddingLocation(false); setNewLocationName(''); setNewLocationAddress(''); }}
-                  className="px-3 py-1.5 text-muted-foreground text-xs"
-                >
+                <button type="button" onClick={() => { setAddingLocation(false); setNewLocationName(''); setNewLocationAddress(''); }} className="px-3 py-1.5 text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
                   Cancel
                 </button>
               </div>
@@ -1610,14 +1635,13 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
         </div>
       )}
 
-      {/* 5B. Platform + Meeting Link (if Virtual) */}
       {meetingFormat === 'virtual' && (
-        <>
-          <div className="space-y-1.5">
-            <Label>Platform *</Label>
+        <div style={glassCard} className="flex flex-col gap-2">
+          <div>
+            <p style={sectionLabel}>Platform *</p>
             {!addingPlatform ? (
               <Select value={virtualPlatform} onValueChange={setVirtualPlatform}>
-                <SelectTrigger>
+                <SelectTrigger className={`${glassInputFocusClass} text-white`} style={{ ...glassInput, height: 40 }}>
                   <SelectValue placeholder="Select platform..." />
                 </SelectTrigger>
                 <SelectContent>
@@ -1636,90 +1660,65 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
               </Select>
             ) : (
               <div className="flex gap-2">
-                <Input
-                  value={newPlatformName}
-                  onChange={e => setNewPlatformName(e.target.value)}
-                  placeholder="Platform name"
-                  className="text-sm"
-                  autoFocus
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (newPlatformName.trim()) {
-                      setCustomPlatforms(prev => [...prev, newPlatformName.trim()]);
-                      setVirtualPlatform(newPlatformName.trim());
-                      setNewPlatformName('');
-                    }
-                    setAddingPlatform(false);
-                  }}
-                  className="px-3 py-1.5 rounded-md text-xs font-medium"
-                  style={{ border: `1px solid ${TEAL}`, color: TEAL }}
-                >
-                  Add
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setAddingPlatform(false); setNewPlatformName(''); }}
-                  className="px-2 py-1.5 text-muted-foreground text-xs"
-                >
-                  Cancel
-                </button>
+                <Input value={newPlatformName} onChange={e => setNewPlatformName(e.target.value)} placeholder="Platform name" className={`text-sm ${glassInputFocusClass}`} style={{ ...glassInput, width: '100%', height: 'auto' }} autoFocus />
+                <button type="button" onClick={() => { if (newPlatformName.trim()) { setCustomPlatforms(prev => [...prev, newPlatformName.trim()]); setVirtualPlatform(newPlatformName.trim()); setNewPlatformName(''); } setAddingPlatform(false); }} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ border: `1px solid ${TEAL}`, color: TEAL }}>Add</button>
+                <button type="button" onClick={() => { setAddingPlatform(false); setNewPlatformName(''); }} className="px-2 py-1.5 text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>Cancel</button>
               </div>
             )}
           </div>
-
-          <div className="space-y-1.5">
-            <Label>Meeting Link</Label>
-            <Input
-              value={meetingLink}
-              onChange={e => setMeetingLink(e.target.value)}
-              placeholder="https://..."
-              type="url"
-              className="text-sm"
-            />
+          <div>
+            <p style={sectionLabel}>Meeting Link</p>
+            <Input value={meetingLink} onChange={e => setMeetingLink(e.target.value)} placeholder="https://..." type="url" className={`text-sm ${glassInputFocusClass}`} style={{ ...glassInput, width: '100%', height: 'auto' }} />
           </div>
-        </>
+        </div>
       )}
 
-      {/* 6. Date */}
-      <div className="space-y-1.5">
-        <Label>Date *</Label>
-        <Input type="date" value={date} onChange={e => setDate(e.target.value)} />
-      </div>
-
-      {/* 7. Time row */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="space-y-1.5">
-          <Label>Start Time *</Label>
-          <Input type="time" value={startTime} onChange={e => setStartTime(e.target.value)} />
+      {/* Group 4: Date + Start Time + End Time */}
+      <div style={glassCard}>
+        <p style={sectionLabel}>Schedule *</p>
+        <div className="grid grid-cols-3 gap-2">
+          <div>
+            <p style={{ ...sectionLabel, fontSize: 9 }}>Date</p>
+            <Input type="date" value={date} onChange={e => setDate(e.target.value)} className={glassInputFocusClass} style={{ ...glassInput, width: '100%', height: 'auto' }} />
+          </div>
+          <div>
+            <p style={{ ...sectionLabel, fontSize: 9 }}>Start</p>
+            <Input type="time" value={startTime} onChange={e => setStartTime(e.target.value)} className={glassInputFocusClass} style={{ ...glassInput, width: '100%', height: 'auto' }} />
+          </div>
+          <div>
+            <p style={{ ...sectionLabel, fontSize: 9 }}>End</p>
+            <Input type="time" value={endTime} onChange={e => setEndTime(e.target.value)} className={glassInputFocusClass} style={{ ...glassInput, width: '100%', height: 'auto' }} />
+          </div>
         </div>
-        <div className="space-y-1.5">
-          <Label>End Time *</Label>
-          <Input type="time" value={endTime} onChange={e => setEndTime(e.target.value)} />
-        </div>
       </div>
 
-
-      {/* 9. Notes */}
-      <div className="space-y-1.5">
-        <Label>Notes</Label>
-        <Textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Optional notes..." rows={3} />
+      {/* Group 5: Notes */}
+      <div style={glassCard}>
+        <p style={sectionLabel}>Notes</p>
+        <Textarea
+          value={notes}
+          onChange={e => setNotes(e.target.value)}
+          placeholder="Optional notes..."
+          rows={3}
+          className={glassInputFocusClass}
+          style={{ ...glassInput, minHeight: 72, resize: 'vertical' } as React.CSSProperties}
+        />
       </div>
 
-      {/* 10. Actions */}
-      <div className="flex gap-2 pt-2">
+      {/* Actions */}
+      <div className="flex flex-col gap-2 pt-1">
         <button
           type="submit"
-          className="flex-1 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors hover:opacity-80"
-          style={{ border: `1.5px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
+          className="w-full px-4 py-2.5 text-sm font-medium transition-all hover:bg-[rgba(45,212,191,0.08)]"
+          style={{ border: `1.5px solid ${TEAL}`, color: TEAL, background: 'transparent', borderRadius: 8 }}
         >
           Save
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2.5 rounded-lg text-sm text-muted-foreground border border-border hover:bg-accent/10 transition-colors"
+          className="w-full px-4 py-2 text-sm transition-colors"
+          style={{ color: 'rgba(255,255,255,0.4)', background: 'transparent', border: 'none' }}
         >
           Cancel
         </button>
