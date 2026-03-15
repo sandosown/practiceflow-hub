@@ -487,7 +487,11 @@ const CalendarFilters: React.FC<Props> = ({
   useEffect(() => {
     if (!open || isMobile) return;
     const handler = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      if (containerRef.current && !containerRef.current.contains(target)) {
+        // Don't close if clicking inside a popover portal (date pickers, etc.)
+        const popoverEl = (target as Element)?.closest?.('[data-radix-popper-content-wrapper]');
+        if (popoverEl) return;
         setOpen(false);
       }
     };
