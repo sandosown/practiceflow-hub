@@ -868,6 +868,54 @@ const AppointmentDetail: React.FC<DetailProps> = ({ appt, userId, role, onDelete
       {/* Title */}
       <h2 className="text-lg font-bold text-foreground">{appt.title}</h2>
 
+      {/* Participants */}
+      {appt.participants && appt.participants.length > 0 && (
+        <div className="flex items-start gap-2 text-sm">
+          <Users size={14} className="text-muted-foreground mt-0.5" />
+          <div className="flex flex-wrap gap-1.5">
+            {appt.participants.map((p, i) => (
+              <span key={i} className="px-2 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-foreground/80">
+                {p.name}{p.external ? ' (external)' : ''}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Meeting Format */}
+      {appt.meeting_format && (
+        <div className="flex items-center gap-2 text-sm text-foreground/80">
+          {appt.meeting_format === 'in_person' ? (
+            <MapPin size={14} className="text-muted-foreground" />
+          ) : (
+            <Video size={14} className="text-muted-foreground" />
+          )}
+          <span>{appt.meeting_format === 'in_person' ? 'In-Person' : 'Virtual'}</span>
+          {appt.meeting_format === 'in_person' && appt.location && (
+            <span className="text-muted-foreground">— {appt.location}</span>
+          )}
+          {appt.meeting_format === 'virtual' && appt.virtual_platform && (
+            <span className="text-muted-foreground">— {appt.virtual_platform}</span>
+          )}
+        </div>
+      )}
+
+      {/* Meeting Link */}
+      {appt.meeting_format === 'virtual' && appt.meeting_link && (
+        <div className="flex items-center gap-2 text-sm">
+          <Link2 size={14} className="text-muted-foreground" />
+          <a
+            href={appt.meeting_link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="truncate hover:underline"
+            style={{ color: TEAL }}
+          >
+            {appt.meeting_link}
+          </a>
+        </div>
+      )}
+
       {/* Date / Time */}
       <div className="space-y-1.5">
         <div className="flex items-center gap-2 text-sm text-foreground/80">
