@@ -37,6 +37,10 @@ function hexToRgb(hex: string): string {
 const GroupPracticeDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [inviteOpen, setInviteOpen] = useState(false);
+
+  const MGMT_ACCENT = '#7c3aed';
+  const TEAL = '#2dd4bf';
 
   return (
     <div className="min-h-screen bg-background">
