@@ -226,6 +226,60 @@ Rules:
 
 ---
 
+## SympoFlo Full Color Palette (LOG-101)
+
+This is the complete approved color palette for SympoFlo. All chip sets, status badges, appointment types, filter elements, module accents, radar signals, and any grouped visual elements must draw from this palette.
+
+### Approved Colors
+
+| Color Name | Hex |
+|---|---|
+| Teal (primary accent) | #2dd4bf |
+| Indigo | #4f46e5 |
+| Purple | #7c3aed |
+| Violet | #a78bfa |
+| Fuchsia | #d946ef |
+| Magenta | #c026d3 |
+| Sky Blue | #0ea5e9 |
+| Cyan | #06b6d4 |
+| Blue | #3b82f6 |
+| Royal Blue | #1d4ed8 |
+| Emerald | #059669 |
+| Lime | #84cc16 |
+| Green | #22c55e |
+| Amber | #d97706 |
+| Yellow | #eab308 |
+| Orange | #f97316 |
+| Burnt Orange | #ea580c |
+| Brown/Tan | #92764a |
+| Slate | #64748b |
+| Steel | #475569 |
+| Warm Gray | #78716c |
+| Rose Gold | #fb7185 |
+| Pink | #ec4899 |
+
+### Permanently Banned Colors
+
+- Red (any tone) — BANNED
+- Rose / warm pink — BANNED
+- Hot Pink (#f43f5e) — BANNED
+- Pastel washes as card fills — BANNED
+- Any color not in the approved palette above
+
+### Color Pairing Rules
+
+- Never place the same color or two visually similar colors adjacent to each other in a chip set, status row, or grouped element
+- Maximize variation — when assigning colors to a set of items, spread across the full spectrum: mix warm, cool, neutral, vivid
+- Teal (#2dd4bf) is the primary accent — do not overuse it in chip sets. Reserve it for primary CTAs, active states, and key highlights
+- No two greens, no two blues, no two purples next to each other in a sequence
+- When a new set of colors needs to be assigned (appointment types, status badges, filter chips, tags), always consult this palette and pick maximally varied options
+
+### Why This Exists
+
+SympoFlo must feel modern, alive, and distinctive. Monotone or narrow color sets make the app feel generic and flat. Color variety is a core expression of the calm command center philosophy — structured but alive, not sterile.
+
+---
+
 ## Bottom Navigation Bar — Visual Spec
 
 **LOG-064 — LOCKED**
