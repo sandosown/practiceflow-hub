@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopNavBar from '@/components/TopNavBar';
-import { ArrowLeft, ClipboardList, MessageSquare, LayoutDashboard, Users, Briefcase, FileText, DollarSign, CreditCard, Package, Sparkles } from 'lucide-react';
+import { ArrowLeft, ClipboardList, MessageSquare, LayoutDashboard, Users, Briefcase, FileText, DollarSign, CreditCard, Package, Sparkles, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cardStyle, cardHoverStyle, iconSquareStyle } from '@/lib/cardStyle';
 import BottomNavBar from '@/components/BottomNavBar';
+import InviteTeamMemberModal from '@/components/InviteTeamMemberModal';
 
 const SIGNALS = [
   { type: 'LICENSE EXPIRING', name: 'James Rivera, LCSW', detail: '14 days remaining', accent: '#d97706' },
