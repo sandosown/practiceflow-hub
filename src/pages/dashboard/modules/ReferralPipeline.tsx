@@ -136,6 +136,17 @@ const DraggableCard: React.FC<{
           <CheckSquare className="w-3.5 h-3.5 text-muted-foreground" />
         </button>
         <div className="flex items-center gap-0.5 ml-auto">
+          {/* Outcome button — available on all stages */}
+          <OutcomePopover onSelect={(o) => onMoveToOutcome(r.id, o)}>
+            <button
+              className="text-[10px] font-semibold px-2 py-0.5 rounded-md hover:bg-muted/50 transition-colors"
+              style={{ color: '#2dd4bf', border: '1px solid #2dd4bf', background: 'transparent' }}
+              title="Move to outcome"
+              onPointerDown={e => e.stopPropagation()}
+            >
+              Outcome
+            </button>
+          </OutcomePopover>
           {/* Back arrow */}
           <button
             className="p-1 rounded hover:bg-muted transition-colors"
@@ -146,19 +157,8 @@ const DraggableCard: React.FC<{
           >
             <ArrowLeftIcon className="w-3.5 h-3.5" style={{ color: isFirst ? 'hsl(var(--muted-foreground) / 0.35)' : ACCENT }} />
           </button>
-          {/* Forward arrow — last stage triggers outcome popover */}
-          {isLast ? (
-            <OutcomePopover onSelect={(o) => onMoveToOutcome(r.id, o)}>
-              <button
-                className="text-[10px] font-semibold px-2 py-0.5 rounded-md hover:bg-muted/50 transition-colors"
-                style={{ color: '#2dd4bf', border: '1px solid #2dd4bf', background: 'transparent' }}
-                title="Move to outcome"
-                onPointerDown={e => e.stopPropagation()}
-              >
-                Close Out →
-              </button>
-            </OutcomePopover>
-          ) : (
+          {/* Forward arrow */}
+          {!isLast && (
             <button
               className="p-1 rounded hover:bg-muted transition-colors"
               title="Move to next stage"
