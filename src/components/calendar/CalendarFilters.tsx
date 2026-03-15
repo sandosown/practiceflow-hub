@@ -296,22 +296,36 @@ const CalendarFilters: React.FC<Props> = ({
     return (
       <div ref={containerRef} className={`relative ${compact ? '' : 'mb-4'}`}>
         {/* Search bar */}
-        <div
-          className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card cursor-text transition-colors hover:border-[#2dd4bf]/40"
-          onClick={() => setOpen(true)}
-        >
+        <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card transition-colors hover:border-[#2dd4bf]/40">
           <Search size={16} className="text-muted-foreground flex-shrink-0" />
-          {active ? (
-            <span className="text-xs text-foreground truncate flex-1">{summary}</span>
-          ) : (
-            <span className="text-xs text-muted-foreground flex-1">{placeholder}</span>
-          )}
+          <input
+            type="text"
+            value={filters.keyword}
+            onChange={e => {
+              onChange({ ...filters, keyword: e.target.value });
+              setDraft(prev => ({ ...prev, keyword: e.target.value }));
+            }}
+            placeholder={active && !filters.keyword ? summary : placeholder}
+            className="flex-1 bg-transparent text-xs text-foreground placeholder:text-muted-foreground focus:outline-none min-w-0"
+          />
           {active && (
-            <button onClick={handleBarClear} className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground flex-shrink-0">
-              <X size={12} />
-              Clear
-            </button>
+            <>
+              <span className="text-[10px] text-muted-foreground truncate max-w-[180px] hidden sm:inline">
+                {filterSummaryNoKeyword(filters)}
+              </span>
+              <button onClick={handleBarClear} className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground flex-shrink-0">
+                <X size={12} />
+                Clear
+              </button>
+            </>
           )}
+          <button
+            onClick={(e) => { e.stopPropagation(); setOpen(o => !o); }}
+            className="p-1 rounded hover:bg-accent/10 transition-colors flex-shrink-0"
+            title="Filters"
+          >
+            <ChevronDown size={14} className="text-muted-foreground" />
+          </button>
         </div>
 
         {/* Dropdown panel */}
