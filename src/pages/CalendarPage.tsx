@@ -1578,22 +1578,6 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
         </div>
       </div>
 
-      {/* 8. Assign To (role-dependent) */}
-      {canAssign && (
-        <div className="space-y-1.5">
-          <Label>Assign To</Label>
-          <Select value={assignTo} onValueChange={setAssignTo}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {assignToOptions.map(u => (
-                <SelectItem key={u.id} value={u.id}>{u.full_name}{u.id === userId ? ' (You)' : ''}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      )}
 
       {/* 9. Notes */}
       <div className="space-y-1.5">
