@@ -736,7 +736,7 @@ const CalendarPage: React.FC = () => {
         {/* Mobile sheet panel */}
         {isMobile && (
           <Sheet open={panelOpen} onOpenChange={setPanelOpen}>
-            <SheetContent side="bottom" className="h-[70vh] p-0 rounded-t-xl">
+            <SheetContent side="bottom" className="h-[85vh] p-0 rounded-t-xl bg-background overflow-y-auto">
               <SheetHeader className="px-4 pt-4 pb-2">
                 <SheetTitle className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Appointments</SheetTitle>
               </SheetHeader>
