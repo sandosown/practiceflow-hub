@@ -219,14 +219,15 @@ const DroppableColumn: React.FC<{
     <div ref={setNodeRef} className="flex-shrink-0 flex flex-col" style={{ minWidth: 240, width: 240 }}>
       <div className="flex items-center justify-between mb-3 px-1">
         {editMode ? (
-          <div className="flex items-center gap-1 flex-1 mr-1">
+          <div className="flex items-center gap-1 flex-1 mr-1 p-1">
             <Input
+              ref={inputRef}
               value={editName}
               maxLength={30}
               onChange={e => setEditName(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') handleBlurOrEnter(); }}
               onBlur={handleBlurOrEnter}
-              className="h-6 text-xs font-semibold uppercase tracking-wider px-1 py-0"
+              className="h-7 text-xs font-semibold uppercase tracking-wider px-2 py-1"
             />
             {isCustom && (
               <button
