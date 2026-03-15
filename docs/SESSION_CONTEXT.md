@@ -356,7 +356,7 @@ Interior stays clean — color lives in border only. No colored card fills. Ever
 
 | Phase 9 | Navigation System + Light/Dark Mode | ✅ COMPLETE |
 
-| Phase 10 | Calendar & Appointments | 🔜 PENDING |
+| Phase 10 | Calendar & Appointments | 🔄 IN PROGRESS |
 
 ---
 
