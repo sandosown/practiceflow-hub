@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
+import TopNavBar from '@/components/TopNavBar';
+import BottomNavBar from '@/components/BottomNavBar';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -11,7 +12,6 @@ import { useToast } from '@/hooks/use-toast';
 import { useSession } from '@/context/SessionContext';
 import { supabase } from '@/integrations/supabase/client';
 import { DEMO_USERS } from '@/data/demoUsers';
-import AppLayout from '@/components/AppLayout';
 
 const ALL_MODULES = [
   'Charts Requiring Action',
@@ -27,7 +27,6 @@ const ALL_MODULES = [
   'Major Moments',
 ];
 
-// Default modules by role
 const ROLE_DEFAULT_MODULES: Record<string, string[]> = {
   OWNER: ALL_MODULES,
   ADMIN: ['Management Center', 'Client Database', 'Insurance Database', 'Vendor Database', 'Charts Requiring Action'],
@@ -55,6 +54,8 @@ interface StaffMember {
   clinician_subtype?: string | null;
 }
 
+const TEAL = '#2dd4bf';
+
 const AccessPermissions: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -69,7 +70,6 @@ const AccessPermissions: React.FC = () => {
 
   const loadData = useCallback(async () => {
     if (isDemoMode) {
-      // Use demo users as staff (exclude owner)
       const staff = DEMO_USERS.filter(u => u.id !== session?.user_id).map(u => ({
         id: u.id,
         full_name: u.full_name,
@@ -78,17 +78,14 @@ const AccessPermissions: React.FC = () => {
         clinician_subtype: u.clinician_subtype,
       }));
       setStaffList(staff);
-
-      // Load grants from localStorage for demo
       const stored = localStorage.getItem('pf_permission_grants');
       if (stored) setGrants(JSON.parse(stored));
       return;
     }
 
-    // Real mode: load profiles and grants
     const [profilesRes, grantsRes] = await Promise.all([
       supabase.from('profiles').select('*'),
-      supabase.from('permission_grants').select('*').eq('is_active', true),
+      supabase.from('permission_grants' as any).select('*').eq('is_active', true),
     ]);
 
     if (profilesRes.data) {
@@ -111,15 +108,9 @@ const AccessPermissions: React.FC = () => {
 
   useEffect(() => { loadData(); }, [loadData]);
 
-  const getEffectiveRole = (staff: StaffMember) => staff.role;
+  const getDefaultModules = (staff: StaffMember) => ROLE_DEFAULT_MODULES[staff.role] ?? [];
 
-  const getDefaultModules = (staff: StaffMember) => {
-    return ROLE_DEFAULT_MODULES[getEffectiveRole(staff)] ?? [];
-  };
-
-  const getActiveGrants = (staffId: string) => {
-    return grants.filter(g => g.granted_to === staffId && g.is_active);
-  };
+  const getActiveGrants = (staffId: string) => grants.filter(g => g.granted_to === staffId && g.is_active);
 
   const getAvailableModules = (staff: StaffMember) => {
     const defaults = getDefaultModules(staff);
@@ -144,14 +135,13 @@ const AccessPermissions: React.FC = () => {
       setGrants(updated);
       localStorage.setItem('pf_permission_grants', JSON.stringify(updated));
     } else {
-      const { error } = await supabase.from('permission_grants').insert({
-        grant_id: newGrant.grant_id,
+      const { error } = await (supabase.from('permission_grants' as any) as any).insert({
         hat_id: 'w1',
         granted_by: session.user_id,
         granted_to: selectedStaff.id,
         module: grantModule,
         access_type: grantAccessType,
-      } as any);
+      });
       if (error) {
         toast({ title: 'Error', description: error.message, variant: 'destructive' });
         return;
@@ -172,11 +162,11 @@ const AccessPermissions: React.FC = () => {
       setGrants(updated.filter(g => g.is_active));
       localStorage.setItem('pf_permission_grants', JSON.stringify(updated));
     } else {
-      await supabase.from('permission_grants').update({
+      await (supabase.from('permission_grants' as any) as any).update({
         is_active: false,
         revoked_at: new Date().toISOString(),
         revoked_by: session?.user_id,
-      } as any).eq('grant_id', grant.grant_id);
+      }).eq('grant_id', grant.grant_id);
     }
 
     toast({ title: 'Access revoked', description: `Removed ${grant.module} access.` });
@@ -189,37 +179,43 @@ const AccessPermissions: React.FC = () => {
   };
 
   return (
-    <AppLayout>
-      <div className="max-w-3xl mx-auto px-4 py-6 space-y-6">
+    <div className="min-h-screen" style={{ background: '#0a1628' }}>
+      <TopNavBar />
+
+      <div className="max-w-3xl mx-auto px-4 py-6 space-y-6 pb-24">
         {/* Header */}
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
+          <button onClick={() => navigate(-1)} className="p-1.5 rounded-md hover:bg-white/10 transition-colors">
+            <ArrowLeft className="h-5 w-5" style={{ color: '#94a3b8' }} />
+          </button>
           <div>
-            <h1 className="text-xl font-bold text-foreground">Access &amp; Permissions</h1>
-            <p className="text-sm text-muted-foreground">Control what each team member can access.</p>
+            <h1 className="text-xl font-bold" style={{ color: '#f1f5f9' }}>Access &amp; Permissions</h1>
+            <p className="text-sm" style={{ color: '#64748b' }}>Control what each team member can access.</p>
           </div>
         </div>
 
         {/* Staff list */}
         <div className="space-y-2">
           {staffList.map(staff => (
-            <div key={staff.id} className="flex items-center justify-between rounded-lg border border-border p-3">
+            <div
+              key={staff.id}
+              className="flex items-center justify-between rounded-lg p-3"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+            >
               <div>
-                <p className="text-sm font-medium text-foreground">{staff.full_name}</p>
-                <p className="text-xs text-muted-foreground">{roleLabelMap[getEffectiveRole(staff)] ?? staff.role}</p>
+                <p className="text-sm font-medium" style={{ color: '#f1f5f9' }}>{staff.full_name}</p>
+                <p className="text-xs" style={{ color: '#64748b' }}>{roleLabelMap[staff.role] ?? staff.role}</p>
               </div>
               <div className="flex items-center gap-2">
                 {getActiveGrants(staff.id).length > 0 && (
-                  <Badge variant="secondary" className="text-[10px]">
+                  <span className="text-[10px] px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(45,212,191,0.15)', color: TEAL }}>
                     {getActiveGrants(staff.id).length} grant{getActiveGrants(staff.id).length > 1 ? 's' : ''}
-                  </Badge>
+                  </span>
                 )}
                 <button
                   onClick={() => { setSelectedStaff(staff); setModalOpen(true); setGrantModule(''); setGrantAccessType('view'); }}
-                  className="text-xs font-semibold px-3 py-1.5 rounded-md transition-colors"
-                  style={{ color: '#2dd4bf', border: '1px solid #2dd4bf', background: 'transparent' }}
+                  className="text-xs font-semibold px-3 py-1.5 rounded-md transition-colors hover:bg-white/5"
+                  style={{ color: TEAL, border: `1px solid ${TEAL}`, background: 'transparent' }}
                 >
                   Manage Access
                 </button>
@@ -227,18 +223,20 @@ const AccessPermissions: React.FC = () => {
             </div>
           ))}
           {staffList.length === 0 && (
-            <p className="text-sm text-muted-foreground text-center py-8">No team members found.</p>
+            <p className="text-sm text-center py-8" style={{ color: '#64748b' }}>No team members found.</p>
           )}
         </div>
       </div>
 
+      <BottomNavBar />
+
       {/* Manage Access Modal */}
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md" style={{ background: '#0f1d32', border: '1px solid rgba(255,255,255,0.1)' }}>
           <DialogHeader>
-            <DialogTitle>{selectedStaff?.full_name}</DialogTitle>
-            <DialogDescription>
-              {roleLabelMap[selectedStaff ? getEffectiveRole(selectedStaff) : 'STAFF']} — manage additional module access
+            <DialogTitle style={{ color: '#f1f5f9' }}>{selectedStaff?.full_name}</DialogTitle>
+            <DialogDescription style={{ color: '#64748b' }}>
+              {roleLabelMap[selectedStaff?.role ?? 'STAFF']} — manage additional module access
             </DialogDescription>
           </DialogHeader>
 
@@ -246,12 +244,12 @@ const AccessPermissions: React.FC = () => {
             <div className="space-y-5">
               {/* Default access */}
               <div>
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Default Access</p>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#5a8ab0' }}>Default Access</p>
                 <div className="flex flex-wrap gap-1.5">
                   {getDefaultModules(selectedStaff).length > 0 ? getDefaultModules(selectedStaff).map(m => (
-                    <Badge key={m} variant="outline" className="text-[10px]">{m}</Badge>
+                    <span key={m} className="text-[10px] px-2 py-0.5 rounded-full" style={{ border: '1px solid rgba(255,255,255,0.15)', color: '#94a3b8' }}>{m}</span>
                   )) : (
-                    <span className="text-xs text-muted-foreground">No default modules</span>
+                    <span className="text-xs" style={{ color: '#64748b' }}>No default modules</span>
                   )}
                 </div>
               </div>
@@ -259,19 +257,20 @@ const AccessPermissions: React.FC = () => {
               {/* Current grants */}
               {getActiveGrants(selectedStaff.id).length > 0 && (
                 <div>
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Additional Access</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#5a8ab0' }}>Additional Access</p>
                   <div className="space-y-1.5">
                     {getActiveGrants(selectedStaff.id).map(g => (
-                      <div key={g.grant_id} className="flex items-center justify-between rounded border border-border px-2.5 py-1.5">
+                      <div key={g.grant_id} className="flex items-center justify-between rounded px-2.5 py-1.5" style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
                         <div className="flex items-center gap-2">
-                          <span className="text-xs text-foreground">{g.module}</span>
-                          <Badge variant="secondary" className="text-[9px] px-1.5 py-0">
+                          <span className="text-xs" style={{ color: '#e2eaf4' }}>{g.module}</span>
+                          <span className="text-[9px] px-1.5 py-0 rounded-full" style={{ background: 'rgba(45,212,191,0.15)', color: TEAL }}>
                             {g.access_type === 'full' ? 'Full' : 'View'}
-                          </Badge>
+                          </span>
                         </div>
                         <button
                           onClick={() => handleRevoke(g)}
-                          className="text-[10px] font-medium px-2 py-0.5 rounded transition-colors text-destructive border border-destructive/40 hover:bg-destructive/10"
+                          className="text-[10px] font-medium px-2 py-0.5 rounded transition-colors hover:bg-red-500/10"
+                          style={{ color: '#ef4444', border: '1px solid rgba(239,68,68,0.3)' }}
                         >
                           Revoke
                         </button>
@@ -283,11 +282,11 @@ const AccessPermissions: React.FC = () => {
 
               {/* Grant new access */}
               {getAvailableModules(selectedStaff).length > 0 && (
-                <div className="space-y-3 pt-2 border-t border-border">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Grant Access</p>
+                <div className="space-y-3 pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+                  <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#5a8ab0' }}>Grant Access</p>
 
                   <Select value={grantModule} onValueChange={setGrantModule}>
-                    <SelectTrigger className="h-9 text-xs">
+                    <SelectTrigger className="h-9 text-xs" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#e2eaf4' }}>
                       <SelectValue placeholder="Select module…" />
                     </SelectTrigger>
                     <SelectContent>
@@ -299,12 +298,12 @@ const AccessPermissions: React.FC = () => {
 
                   <RadioGroup value={grantAccessType} onValueChange={(v) => setGrantAccessType(v as 'view' | 'full')} className="flex gap-4">
                     <div className="flex items-center gap-1.5">
-                      <RadioGroupItem value="view" id="view" />
-                      <Label htmlFor="view" className="text-xs">View Only</Label>
+                      <RadioGroupItem value="view" id="perm-view" />
+                      <Label htmlFor="perm-view" className="text-xs" style={{ color: '#e2eaf4' }}>View Only</Label>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <RadioGroupItem value="full" id="full" />
-                      <Label htmlFor="full" className="text-xs">Full Access</Label>
+                      <RadioGroupItem value="full" id="perm-full" />
+                      <Label htmlFor="perm-full" className="text-xs" style={{ color: '#e2eaf4' }}>Full Access</Label>
                     </div>
                   </RadioGroup>
 
@@ -312,7 +311,7 @@ const AccessPermissions: React.FC = () => {
                     onClick={handleGrant}
                     disabled={!grantModule}
                     className="text-xs font-semibold px-4 py-1.5 rounded-md transition-colors disabled:opacity-40"
-                    style={{ color: '#2dd4bf', border: '1px solid #2dd4bf', background: 'transparent' }}
+                    style={{ color: TEAL, border: `1px solid ${TEAL}`, background: 'transparent' }}
                   >
                     Grant Access
                   </button>
@@ -322,7 +321,7 @@ const AccessPermissions: React.FC = () => {
           )}
         </DialogContent>
       </Dialog>
-    </AppLayout>
+    </div>
   );
 };
 
