@@ -31,7 +31,7 @@ const DEMO_STAFF: PeopleEntry[] = [
   { id: 'demo-intern-clinical', name: 'Priya Patel', role: 'INTERN', roleLabel: 'Intern — Clinical', status: 'pending' },
   { id: 'demo-intern-business', name: 'Alex Nguyen', role: 'INTERN', roleLabel: 'Intern — Business', status: 'draft' },
   { id: 'demo-staff', name: 'Taylor Brooks', role: 'STAFF', roleLabel: 'Staff', status: 'active' },
-  { id: 'demo-partner', name: 'Dr. Robert Chen', role: 'PARTNER', roleLabel: 'Partner', status: 'active' },
+  { id: 'demo-partner', name: 'Jordan Mitchell', role: 'PARTNER', roleLabel: 'Partner', status: 'active' },
 ];
 
 const statusConfig: Record<string, { label: string; color: string }> = {
