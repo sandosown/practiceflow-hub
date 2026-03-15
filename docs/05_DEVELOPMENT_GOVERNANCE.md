@@ -358,6 +358,23 @@ SympoFlo serves entrepreneurs who run their businesses from their phones as much
 
 ---
 
+## LOG-109 — Theme State Consistency Doctrine — LOCKED
+
+**Rule:**
+
+- Light/Dark mode selection is a global user preference — it must render consistently across all surfaces, views, device sizes, and breakpoints
+- Mobile and desktop must always reflect the same theme state
+- Theme preference is set once in Settings and applies everywhere — no surface is exempt
+- There must be no hardcoded light or dark backgrounds on any component, page, modal, panel, or surface — all backgrounds must reference the active theme token
+- If a user sets Dark Mode in Settings, every surface including mobile calendar, mobile appointments panel, modals, drawers, and bottom sheets must render in dark mode
+- Default is Light Mode — but once a user changes it, that preference is universal and persistent
+
+**Rationale:**
+
+A system that shows dark mode on desktop and light mode on mobile is broken. Theme consistency is a baseline expectation for any modern app. SympoFlo must behave as one coherent system regardless of device.
+
+---
+
 End of 05_DEVELOPMENT_GOVERNANCE.md
 
 ---
