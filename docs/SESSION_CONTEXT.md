@@ -694,7 +694,7 @@ If ignored, disappears on next navigation.
 
 ## APPROVED THIS SESSION
 
-- LOG-086 verified — Add Referral source dropdown confirmed ✅
+- LOG-086 verified — Add Referral source dropdown ✅
 
 - Finance module page — approved ✅
 
@@ -702,21 +702,47 @@ If ignored, disappears on next navigation.
 
 - Back button text removed app-wide ✅
 
-- Referral Pipeline drag and drop + column collapse (2 cards max, +X more) ✅
+- Referral Pipeline drag and drop + column collapse ✅
 
 - Mobile hamburger menu ✅
 
-- Settings page built + 404 route fixed ✅
+- Settings page + route fix ✅
 
-- Dark Mode toggle in Settings ✅
+- Dark Mode toggle + persistence across sessions ✅
 
-- Dark Mode persistence across sessions (Supabase) ✅
+- LOG-071 asymmetric border system applied ✅
 
-- LOG-071 asymmetric border system applied and approved ✅
-
-- LOG-087 applied to codebase — Group Practice and Workspaces removed from all UI surfaces ✅
+- LOG-087 applied — Group Practice and Workspaces removed from all UI surfaces ✅
 
 - More drawer role-filtered for all 7 roles ✅
+
+- Finance manual entry + Supabase persistence ✅
+
+- Finance custom categories ✅
+
+- Referral Pipeline forward/back arrows desktop and mobile ✅
+
+- Referral Pipeline Outcome button on all cards ✅
+
+- Referral Pipeline Edit Mode + stage renaming ✅
+
+- Referral Pipeline + Add Stage modal ✅
+
+- Referral Pipeline Return to Pipeline from outcome buckets ✅
+
+- Referral Pipeline Outcomes instructional text ✅
+
+- Invitation System — Management Center ✅
+
+- Permission Grant System — Access & Permissions page ✅
+
+- Partner role — dashboard, Customize My View, direct hat routing ✅
+
+- Staff Removal flow — INACTIVE status, confirmation modal, blocking check ✅
+
+- Management Center — search-first, rich staff rows, Recent Activity ✅
+
+- Opening dashboard — workspace name only, no subtitle ✅
 
 - Phase 9 complete ✅
 
