@@ -183,17 +183,27 @@ const DroppableColumn: React.FC<{
   stages: string[];
   isCustom: boolean;
   editMode: boolean;
+  autoFocusEdit?: boolean;
   onMoveStage: (id: string, dir: 1 | -1) => void;
   onMoveToOutcome: (id: string, outcome: Outcome) => void;
   onDeleteStage?: () => void;
   onRenameStage?: (newName: string) => void;
-}> = ({ stage, cards, isMobile, stages, isCustom, editMode, onMoveStage, onMoveToOutcome, onDeleteStage, onRenameStage }) => {
+}> = ({ stage, cards, isMobile, stages, isCustom, editMode, autoFocusEdit, onMoveStage, onMoveToOutcome, onDeleteStage, onRenameStage }) => {
   const { setNodeRef, isOver } = useDroppable({ id: stage });
   const [expanded, setExpanded] = useState(false);
   const [editName, setEditName] = useState(stage);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   // Sync editName when stage display name changes externally
   React.useEffect(() => { setEditName(stage); }, [stage]);
+
+  // Auto-focus and select text when entering edit mode on the first stage
+  React.useEffect(() => {
+    if (editMode && autoFocusEdit && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [editMode, autoFocusEdit]);
 
   const visibleCards = expanded ? cards : cards.slice(0, MAX_VISIBLE);
   const hiddenCount = cards.length - MAX_VISIBLE;
