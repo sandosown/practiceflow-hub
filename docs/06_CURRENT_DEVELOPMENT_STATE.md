@@ -219,6 +219,7 @@
 | LOG-092 | Custom Pipeline Stages — Owner adds stages anywhere in chain, drag-reorderable, default stages cannot be removed. LOG-092 amended — default stage names are editable by Owner. Structure preserved, labels are not locked. |
 | LOG-093 | Referral Pipeline outcome bucket entry — drag or forward/back arrows, desktop and mobile, all movements logged |
 | LOG-094 | Staff Deactivation — INACTIVE status, never hard delete, immediate or date-set removal, blocked if active assignments exist |
+| LOG-095 | Management Center Recent Activity — live practice activity feed, Owner + Admin only, 10 items max, practice-level operational events only |
 
 ---
 

@@ -101,6 +101,34 @@ Pinned cards remain at top until unpinned by Owner or Admin.
 
 ---
 
+## Management Center — GP
+
+### Management Center — Recent Activity (LOG-095)
+
+A live activity feed appears on the Management Center page below the Staff Overview section.
+
+Purpose: gives Owner and Admin a real-time pulse on practice activity without navigating to individual modules.
+
+#### Feed Items
+
+- New hire added — name, role, timestamp
+- Referral received — source, status, timestamp
+- Client assigned — client name, clinician name, timestamp
+- Staff credential updated — name, credential type, timestamp
+- Invitation accepted — name, role, timestamp
+- Staff removed — name, timestamp
+
+#### Rules
+
+- Visible to Owner and Admin only
+- Role-scoped — shows activity relevant to the practice level only
+- Operational activity only — calm command center tone
+- Most recent items appear first
+- Maximum 10 items shown — "View all activity →" link expands full history
+- This is separate from the Feed in the More drawer (which is role-scoped per individual)
+
+---
+
 ## Referral Pipeline — GP
 
 LOG-076 — LOCKED
