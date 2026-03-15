@@ -66,6 +66,23 @@ function filterSummary(f: CalendarFilterState): string {
   return parts.join(' · ');
 }
 
+/** Summary excluding keyword (shown as badge next to the live input) */
+function filterSummaryNoKeyword(f: CalendarFilterState): string {
+  const parts: string[] = [];
+  if (f.dateFrom && f.dateTo) parts.push(`${f.dateFrom} – ${f.dateTo}`);
+  else if (f.dateFrom) parts.push(`From ${f.dateFrom}`);
+  else if (f.dateTo) parts.push(`To ${f.dateTo}`);
+  if (f.selectedTypes.length === 1) parts.push(f.selectedTypes[0]);
+  else if (f.selectedTypes.length > 1) parts.push(`${f.selectedTypes.length} types`);
+  if (f.selectedStatuses.length === 1) parts.push(f.selectedStatuses[0]);
+  else if (f.selectedStatuses.length > 1) parts.push(`${f.selectedStatuses.length} statuses`);
+  if (f.assignedTo !== 'all') {
+    const name = DEMO_USERS.find(u => u.id === f.assignedTo)?.full_name;
+    if (name) parts.push(name);
+  }
+  return parts.join(' · ');
+}
+
 interface Props {
   filters: CalendarFilterState;
   onChange: (f: CalendarFilterState) => void;
@@ -95,21 +112,6 @@ const FilterDropdownContent: React.FC<{
 
   return (
     <div className={`space-y-3 ${compact ? 'text-xs' : 'text-sm'}`}>
-      {/* Keyword */}
-      <div>
-        <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">Keyword</label>
-        <div className="relative">
-          <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
-          <input
-            type="text"
-            value={draft.keyword}
-            onChange={e => setDraft(prev => ({ ...prev, keyword: e.target.value }))}
-            placeholder="Search by keyword..."
-            className="w-full pl-8 pr-3 py-1.5 rounded-md border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
-          />
-        </div>
-      </div>
-
       {/* Date Range */}
       <div>
         <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">Date Range</label>
@@ -311,22 +313,36 @@ const CalendarFilters: React.FC<Props> = ({
     return (
       <div ref={containerRef} className={`relative ${compact ? '' : 'mb-4'}`}>
         {/* Search bar */}
-        <div
-          className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card cursor-text transition-colors hover:border-[#2dd4bf]/40"
-          onClick={() => setOpen(true)}
-        >
+        <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card transition-colors hover:border-[#2dd4bf]/40">
           <Search size={16} className="text-muted-foreground flex-shrink-0" />
-          {active ? (
-            <span className="text-xs text-foreground truncate flex-1">{summary}</span>
-          ) : (
-            <span className="text-xs text-muted-foreground flex-1">{placeholder}</span>
-          )}
+          <input
+            type="text"
+            value={filters.keyword}
+            onChange={e => {
+              onChange({ ...filters, keyword: e.target.value });
+              setDraft(prev => ({ ...prev, keyword: e.target.value }));
+            }}
+            placeholder={active && !filters.keyword ? summary : placeholder}
+            className="flex-1 bg-transparent text-xs text-foreground placeholder:text-muted-foreground focus:outline-none min-w-0"
+          />
           {active && (
-            <button onClick={handleBarClear} className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground flex-shrink-0">
-              <X size={12} />
-              Clear
-            </button>
+            <>
+              <span className="text-[10px] text-muted-foreground truncate max-w-[180px] hidden sm:inline">
+                {filterSummaryNoKeyword(filters)}
+              </span>
+              <button onClick={handleBarClear} className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground flex-shrink-0">
+                <X size={12} />
+                Clear
+              </button>
+            </>
           )}
+          <button
+            onClick={(e) => { e.stopPropagation(); setOpen(o => !o); }}
+            className="p-1 rounded hover:bg-accent/10 transition-colors flex-shrink-0"
+            title="Filters"
+          >
+            <ChevronDown size={14} className="text-muted-foreground" />
+          </button>
         </div>
 
         {/* Dropdown panel */}
@@ -351,22 +367,31 @@ const CalendarFilters: React.FC<Props> = ({
   // Mobile: search bar → bottom sheet
   return (
     <div className={compact ? '' : 'mb-4'}>
-      <div
-        className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card cursor-text"
-        onClick={() => setOpen(true)}
-      >
+      <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-card">
         <Search size={16} className="text-muted-foreground flex-shrink-0" />
-        {active ? (
-          <span className="text-xs text-foreground truncate flex-1">{summary}</span>
-        ) : (
-          <span className="text-xs text-muted-foreground flex-1">{placeholder}</span>
-        )}
+        <input
+          type="text"
+          value={filters.keyword}
+          onChange={e => {
+            onChange({ ...filters, keyword: e.target.value });
+            setDraft(prev => ({ ...prev, keyword: e.target.value }));
+          }}
+          placeholder={active && !filters.keyword ? summary : placeholder}
+          className="flex-1 bg-transparent text-xs text-foreground placeholder:text-muted-foreground focus:outline-none min-w-0"
+        />
         {active && (
           <button onClick={handleBarClear} className="flex items-center gap-0.5 text-xs text-muted-foreground hover:text-foreground flex-shrink-0">
             <X size={12} />
             Clear
           </button>
         )}
+        <button
+          onClick={(e) => { e.stopPropagation(); setOpen(o => !o); }}
+          className="p-1 rounded hover:bg-accent/10 transition-colors flex-shrink-0"
+          title="Filters"
+        >
+          <ChevronDown size={14} className="text-muted-foreground" />
+        </button>
       </div>
 
       <Sheet open={open} onOpenChange={setOpen}>
