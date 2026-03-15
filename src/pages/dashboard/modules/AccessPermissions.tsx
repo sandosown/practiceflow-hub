@@ -24,6 +24,7 @@ const ALL_MODULES = [
 
 const ROLE_DEFAULT_MODULES: Record<string, string[]> = {
   OWNER: ALL_MODULES,
+  PARTNER: ALL_MODULES,
   ADMIN: ['Management Center', 'Client Database', 'Insurance Database', 'Vendor Database', 'Charts Requiring Action'],
   SUPERVISOR: ['Client Database', 'Supervision Structure', 'Charts Requiring Action'],
   CLINICIAN: ['Supervision Structure', 'Charts Requiring Action'],

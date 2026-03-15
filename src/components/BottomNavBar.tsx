@@ -74,6 +74,7 @@ function getEffectiveRole(role: AppRole, internSubtype: InternSubtype): Effectiv
   if (role === 'INTERN') {
     return internSubtype === 'BUSINESS' ? 'INTERN_BUSINESS' : 'INTERN_CLINICAL';
   }
+  if (role === 'PARTNER') return 'PARTNER';
   return role as EffectiveRole;
 }
 
