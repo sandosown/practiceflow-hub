@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import { Plus, ChevronLeft, ChevronRight, Clock, User, X, Edit2, CalendarIcon, Trash2, AlertTriangle, List, Search, Check, RotateCcw, MapPin, Video, Link2, Users } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -1017,7 +1018,16 @@ const AppointmentDetail: React.FC<DetailProps> = ({ appt, userId, role, onDelete
 /* ─── ADD APPOINTMENT FORM ─── */
 /* ═══════════════════════════════════════════════ */
 
-const DEFAULT_LOCATIONS = ['Office', 'External Location'];
+interface SavedLocation {
+  location_id: string;
+  hat_id: string;
+  name: string;
+  address: string | null;
+  type: string;
+  is_active: boolean;
+}
+
+const LOCATION_TYPES = ['Office', 'Studio', 'Clinic', 'Venue', 'Home', 'Other'];
 const DEFAULT_PLATFORMS = ['Zoom', 'SimplePractice', 'Google Meet', 'Microsoft Teams', 'FaceTime', 'Phone Call', 'Other'];
 
 interface AddFormProps {
@@ -1053,14 +1063,32 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
   const [location, setLocation] = useState('');
   const [virtualPlatform, setVirtualPlatform] = useState('');
   const [meetingLink, setMeetingLink] = useState('');
-  const [customLocations, setCustomLocations] = useState<string[]>([]);
   const [customPlatforms, setCustomPlatforms] = useState<string[]>([]);
-  const [addingLocation, setAddingLocation] = useState(false);
   const [addingPlatform, setAddingPlatform] = useState(false);
-  const [newLocationName, setNewLocationName] = useState('');
   const [newPlatformName, setNewPlatformName] = useState('');
 
-  const allLocations = [...DEFAULT_LOCATIONS, ...customLocations];
+  // LOG-103: Saved locations
+  const [savedLocations, setSavedLocations] = useState<SavedLocation[]>([]);
+  const [addingLocation, setAddingLocation] = useState(false);
+  const [newLocationName, setNewLocationName] = useState('');
+  const [newLocationAddress, setNewLocationAddress] = useState('');
+  const [newLocationType, setNewLocationType] = useState('Office');
+  const [saveForFuture, setSaveForFuture] = useState(true);
+
+  // Fetch saved locations
+  useEffect(() => {
+    const fetchLocations = async () => {
+      const { data } = await supabase
+        .from('hat_locations')
+        .select('*')
+        .eq('hat_id', 'w1')
+        .eq('is_active', true)
+        .order('name');
+      if (data) setSavedLocations(data as unknown as SavedLocation[]);
+    };
+    fetchLocations();
+  }, []);
+
   const allPlatforms = [...DEFAULT_PLATFORMS, ...customPlatforms];
 
   const activeStaff = DEMO_USERS.filter(u => u.practice_id === 'demo-practice-1');
@@ -1349,60 +1377,121 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
         </div>
       </div>
 
-      {/* 5A. Location (if In-Person) */}
+      {/* 5A. Location (if In-Person) — LOG-103 */}
       {meetingFormat === 'in_person' && (
         <div className="space-y-1.5">
           <Label>Where?</Label>
           {!addingLocation ? (
-            <Select value={location} onValueChange={setLocation}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select location..." />
-              </SelectTrigger>
-              <SelectContent>
-                {allLocations.map(loc => (
-                  <SelectItem key={loc} value={loc}>{loc}</SelectItem>
-                ))}
-                <button
-                  type="button"
-                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); setAddingLocation(true); }}
-                  className="w-full text-left px-2 py-1.5 text-sm flex items-center gap-1.5 hover:bg-accent/10"
-                  style={{ color: TEAL }}
-                >
-                  <Plus size={12} /> Add location
-                </button>
-              </SelectContent>
-            </Select>
+            <>
+              <Select value={location} onValueChange={(val) => {
+                if (val === '__add_new__') {
+                  setAddingLocation(true);
+                } else {
+                  setLocation(val);
+                }
+              }}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select location..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {savedLocations.map(loc => (
+                    <SelectItem key={loc.location_id} value={loc.name}>
+                      <div className="flex flex-col">
+                        <span>{loc.name}</span>
+                        {loc.address && <span className="text-[11px] text-muted-foreground">{loc.address}</span>}
+                      </div>
+                    </SelectItem>
+                  ))}
+                  <SelectItem value="__add_new__">
+                    <span className="flex items-center gap-1.5" style={{ color: TEAL }}>
+                      <Plus size={12} /> Add New Location
+                    </span>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+              
+            </>
           ) : (
-            <div className="flex gap-2">
+            <div className="space-y-2 rounded-lg border border-border p-3">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">New Location</p>
               <Input
                 value={newLocationName}
                 onChange={e => setNewLocationName(e.target.value)}
-                placeholder="Location name"
+                placeholder="Location name *"
                 className="text-sm"
                 autoFocus
               />
-              <button
-                type="button"
-                onClick={() => {
-                  if (newLocationName.trim()) {
-                    setCustomLocations(prev => [...prev, newLocationName.trim()]);
-                    setLocation(newLocationName.trim());
+              <Input
+                value={newLocationAddress}
+                onChange={e => setNewLocationAddress(e.target.value)}
+                placeholder="Address (optional)"
+                className="text-sm"
+              />
+              <Select value={newLocationType} onValueChange={setNewLocationType}>
+                <SelectTrigger className="h-8 text-sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {LOCATION_TYPES.map(t => (
+                    <SelectItem key={t} value={t}>{t}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <div className="flex items-center justify-between">
+                <label className="flex items-center gap-2 text-xs text-foreground/80 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={saveForFuture}
+                    onChange={e => setSaveForFuture(e.target.checked)}
+                    className="rounded border-border"
+                  />
+                  Save for future use?
+                </label>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={async () => {
+                    const name = newLocationName.trim();
+                    if (!name) return;
+                    if (saveForFuture) {
+                      const { data, error } = await supabase
+                        .from('hat_locations')
+                        .insert({
+                          hat_id: 'w1',
+                          name,
+                          address: newLocationAddress.trim() || null,
+                          type: newLocationType.toLowerCase(),
+                          created_by: userId,
+                        })
+                        .select()
+                        .single();
+                      if (!error && data) {
+                        setSavedLocations(prev => [...prev, data as unknown as SavedLocation]);
+                        toast({ title: 'Location saved' });
+                      }
+                    }
+                    setLocation(name);
                     setNewLocationName('');
-                  }
-                  setAddingLocation(false);
-                }}
-                className="px-3 py-1.5 rounded-md text-xs font-medium"
-                style={{ border: `1px solid ${TEAL}`, color: TEAL }}
-              >
-                Add
-              </button>
-              <button
-                type="button"
-                onClick={() => { setAddingLocation(false); setNewLocationName(''); }}
-                className="px-2 py-1.5 text-muted-foreground text-xs"
-              >
-                Cancel
-              </button>
+                    setNewLocationAddress('');
+                    setNewLocationType('Office');
+                    setSaveForFuture(true);
+                    setAddingLocation(false);
+                  }}
+                  disabled={!newLocationName.trim()}
+                  className="flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors disabled:opacity-40"
+                  style={{ border: `1px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
+                >
+                  Add
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setAddingLocation(false); setNewLocationName(''); setNewLocationAddress(''); }}
+                  className="px-3 py-1.5 text-muted-foreground text-xs"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           )}
         </div>
