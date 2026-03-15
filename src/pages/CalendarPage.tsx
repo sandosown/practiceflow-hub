@@ -549,6 +549,14 @@ const CalendarPage: React.FC = () => {
           currentDate={currentDate}
           onMonthYearChange={handleMonthYearChange}
           role={role}
+          appointments={roleFilteredAppointments}
+          onSelectAppointment={(appt) => {
+            const d = new Date(appt.start_time);
+            setCurrentDate(d);
+            setView('day');
+            const found = appointments.find(a => a.appointment_id === appt.appointment_id);
+            if (found) openDetail(found);
+          }}
         />
 
         {/* Calendar body + Panel layout */}
@@ -680,6 +688,8 @@ const AppointmentsPanel: React.FC<PanelProps> = ({ grouped, dateContext, onSelec
           role={role}
           placeholder="Search..."
           compact
+          appointments={Object.values(grouped).flat()}
+          onSelectAppointment={(appt) => onSelect(appt as any)}
         />
       </div>
       <ScrollArea className="flex-1 px-4 pb-4">
