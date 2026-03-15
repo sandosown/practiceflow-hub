@@ -356,13 +356,15 @@ Interior stays clean — color lives in border only. No colored card fills. Ever
 
 | Phase 9 | Navigation System + Light/Dark Mode | ✅ COMPLETE |
 
-| Phase 10 | Calendar & Appointments | 🔜 PENDING |
+| Phase 10 | Calendar & Appointments | 🔄 IN PROGRESS |
 
 ---
 
 ## NEXT BUILD
 
-**Resume at:** Phase 10 — Calendar & Appointments (PENDING)
+**Currently building:** Phase 10 — Calendar & Appointments
+
+Base calendar shell in progress.
 
 ---
 
@@ -658,17 +660,21 @@ If ignored, disappears on next navigation.
 
 | LOG-087 | "Group Practice" and "Workspaces" permanently banned from all UI surfaces. Breadcrumbs show page name only. Top bar center shows owner's company name only. | LOCKED |
 
-| LOG-089 | Partner role — co-owner level, full access by default, self-configures visible tabs per hat, hat-scoped, universal across all engines | LOCKED |
+| LOG-088 | Finance data pipeline future-proofed — source field on all entries from V1 | LOCKED |
 
-| LOG-090 | Permission Grant System — Owner grants View Only or Full Access to any module for any staff member, per-hat, revocable | LOCKED |
+| LOG-089 | Partner role — co-owner level, full access, self-configures visible tabs per hat | LOCKED |
 
-| LOG-091 | Invitation System — only entry point for staff, Owner/Admin/designated roles can invite, single-use link expires 72hrs, hat-scoped | LOCKED |
+| LOG-090 | Permission Grant System — Owner grants View Only or Full Access per module per staff member | LOCKED |
 
-| LOG-092 | Custom Pipeline Stages — Owner adds stages anywhere in chain, drag-reorderable, default stages cannot be removed | LOCKED |
+| LOG-091 | Invitation System — only entry point for staff, single-use link, 72hr expiry | LOCKED |
 
-| LOG-093 | Referral Pipeline outcome bucket entry — drag or forward/back arrows, desktop and mobile, all movements logged | LOCKED |
+| LOG-092 | Custom Pipeline Stages — Owner adds stages anywhere, drag-reorderable, names editable | LOCKED |
 
-| LOG-094 | Staff Deactivation — INACTIVE status, never hard delete, immediate or date-set removal, blocked if active assignments exist | LOCKED |
+| LOG-093 | Referral Pipeline outcome bucket entry — drag or Outcome button, all stages, logged | LOCKED |
+
+| LOG-094 | Staff Deactivation — INACTIVE status, never hard delete, immediate or date-set removal | LOCKED |
+
+| LOG-095 | Management Center Recent Activity — live feed, Owner + Admin only, 10 items max | LOCKED |
 
 ---
 
@@ -688,7 +694,7 @@ If ignored, disappears on next navigation.
 
 ## APPROVED THIS SESSION
 
-- LOG-086 verified — Add Referral source dropdown confirmed ✅
+- LOG-086 verified — Add Referral source dropdown ✅
 
 - Finance module page — approved ✅
 
@@ -696,21 +702,47 @@ If ignored, disappears on next navigation.
 
 - Back button text removed app-wide ✅
 
-- Referral Pipeline drag and drop + column collapse (2 cards max, +X more) ✅
+- Referral Pipeline drag and drop + column collapse ✅
 
 - Mobile hamburger menu ✅
 
-- Settings page built + 404 route fixed ✅
+- Settings page + route fix ✅
 
-- Dark Mode toggle in Settings ✅
+- Dark Mode toggle + persistence across sessions ✅
 
-- Dark Mode persistence across sessions (Supabase) ✅
+- LOG-071 asymmetric border system applied ✅
 
-- LOG-071 asymmetric border system applied and approved ✅
-
-- LOG-087 applied to codebase — Group Practice and Workspaces removed from all UI surfaces ✅
+- LOG-087 applied — Group Practice and Workspaces removed from all UI surfaces ✅
 
 - More drawer role-filtered for all 7 roles ✅
+
+- Finance manual entry + Supabase persistence ✅
+
+- Finance custom categories ✅
+
+- Referral Pipeline forward/back arrows desktop and mobile ✅
+
+- Referral Pipeline Outcome button on all cards ✅
+
+- Referral Pipeline Edit Mode + stage renaming ✅
+
+- Referral Pipeline + Add Stage modal ✅
+
+- Referral Pipeline Return to Pipeline from outcome buckets ✅
+
+- Referral Pipeline Outcomes instructional text ✅
+
+- Invitation System — Management Center ✅
+
+- Permission Grant System — Access & Permissions page ✅
+
+- Partner role — dashboard, Customize My View, direct hat routing ✅
+
+- Staff Removal flow — INACTIVE status, confirmation modal, blocking check ✅
+
+- Management Center — search-first, rich staff rows, Recent Activity ✅
+
+- Opening dashboard — workspace name only, no subtitle ✅
 
 - Phase 9 complete ✅
 
