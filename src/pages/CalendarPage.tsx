@@ -478,14 +478,25 @@ const CalendarPage: React.FC = () => {
                           borderTop: `1px solid ${color}40`,
                           borderBottom: `1px solid ${color}40`,
                           borderRight: `1px solid ${color}24`,
+                          opacity: (a.status === 'cancelled' || a.status === 'no_show') ? 0.5 : 1,
                         }}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="text-sm font-semibold text-foreground">{a.title}</span>
+                          <span className={`text-sm font-semibold text-foreground flex items-center gap-1 ${a.status === 'cancelled' ? 'line-through' : ''}`}>
+                            {a.status === 'completed' && <Check size={12} />}
+                            {a.status === 'rescheduled' && <RotateCcw size={12} />}
+                            {a.title}
+                          </span>
                           <span className="text-xs text-muted-foreground">{getDurationStr(a.start_time, a.end_time)}</span>
                         </div>
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className="text-xs" style={{ color }}>{a.appointment_type}</span>
+                          <span
+                            className="px-1.5 py-0 rounded-full text-[10px] font-medium"
+                            style={{ color: STATUS_COLORS[a.status], border: `1px solid ${STATUS_COLORS[a.status]}` }}
+                          >
+                            {STATUS_LABELS[a.status]}
+                          </span>
                           <span className="text-xs text-muted-foreground">{formatTime(a.start_time)} – {formatTime(a.end_time)}</span>
                         </div>
                         {a.assigned_by && a.assigned_by !== a.assigned_to && (
