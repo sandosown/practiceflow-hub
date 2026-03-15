@@ -798,20 +798,34 @@ interface DetailProps {
   role: string;
   onDelete: (a: DemoAppointment) => void;
   onReschedule: (a: DemoAppointment) => void;
+  onStatusUpdate: (apptId: string, status: AppointmentStatus) => void;
   onClose: () => void;
 }
 
-const AppointmentDetail: React.FC<DetailProps> = ({ appt, userId, role, onDelete, onReschedule }) => {
+const ALL_STATUSES: AppointmentStatus[] = ['confirmed', 'completed', 'cancelled', 'rescheduled', 'no_show'];
+
+const AppointmentDetail: React.FC<DetailProps> = ({ appt, userId, role, onDelete, onReschedule, onStatusUpdate }) => {
   const color = TYPE_COLORS[appt.appointment_type] ?? '#64748b';
+  const statusColor = STATUS_COLORS[appt.status] ?? '#64748b';
   const isOwn = appt.created_by === userId || appt.assigned_to === userId;
   const isSupervisorAssigned = !!appt.assigned_by && appt.assigned_by !== appt.assigned_to;
   const canDelete = isOwn && !isSupervisorAssigned;
   const canRequestReschedule = isSupervisorAssigned && appt.assigned_to === userId;
+  const canUpdateStatus = isOwn || role === 'OWNER' || role === 'ADMIN' ||
+    (role === 'SUPERVISOR' && ['demo-clinician', 'demo-intern-clinical'].includes(appt.assigned_to));
+
+  const [statusPickerOpen, setStatusPickerOpen] = useState(false);
 
   return (
     <div className="space-y-4">
-      {/* Type badge */}
-      <div className="flex items-center gap-2">
+      {/* Status + Type badges */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <span
+          className="px-2.5 py-0.5 rounded-full text-xs font-semibold"
+          style={{ background: `${statusColor}22`, color: statusColor, border: `1px solid ${statusColor}` }}
+        >
+          {STATUS_LABELS[appt.status]}
+        </span>
         <span
           className="px-2.5 py-0.5 rounded-full text-xs font-semibold"
           style={{ background: `${color}22`, color }}
@@ -857,6 +871,42 @@ const AppointmentDetail: React.FC<DetailProps> = ({ appt, userId, role, onDelete
         <div className="bg-muted/30 rounded-lg p-3">
           <p className="text-xs text-muted-foreground mb-1 uppercase font-semibold tracking-wider">Notes</p>
           <p className="text-sm text-foreground/80">{appt.notes}</p>
+        </div>
+      )}
+
+      {/* Status Update */}
+      {canUpdateStatus && (
+        <div className="relative">
+          <button
+            onClick={() => setStatusPickerOpen(o => !o)}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors hover:opacity-80"
+            style={{ border: `1.5px solid ${statusColor}`, color: statusColor, background: 'transparent' }}
+          >
+            Update Status
+          </button>
+          {statusPickerOpen && (
+            <div className="absolute z-50 mt-1 left-0 bg-card border border-border rounded-lg shadow-lg p-1.5 min-w-[180px] animate-fade-in">
+              {ALL_STATUSES.map(s => {
+                const sc = STATUS_COLORS[s];
+                const isActive = appt.status === s;
+                return (
+                  <button
+                    key={s}
+                    onClick={() => {
+                      onStatusUpdate(appt.appointment_id, s);
+                      setStatusPickerOpen(false);
+                    }}
+                    className="w-full text-left px-3 py-1.5 rounded-md text-sm flex items-center gap-2 transition-colors hover:bg-accent/10"
+                    style={{ color: sc, fontWeight: isActive ? 700 : 500 }}
+                  >
+                    <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: sc }} />
+                    {STATUS_LABELS[s]}
+                    {isActive && <Check size={14} className="ml-auto" />}
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 
