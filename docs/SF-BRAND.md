@@ -208,35 +208,15 @@ Rules:
 - Flat uniform navy on all cards — BANNED
 - Decorative glow with no function — BANNED
 
-### Color Variety Rule (LOG-100)
+### UI Color Variety System (LOG-100 + LOG-101)
 
-Color blocks, chips, tags, filter elements, and appointment entries must always use varied colors from the domain accent map. Never default to one or two colors across a set of items.
+SympoFlo's brand colors are locked in Brand Kit SF-001 (navy #1B2D5B, aqua #30B8C9, white #FFFFFF). This section governs UI element vitality — separate from brand identity.
 
-Rules:
+**Purpose:**
 
-- Every distinct item type must have its own unique accent color
+SympoFlo must never feel boring, stale, or generic. Calm does not mean colorless. A narrow color set on UI elements creates a flat monotone experience that contradicts the Calm Command Center philosophy.
 
-- No two adjacent or related items should share the same color where avoidable
-
-- Teal (#2dd4bf) is the primary accent — it must not dominate chip sets or block groups
-
-- Color variety is a visual doctrine requirement — monotone chip sets are explicitly rejected
-
-- Applies to: calendar appointment chips, filter chips, status badges, tag chips, module cards, radar cards, and any grouped visual elements
-
----
-
-## UI Color Variety System (LOG-101)
-
-This is NOT a brand palette. SympoFlo's brand colors are locked in Brand Kit SF-001 (navy, aqua, white).
-
-This is a UI vitality doctrine — a set of approved colors for UI elements like chips, status badges, appointment type indicators, filter tags, radar signals, and any grouped interface elements that need variety to feel modern and alive.
-
-### Purpose
-
-SympoFlo must never feel boring, stale, or generic. A narrow color set on UI elements creates a flat, monotone experience that contradicts the Calm Command Center philosophy. Calm does not mean colorless. Alive and structured can coexist.
-
-### Approved UI Variety Colors
+**Approved UI Variety Colors:**
 
 | Color Name | Hex |
 |---|---|
@@ -264,25 +244,26 @@ SympoFlo must never feel boring, stale, or generic. A narrow color set on UI ele
 | Rose Gold | #fb7185 |
 | Pink | #ec4899 |
 
-### Permanently Banned UI Colors
+**Permanently Banned UI Colors:**
 
 - Red (any tone) — BANNED
 - Rose / warm pink — BANNED
 - Hot Pink (#f43f5e) — BANNED
 - Pastel washes as card fills — BANNED
 
-### Color Variety Rules
+**Color Variety Rules:**
 
 - Never place the same or visually similar colors adjacent in a chip set, status row, or grouped element
 - Spread across the full spectrum — mix warm, cool, neutral, vivid
 - Teal (#2dd4bf) is the primary accent — do not overuse in chip sets
 - No two greens, no two blues, no two purples next to each other in a sequence
-- When assigning colors to any new set (appointment types, status badges, filter chips, tags) — always pick maximally varied options from this list
+- When assigning colors to any new set — always pick maximally varied options from this list
+- Monotone chip sets are explicitly rejected
 
-### What This Is NOT
+**What This Is NOT:**
 
-- This is not the SympoFlo brand palette
-- This is not for logos, wordmarks, or marketing materials
+- Not the SympoFlo brand palette
+- Not for logos, wordmarks, or marketing materials
 - Brand identity lives in SF-BRAND Kit SF-001
 - This palette is for UI element vitality only
 
