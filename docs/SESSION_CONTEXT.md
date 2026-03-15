@@ -688,6 +688,8 @@ If ignored, disappears on next navigation.
 
 | LOG-101 | UI Color Variety System — 23 UI variety colors locked, not brand palette | LOCKED |
 
+| LOG-102 | Appointment Context Fields — participants, meeting format, location, virtual platform — universal | LOCKED |
+
 ---
 
 ## OUTSTANDING DECISIONS
