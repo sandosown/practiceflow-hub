@@ -128,10 +128,10 @@ function applyFilters(appts: DemoAppointment[], filters: CalendarFilterState): D
       if (!filters.selectedTypes.includes(a.appointment_type)) return false;
     }
 
-    // Status — default to 'Confirmed' for demo data since status field not yet on model
+    // Status
     if (filters.selectedStatuses.length > 0) {
-      const status = 'Confirmed'; // default — will use a.status when field exists
-      if (!filters.selectedStatuses.includes(status)) return false;
+      const statusLabel = STATUS_LABELS[a.status] ?? 'Confirmed';
+      if (!filters.selectedStatuses.includes(statusLabel)) return false;
     }
 
     // Assigned To
