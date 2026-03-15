@@ -114,60 +114,6 @@ const ManagementCenter: React.FC = () => {
     fetchInvitations();
   }, [fetchInvitations]);
 
-  const resetForm = () => {
-    setFirstName('');
-    setLastName('');
-    setEmail('');
-    setRole('');
-    setInternSubtype('');
-    setClinicianSubtype('');
-  };
-
-  const handleSendInvitation = async () => {
-    if (!firstName.trim() || !lastName.trim() || !email.trim() || !role) {
-      toast({ title: 'Please fill in all required fields', variant: 'destructive' });
-      return;
-    }
-    if (role === 'INTERN' && !internSubtype) {
-      toast({ title: 'Please select an intern subtype', variant: 'destructive' });
-      return;
-    }
-    if (role === 'CLINICIAN' && !clinicianSubtype) {
-      toast({ title: 'Please select a clinician subtype', variant: 'destructive' });
-      return;
-    }
-
-    setSending(true);
-
-    const { data, error } = await supabase.functions.invoke('send-invitation', {
-      body: {
-        first_name: firstName.trim(),
-        last_name: lastName.trim(),
-        email: email.trim().toLowerCase(),
-        role,
-        intern_subtype: role === 'INTERN' ? internSubtype : null,
-        clinician_subtype: role === 'CLINICIAN' ? clinicianSubtype : null,
-        hat_id: 'w1',
-      },
-    });
-
-    setSending(false);
-
-    if (error) {
-      toast({ title: error.message || 'Failed to send invitation', variant: 'destructive' });
-      return;
-    }
-
-    if (data?.error) {
-      toast({ title: data.error, variant: 'destructive' });
-      return;
-    }
-
-    toast({ title: `Invitation sent to ${email.trim().toLowerCase()}` });
-    resetForm();
-    setInviteOpen(false);
-    fetchInvitations();
-  };
 
   const handleRevoke = async (invitationId: string) => {
     const { error } = await supabase
