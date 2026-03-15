@@ -72,6 +72,7 @@ const AppRoutes = () => (
     <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
     <Route path="/password-reset" element={<PublicRoute><PasswordReset /></PublicRoute>} />
     <Route path="/reset-password" element={<ResetPassword />} />
+    <Route path="/accept-invitation" element={<AcceptInvitation />} />
 
     {/* Dashboards */}
     <Route path="/dashboard/owner" element={<ProtectedRoute><OwnerDashboard /></ProtectedRoute>} />
