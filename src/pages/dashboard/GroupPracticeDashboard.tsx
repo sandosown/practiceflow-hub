@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopNavBar from '@/components/TopNavBar';
-import { ArrowLeft, ClipboardList, MessageSquare, LayoutDashboard, Users, Briefcase, FileText, DollarSign, CreditCard, Package, Sparkles } from 'lucide-react';
+import { ArrowLeft, ClipboardList, MessageSquare, LayoutDashboard, Users, Briefcase, FileText, DollarSign, CreditCard, Package, Sparkles, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cardStyle, cardHoverStyle, iconSquareStyle } from '@/lib/cardStyle';
 import BottomNavBar from '@/components/BottomNavBar';
+import InviteTeamMemberModal from '@/components/InviteTeamMemberModal';
 
 const SIGNALS = [
   { type: 'LICENSE EXPIRING', name: 'James Rivera, LCSW', detail: '14 days remaining', accent: '#d97706' },
@@ -36,6 +37,10 @@ function hexToRgb(hex: string): string {
 const GroupPracticeDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [inviteOpen, setInviteOpen] = useState(false);
+
+  const MGMT_ACCENT = '#7c3aed';
+  const TEAL = '#2dd4bf';
 
   return (
     <div className="min-h-screen bg-background">
@@ -112,6 +117,44 @@ const GroupPracticeDashboard: React.FC = () => {
           </div>
         </section>
 
+        {/* Team Management card — Owner only */}
+        <section className="mb-8">
+          <div
+            className="p-4 flex items-center justify-between gap-4"
+            style={{
+              background: 'hsl(var(--card))',
+              borderRadius: 10,
+              borderLeft: `4px solid ${MGMT_ACCENT}`,
+              borderTop: `1px solid rgba(124,58,237,0.5)`,
+              borderBottom: `1px solid rgba(124,58,237,0.5)`,
+              borderRight: `1px solid rgba(124,58,237,0.35)`,
+            }}
+          >
+            <h2
+              className="text-xs font-semibold uppercase tracking-widest text-muted-foreground"
+            >
+              Team Management
+            </h2>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setInviteOpen(true)}
+                className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md transition-colors hover:bg-white/5"
+                style={{ color: TEAL, border: `1px solid ${TEAL}`, background: 'transparent' }}
+              >
+                <Plus className="w-3.5 h-3.5" />
+                Invite Team Member
+              </button>
+              <button
+                onClick={() => navigate('/dashboard/owner/group-practice/access-permissions')}
+                className="text-xs font-semibold px-3 py-1.5 rounded-md transition-colors hover:bg-white/5"
+                style={{ color: TEAL, border: `1px solid ${TEAL}`, background: 'transparent' }}
+              >
+                Access &amp; Permissions
+              </button>
+            </div>
+          </div>
+        </section>
+
         {/* Module cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
           {MODULES.map(m => {
@@ -141,6 +184,7 @@ const GroupPracticeDashboard: React.FC = () => {
         </div>
       </div>
       <BottomNavBar />
+      <InviteTeamMemberModal open={inviteOpen} onOpenChange={setInviteOpen} />
     </div>
   );
 };
