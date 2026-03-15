@@ -160,8 +160,6 @@ const DatePickerField: React.FC<{
   };
 
   const calendarPopoverStyle: React.CSSProperties = {
-    background: 'rgba(6,14,30,0.97)',
-    border: '1px solid rgba(45,212,191,0.15)',
     borderRadius: 12,
     boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
     padding: 12,
