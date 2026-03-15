@@ -107,19 +107,34 @@ const CalendarPage: React.FC = () => {
   const panelScrollRef = useRef<HTMLDivElement>(null);
 
   /* ── Role-scoped filtering ── */
-  const visibleAppointments = useMemo(() => {
+  const roleFilteredAppointments = useMemo(() => {
     if (role === 'OWNER' || role === 'ADMIN' || role === 'PARTNER') {
-      // See all practice appointments
       return appointments;
     }
     if (role === 'SUPERVISOR') {
-      // Own + supervisees (for demo: clinician + clinical intern are supervisees)
       const superviseeIds = ['demo-clinician', 'demo-intern-clinical'];
       return appointments.filter(a => a.assigned_to === userId || superviseeIds.includes(a.assigned_to));
     }
-    // Everyone else: own only
     return appointments.filter(a => a.assigned_to === userId);
   }, [appointments, userId, role]);
+
+  /* ── Search filter helper ── */
+  const filterBySearch = useCallback((appts: DemoAppointment[], query: string) => {
+    if (!query.trim()) return appts;
+    const q = query.toLowerCase();
+    return appts.filter(a =>
+      a.title.toLowerCase().includes(q) ||
+      a.appointment_type.toLowerCase().includes(q) ||
+      getNameById(a.assigned_to).toLowerCase().includes(q) ||
+      (a.assigned_by ? getNameById(a.assigned_by).toLowerCase().includes(q) : false)
+    );
+  }, []);
+
+  /* ── Calendar-visible appointments (role + calendar search) ── */
+  const visibleAppointments = useMemo(
+    () => filterBySearch(roleFilteredAppointments, calendarSearch),
+    [roleFilteredAppointments, calendarSearch, filterBySearch]
+  );
 
   /* ── Navigation ── */
   const navigatePrev = () => {
