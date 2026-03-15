@@ -329,14 +329,14 @@ const FilterDropdownContent: React.FC<{
   const [pickerYear, setPickerYear] = useState(currentDate.getFullYear());
 
   const fieldStyle: React.CSSProperties = {
-    background: 'rgba(255,255,255,0.05)',
-    border: '1px solid rgba(255,255,255,0.08)',
+    background: 'hsl(var(--muted) / 0.5)',
+    border: '1px solid hsl(var(--border))',
     borderRadius: 8,
     padding: '10px 12px',
   };
 
   const sectionLabel = "text-[10px] font-semibold uppercase tracking-[0.08em] mb-1 block" as const;
-  const sectionLabelStyle: React.CSSProperties = { color: 'rgba(255,255,255,0.4)' };
+  const sectionLabelStyle: React.CSSProperties = { color: 'hsl(var(--muted-foreground))' };
 
   return (
     <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -442,7 +442,7 @@ const FilterDropdownContent: React.FC<{
       <div className="flex items-center gap-3 pt-1">
         <button
           onClick={onSearch}
-          className="flex-1 text-xs font-medium transition-colors"
+          className="flex-1 text-xs font-medium transition-colors min-h-[44px]"
           style={{
             border: '1.5px solid #2dd4bf',
             color: '#2dd4bf',
@@ -457,8 +457,8 @@ const FilterDropdownContent: React.FC<{
         </button>
         <button
           onClick={onClear}
-          className="text-xs font-medium hover:opacity-80 transition-opacity"
-          style={{ color: 'rgba(255,255,255,0.4)', background: 'transparent', border: 'none' }}
+          className="text-xs font-medium hover:opacity-80 transition-opacity text-muted-foreground min-h-[44px]"
+          style={{ background: 'transparent', border: 'none' }}
         >
           Clear
         </button>
