@@ -1409,7 +1409,7 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
                   </SelectItem>
                 </SelectContent>
               </Select>
-              {location === '__add_new__' && setLocation('')}
+              
             </>
           ) : (
             <div className="space-y-2 rounded-lg border border-border p-3">
