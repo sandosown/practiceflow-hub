@@ -30,6 +30,23 @@ const TYPE_COLORS: Record<string, string> = {
 
 const TEAL = '#2dd4bf';
 
+/* ─── Status colors & labels ─── */
+const STATUS_COLORS: Record<string, string> = {
+  'confirmed': '#2dd4bf',
+  'completed': '#059669',
+  'cancelled': '#78716c',
+  'rescheduled': '#d97706',
+  'no_show': '#ea580c',
+};
+
+const STATUS_LABELS: Record<string, string> = {
+  'confirmed': 'Confirmed',
+  'completed': 'Completed',
+  'cancelled': 'Cancelled',
+  'rescheduled': 'Rescheduled',
+  'no_show': 'No Show',
+};
+
 /* ─── Types available by role category ─── */
 const CLINICAL_TYPES = ['Client Session', 'Supervision Session', 'Staff Meeting', 'Intake', 'Personal', 'Meeting', 'Session', 'Other'];
 const NON_CLINICAL_TYPES = ['Staff Meeting', 'Personal', 'Meeting', 'Other'];
