@@ -100,25 +100,46 @@ interface Props {
   onSelectAppointment?: (appt: SearchableAppointment) => void;
 }
 
-/* ─── Accent Chip ─── */
+/** Convert hex to r,g,b string */
+function hexToRgb(hex: string): string {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.substring(0, 2), 16);
+  const g = parseInt(h.substring(2, 4), 16);
+  const b = parseInt(h.substring(4, 6), 16);
+  return `${r},${g},${b}`;
+}
+
+/* ─── Accent Chip (LOG-105) ─── */
 const AccentChip: React.FC<{
   label: string;
   color: string;
   checked: boolean;
   onClick: () => void;
-}> = ({ label, color, checked, onClick }) => (
-  <button
-    onClick={onClick}
-    className="px-2 py-1 rounded-full text-[11px] font-medium border transition-colors"
-    style={
-      checked
-        ? { borderColor: color, background: color, color: '#0f172a' }
-        : { borderColor: color, color: color, background: 'transparent' }
-    }
-  >
-    {label}
-  </button>
-);
+}> = ({ label, color, checked, onClick }) => {
+  const rgb = hexToRgb(color);
+  return (
+    <button
+      onClick={onClick}
+      className="rounded-[20px] text-[11px] font-medium border transition-colors"
+      style={{
+        padding: '5px 12px',
+        ...(checked
+          ? {
+              borderColor: color,
+              color: color,
+              background: `rgba(${rgb},0.1)`,
+            }
+          : {
+              borderColor: `rgba(${rgb},0.45)`,
+              color: `rgba(${rgb},0.45)`,
+              background: 'transparent',
+            }),
+      }}
+    >
+      {label}
+    </button>
+  );
+};
 
 /* ─── Live Search Results ─── */
 const LiveSearchResults: React.FC<{
