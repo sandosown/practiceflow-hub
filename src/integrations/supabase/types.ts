@@ -756,6 +756,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          access_end_date: string | null
           clinician_subtype: string | null
           created_at: string
           email: string | null
@@ -765,12 +766,16 @@ export type Database = {
           last_workspace_id: string | null
           onboarding_complete: boolean
           practice_id: string | null
+          removed_at: string | null
+          removed_by: string | null
           role: string
+          status: string
           theme_preference: string
           updated_at: string
           user_id: string
         }
         Insert: {
+          access_end_date?: string | null
           clinician_subtype?: string | null
           created_at?: string
           email?: string | null
@@ -780,12 +785,16 @@ export type Database = {
           last_workspace_id?: string | null
           onboarding_complete?: boolean
           practice_id?: string | null
+          removed_at?: string | null
+          removed_by?: string | null
           role?: string
+          status?: string
           theme_preference?: string
           updated_at?: string
           user_id: string
         }
         Update: {
+          access_end_date?: string | null
           clinician_subtype?: string | null
           created_at?: string
           email?: string | null
@@ -795,7 +804,10 @@ export type Database = {
           last_workspace_id?: string | null
           onboarding_complete?: boolean
           practice_id?: string | null
+          removed_at?: string | null
+          removed_by?: string | null
           role?: string
+          status?: string
           theme_preference?: string
           updated_at?: string
           user_id?: string
