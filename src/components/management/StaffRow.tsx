@@ -31,6 +31,8 @@ interface StaffRowProps {
   staff: StaffEntry;
   contextInfo: StaffContextInfo;
   onViewProfile: (staff: StaffEntry) => void;
+  onRemove?: (staff: StaffEntry) => void;
+  showRemove?: boolean;
 }
 
 const StaffRow: React.FC<StaffRowProps> = ({ staff, contextInfo, onViewProfile }) => {
