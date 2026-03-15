@@ -86,13 +86,6 @@ const ManagementCenter: React.FC = () => {
   const { toast } = useToast();
 
   const [inviteOpen, setInviteOpen] = useState(false);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [role, setRole] = useState('');
-  const [internSubtype, setInternSubtype] = useState('');
-  const [clinicianSubtype, setClinicianSubtype] = useState('');
-  const [sending, setSending] = useState(false);
 
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [loadingInvitations, setLoadingInvitations] = useState(true);
