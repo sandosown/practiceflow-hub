@@ -571,6 +571,69 @@ const CalendarPage: React.FC = () => {
 };
 
 /* ═══════════════════════════════════════════════ */
+/* ─── APPOINTMENTS PANEL ─── */
+/* ═══════════════════════════════════════════════ */
+interface PanelProps {
+  grouped: Record<string, DemoAppointment[]>;
+  dateContext: string;
+  onSelect: (a: DemoAppointment) => void;
+}
+
+const AppointmentsPanel: React.FC<PanelProps> = ({ grouped, dateContext, onSelect }) => {
+  const dateKeys = Object.keys(grouped).sort();
+
+  return (
+    <div className="flex flex-col h-full max-h-[calc(100vh-200px)]">
+      <div className="px-4 pt-4 pb-2">
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Appointments</p>
+        <p className="text-sm text-foreground/70 mt-0.5">{dateContext}</p>
+      </div>
+      <ScrollArea className="flex-1 px-4 pb-4">
+        {dateKeys.length === 0 ? (
+          <p className="text-sm text-muted-foreground py-8 text-center">No appointments this month.</p>
+        ) : (
+          dateKeys.map(dateKey => {
+            const appts = grouped[dateKey];
+            const d = new Date(dateKey + 'T12:00:00');
+            return (
+              <div key={dateKey} id={`panel-date-${dateKey}`} className="mb-4">
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 border-b border-border/30 pb-1">
+                  {d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                </p>
+                <div className="space-y-1.5">
+                  {appts.map(a => {
+                    const color = TYPE_COLORS[a.appointment_type] ?? '#64748b';
+                    return (
+                      <button
+                        key={a.appointment_id}
+                        onClick={() => onSelect(a)}
+                        className="w-full text-left rounded-lg p-2 hover:bg-accent/10 transition-colors"
+                      >
+                        <div className="flex items-start gap-2">
+                          <span className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0" style={{ background: color }} />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs text-muted-foreground">{formatTime(a.start_time)} – {formatTime(a.end_time)}</p>
+                            <p className="text-sm font-medium text-foreground truncate">{a.title}</p>
+                            <p className="text-[11px] text-muted-foreground">{a.appointment_type}</p>
+                            {a.assigned_by && a.assigned_by !== a.assigned_to && (
+                              <p className="text-[10px] text-muted-foreground">with {getNameById(a.assigned_to)}</p>
+                            )}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })
+        )}
+      </ScrollArea>
+    </div>
+  );
+};
+
+/* ═══════════════════════════════════════════════ */
 /* ─── APPOINTMENT DETAIL ─── */
 /* ═══════════════════════════════════════════════ */
 interface DetailProps {
