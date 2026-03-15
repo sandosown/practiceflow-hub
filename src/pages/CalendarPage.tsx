@@ -3,7 +3,8 @@ import { Plus, ChevronLeft, ChevronRight, Clock, User, X, Edit2, CalendarIcon, T
 import { useSessionData } from '@/context/SessionContext';
 import { DEMO_USERS } from '@/data/demoUsers';
 import { getDemoAppointments, type DemoAppointment } from '@/data/calendarDemoData';
-import AppLayout from '@/components/AppLayout';
+import TopNavBar from '@/components/TopNavBar';
+import BottomNavBar from '@/components/BottomNavBar';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
@@ -388,7 +389,8 @@ const CalendarPage: React.FC = () => {
       : formatDateLong(currentDate);
 
   return (
-    <AppLayout title="Calendar">
+    <div className="min-h-screen bg-background">
+      <TopNavBar />
       <div className="px-4 md:px-6 pt-4 pb-20 max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
@@ -474,7 +476,8 @@ const CalendarPage: React.FC = () => {
           />
         </DialogContent>
       </Dialog>
-    </AppLayout>
+      <BottomNavBar />
+    </div>
   );
 };
 
