@@ -222,6 +222,8 @@
 | LOG-095 | Management Center Recent Activity — live practice activity feed, Owner + Admin only, 10 items max, practice-level operational events only |
 | LOG-096 | Calendar is a universal component — hat-configurable appointment types, same shell across all hats and engines, no redesign needed for new hats | LOCKED |
 | LOG-097 | Appointment Status System — Confirmed, Completed, Cancelled, Rescheduled, No Show — universal across all hats, inline update, logged | LOCKED |
+| LOG-098 | Calendar Filter System — keyword, date range, month/year, type, status, assigned to — universal across all hats, real-time filtering, mobile-responsive | LOCKED |
+| LOG-099 | Proactive Canon Flagging Rule — Claude must flag all canon-worthy decisions during sessions without waiting to be asked | LOCKED |
 
 ---
 

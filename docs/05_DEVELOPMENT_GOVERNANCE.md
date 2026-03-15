@@ -24,6 +24,49 @@ Canon > Chat. Always.
 
 ---
 
+## Proactive Canon Flagging Rule (LOG-099)
+
+**LOG-099 — LOCKED**
+
+This rule governs how cross-platform and architectural decisions are handled during active development sessions.
+
+### Rule
+
+During any development session, Claude must proactively flag any decision, change, or pattern that is canon-worthy or cross-platform applicable — without waiting to be asked.
+
+### Trigger Conditions
+
+Flag immediately when any of the following occur:
+
+- A decision affects multiple hats or engines
+- A universal component behavior is changed or added
+- A new system-level feature is introduced
+- An architectural decision is made on the fly during building
+- A UI pattern is established that should be consistent everywhere
+- A visual doctrine decision is made that affects other modules
+- A naming or language decision is made that should be universal
+- A data model decision is made that affects multiple surfaces
+
+### Flag Format
+
+When a trigger condition is met, Claude must immediately surface:
+
+> 🔒 Canon-worthy — [brief reason why this applies beyond current context] — recommend locking as LOG-XXX before continuing.
+
+### Rule
+
+- Canon flagging takes priority over continuing the build
+- The flag must appear before the next build prompt is written
+- Owner decides whether to lock immediately or defer
+- If deferred, it must be added to OUTSTANDING DECISIONS in SESSION_CONTEXT.md
+- Nothing architectural lives only in conversation — ever
+
+### Why This Exists
+
+The owner may not always know when a decision has cross-platform implications. Claude is responsible for catching these moments and surfacing them proactively. This protects the integrity of the canon and prevents rework across engines and hats.
+
+---
+
 ## Governance Principles
 
 - No architectural decisions live only in conversation.

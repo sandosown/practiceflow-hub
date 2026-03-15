@@ -680,6 +680,10 @@ If ignored, disappears on next navigation.
 
 | LOG-097 | Appointment Status System — Confirmed, Completed, Cancelled, Rescheduled, No Show — universal across all hats, inline update, logged | LOCKED |
 
+| LOG-098 | Calendar Filter System — universal smart filters across all hats and engines | LOCKED |
+
+| LOG-099 | Proactive Canon Flagging Rule — proactive flagging of canon-worthy decisions during all sessions | LOCKED |
+
 ---
 
 ## OUTSTANDING DECISIONS

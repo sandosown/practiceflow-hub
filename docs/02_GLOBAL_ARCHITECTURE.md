@@ -413,6 +413,40 @@ Every appointment has a status field. Status is universal across all hats — no
 - status_updated_at (timestamp)
 - status_updated_by (uuid)
 
+### Calendar Filter System (LOG-098)
+
+**LOG-098 — LOCKED**
+
+The Calendar includes a smart filter system universal across all hats and engines where the Calendar is active.
+
+**Filter criteria (all universal):**
+
+- Keyword — searches appointment titles
+- Date Range — from/to date picker
+- Month / Year — picker that updates calendar view
+- Appointment Type — multiselect dropdown, options vary per hat context
+- Status — multiselect: Confirmed, Completed, Cancelled, Rescheduled, No Show
+- Assigned To — staff member dropdown, visible to authority roles only (Owner, Admin, equivalent per hat)
+
+**Filter behavior:**
+
+- All filters work in combination — AND logic
+- Calendar grid and Appointments side panel update in real time
+- Active filters show a clear indicator
+- "Clear all" resets to unfiltered view
+- On mobile: filters collapse behind a "Filters" button that expands a filter sheet
+- Active filters show a teal indicator dot on the Filters button on mobile
+
+**Placement:**
+
+- Main calendar: filter bar below header row, above calendar grid
+- Appointments side panel: same filters in compact vertical stack
+
+**Access rules:**
+
+- Keyword, Date Range, Month/Year, Type, Status: visible to all roles
+- Assigned To: visible to authority roles only (Owner, Admin, Supervisor equivalents per hat)
+
 ---
 
 ## Event Lifecycle (Operations Engine)
