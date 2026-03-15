@@ -61,6 +61,19 @@ const Login: React.FC = () => {
     setLoading(false);
   };
 
+  // --- DEV TEST MODE: Real Supabase auth for testing ---
+  // TODO: Remove or gate behind environment variable before production launch
+  const handleDevLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setDevLoading(true);
+    setDevError('');
+    const { error: loginError } = await login(devEmail, devPassword);
+    if (loginError) {
+      setDevError(loginError);
+    }
+    setDevLoading(false);
+  };
+
   const roleLabel = (u: typeof DEMO_USERS[0]) => {
     let r = u.role as string;
     if (u.intern_subtype) r += ` (${u.intern_subtype})`;
