@@ -293,14 +293,29 @@ const CalendarPage: React.FC = () => {
   /* ── Appointment chip ── */
   const ApptChip: React.FC<{ appt: DemoAppointment; compact?: boolean }> = ({ appt, compact }) => {
     const color = TYPE_COLORS[appt.appointment_type] ?? '#64748b';
+    const isCancelled = appt.status === 'cancelled';
+    const isNoShow = appt.status === 'no_show';
+    const isCompleted = appt.status === 'completed';
+    const isRescheduled = appt.status === 'rescheduled';
+    const muted = isCancelled || isNoShow;
+
     return (
       <button
         onClick={(e) => { e.stopPropagation(); openDetail(appt); }}
-        className="text-left w-full truncate rounded px-1.5 py-0.5 text-xs font-medium transition-opacity hover:opacity-80"
-        style={{ background: `${color}22`, color, borderLeft: `3px solid ${color}` }}
+        className="text-left w-full truncate rounded px-1.5 py-0.5 text-xs font-medium transition-opacity hover:opacity-80 flex items-center gap-1"
+        style={{
+          background: `${color}22`,
+          color,
+          borderLeft: `3px solid ${color}`,
+          opacity: muted ? 0.5 : 1,
+        }}
         title={appt.title}
       >
-        {compact ? appt.title : `${formatTime(appt.start_time)} ${appt.title}`}
+        {isCompleted && <Check size={10} className="flex-shrink-0" />}
+        {isRescheduled && <RotateCcw size={10} className="flex-shrink-0" />}
+        <span className={isCancelled ? 'line-through' : ''}>
+          {compact ? appt.title : `${formatTime(appt.start_time)} ${appt.title}`}
+        </span>
       </button>
     );
   };
