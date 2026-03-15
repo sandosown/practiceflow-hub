@@ -1175,6 +1175,10 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
     const startISO = new Date(`${date}T${startTime}:00`).toISOString();
     const endISO = new Date(`${date}T${endTime}:00`).toISOString();
 
+    // Derive assigned_to from first internal participant in "With" field, fallback to creator
+    const firstInternalParticipant = participants.find(p => !p.external && p.id);
+    const assignedTo = firstInternalParticipant?.id ?? userId;
+
     onSave({
       hat_id: 'w1',
       engine_source: 'operations',
@@ -1183,8 +1187,8 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
       start_time: startISO,
       end_time: endISO,
       created_by: userId,
-      assigned_to: assignTo,
-      assigned_by: assignTo !== userId ? userId : null,
+      assigned_to: assignedTo,
+      assigned_by: assignedTo !== userId ? userId : null,
       client_id: null,
       supervision_session_id: null,
       notes: notes.trim() || null,
