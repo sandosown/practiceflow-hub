@@ -117,6 +117,9 @@ const AppRoutes = () => (
     <Route path="/dashboard/partner/group-practice/vendors" element={<ProtectedRoute><VendorDatabase /></ProtectedRoute>} />
     <Route path="/dashboard/partner/group-practice/major-moments" element={<ProtectedRoute><MajorMoments /></ProtectedRoute>} />
 
+    {/* Calendar (universal — all roles) */}
+    <Route path="/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
+
     {/* Settings */}
     <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
 
