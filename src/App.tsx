@@ -102,6 +102,20 @@ const AppRoutes = () => (
     <Route path="/dashboard/owner/group-practice/major-moments" element={<ProtectedRoute><MajorMoments /></ProtectedRoute>} />
     <Route path="/dashboard/owner/group-practice/access-permissions" element={<ProtectedRoute><AccessPermissions /></ProtectedRoute>} />
 
+    {/* Partner GP sub-pages — same modules, different route prefix */}
+    <Route path="/dashboard/partner/group-practice" element={<ProtectedRoute><PartnerDashboard /></ProtectedRoute>} />
+    <Route path="/dashboard/partner/group-practice/office-board" element={<ProtectedRoute><OfficeBoard /></ProtectedRoute>} />
+    <Route path="/dashboard/partner/group-practice/charts" element={<ProtectedRoute><ChartsRequiringAction /></ProtectedRoute>} />
+    <Route path="/dashboard/partner/group-practice/management" element={<ProtectedRoute><ManagementCenter /></ProtectedRoute>} />
+    <Route path="/dashboard/partner/group-practice/clients" element={<ProtectedRoute><ClientDatabase /></ProtectedRoute>} />
+    <Route path="/dashboard/partner/group-practice/caseload" element={<ProtectedRoute><ReferralPipeline /></ProtectedRoute>} />
+    <Route path="/dashboard/partner/group-practice/treatment" element={<ProtectedRoute><TreatmentPlanTracker /></ProtectedRoute>} />
+    <Route path="/dashboard/partner/group-practice/supervision" element={<ProtectedRoute><SupervisionStructure /></ProtectedRoute>} />
+    <Route path="/dashboard/partner/group-practice/finance" element={<ProtectedRoute><FinanceTab /></ProtectedRoute>} />
+    <Route path="/dashboard/partner/group-practice/insurance" element={<ProtectedRoute><InsuranceDatabase /></ProtectedRoute>} />
+    <Route path="/dashboard/partner/group-practice/vendors" element={<ProtectedRoute><VendorDatabase /></ProtectedRoute>} />
+    <Route path="/dashboard/partner/group-practice/major-moments" element={<ProtectedRoute><MajorMoments /></ProtectedRoute>} />
+
     {/* Settings */}
     <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
 
