@@ -1507,6 +1507,11 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
                   <SelectValue placeholder="Select location..." />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="__add_new__">
+                    <span className="flex items-center gap-1.5" style={{ color: TEAL }}>
+                      <Plus size={12} /> Add New Location
+                    </span>
+                  </SelectItem>
                   {savedLocations.map(loc => (
                     <SelectItem key={loc.location_id} value={loc.name}>
                       <div className="flex flex-col">
@@ -1515,11 +1520,6 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
                       </div>
                     </SelectItem>
                   ))}
-                  <SelectItem value="__add_new__">
-                    <span className="flex items-center gap-1.5" style={{ color: TEAL }}>
-                      <Plus size={12} /> Add New Location
-                    </span>
-                  </SelectItem>
                 </SelectContent>
               </Select>
               
