@@ -692,6 +692,8 @@ If ignored, disappears on next navigation.
 
 | LOG-103 | Location Management System — saved hat locations, multiple offices, Settings management | LOCKED |
 
+| LOG-104 | Appointment Shared Ownership Rule — equal ownership for all participants, independent copies, linked | LOCKED |
+
 ---
 
 ## OUTSTANDING DECISIONS

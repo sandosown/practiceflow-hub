@@ -549,6 +549,47 @@ Universal location management for in-person appointments across all hats and eng
 - Default location can be set per hat in Settings
 - Historical appointment location data is never deleted
 
+### Appointment Shared Ownership Rule (LOG-104)
+
+**LOG-104 — LOCKED**
+
+Every person on an appointment owns it equally — regardless of who created it.
+
+**Rule:**
+
+When an appointment is created and participants are added via the "With" field:
+
+- The appointment appears on every participant's calendar automatically
+- Every participant has full ownership of their copy:
+  - Can edit title, notes, location, platform
+  - Can update their own status independently
+  - Can cancel their own copy
+  - Can add their own notes
+  - Appears in their appointment history and search
+- There is no "creator" vs "participant" distinction in the UI
+- Every copy is a first-class independent record
+
+**Linking:**
+
+- All copies of the same appointment are linked via a shared appointment_group_id
+- If one participant cancels their copy — only their copy is affected
+- Other participants are not affected unless they choose to update their own
+- No silent changes — if the original creator deletes their copy, other participants keep theirs
+
+**Storage:**
+
+Add to appointments table:
+
+- appointment_group_id (uuid, nullable — links related appointment copies)
+- is_linked (boolean, default: false)
+
+**Rules:**
+
+- Universal across all hats and all engines
+- No role hierarchy on appointment ownership — all participants equal
+- Hat-scoped — appointment copies only exist within the hat they were created in
+- No cross-hat appointment sharing ever
+
 ---
 
 ## Event Lifecycle (Operations Engine)
