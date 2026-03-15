@@ -22,6 +22,8 @@ import ClinicianDashboard from "./pages/dashboard/ClinicianDashboard";
 import InternClinicalDashboard from "./pages/dashboard/InternClinicalDashboard";
 import InternBusinessDashboard from "./pages/dashboard/InternBusinessDashboard";
 import StaffDashboard from "./pages/dashboard/StaffDashboard";
+import PartnerHub from "./pages/dashboard/PartnerHub";
+import PartnerDashboard from "./pages/dashboard/PartnerDashboard";
 
 // Owner GP pages
 import GroupPracticeDashboard from "./pages/dashboard/GroupPracticeDashboard";
