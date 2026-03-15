@@ -1041,8 +1041,6 @@ interface AddFormProps {
 const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtype, onSave, onCancel }) => {
   const types = getTypesForRole(role, internSubtype);
 
-  // Assign To visibility per LOG-102
-  const canAssign = role === 'OWNER' || role === 'ADMIN' || role === 'PARTNER' || role === 'SUPERVISOR';
 
   const [title, setTitle] = useState('');
   const [type, setType] = useState(types[0]);
