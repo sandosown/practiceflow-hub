@@ -367,17 +367,26 @@ const FilterDropdownContent: React.FC<{
       )}
 
       {/* Actions */}
-      <div className="flex items-center gap-2 pt-1">
+      <div className="flex items-center gap-3 pt-1">
         <button
           onClick={onSearch}
-          className="flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors hover:opacity-80"
-          style={{ border: `1.5px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
+          className="flex-1 text-xs font-medium transition-colors"
+          style={{
+            border: '1.5px solid #2dd4bf',
+            color: '#2dd4bf',
+            background: 'transparent',
+            borderRadius: 8,
+            padding: 10,
+          }}
+          onMouseEnter={e => (e.currentTarget.style.background = 'rgba(45,212,191,0.08)')}
+          onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
         >
           Search
         </button>
         <button
           onClick={onClear}
-          className="text-xs font-medium hover:opacity-80 transition-opacity text-muted-foreground"
+          className="text-xs font-medium hover:opacity-80 transition-opacity"
+          style={{ color: 'rgba(255,255,255,0.4)', background: 'transparent', border: 'none' }}
         >
           Clear
         </button>
