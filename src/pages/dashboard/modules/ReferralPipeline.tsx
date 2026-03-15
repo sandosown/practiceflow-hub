@@ -407,6 +407,7 @@ const ReferralPipeline: React.FC = () => {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [form, setForm] = useState({ firstName: '', lastName: '', phone: '', email: '', source: '', notes: '' });
   const [movementLog, setMovementLog] = useState<MovementLog[]>([]);
+  const [editMode, setEditMode] = useState(false);
 
   // All stages use internal keys; display names resolved via stageRenames
   const stageKeys = [...DEFAULT_STAGES.slice(0, -1), ...customStages, DEFAULT_STAGES[DEFAULT_STAGES.length - 1]];
