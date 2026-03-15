@@ -399,6 +399,19 @@ const AccessPermissions: React.FC = () => {
 
   useEffect(() => { loadData(); }, [loadData]);
 
+  // Auto-select staff member from route state
+  useEffect(() => {
+    if (preselectedApplied.current || staffList.length === 0) return;
+    const state = location.state as { preselectedUserId?: string } | null;
+    if (state?.preselectedUserId) {
+      const match = staffList.find(s => s.id === state.preselectedUserId);
+      if (match) {
+        setSelectedStaff(match);
+        preselectedApplied.current = true;
+      }
+    }
+  }, [staffList, location.state]);
+
   const handleGrant = async (modules: string[], accessType: 'view' | 'full') => {
     if (!selectedStaff || !session) return;
 

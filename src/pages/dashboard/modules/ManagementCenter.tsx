@@ -286,6 +286,14 @@ const ManagementCenter: React.FC = () => {
       </div>
       <BottomNavBar />
       <InviteTeamMemberModal open={inviteOpen} onOpenChange={setInviteOpen} onInviteSent={fetchInvitations} />
+      {removeTarget && (
+        <RemoveStaffModal
+          open={!!removeTarget}
+          onOpenChange={(open) => { if (!open) setRemoveTarget(null); }}
+          staff={{ name: removeTarget.name, firstName: removeTarget.firstName, role: removeTarget.role, id: removeTarget.id }}
+          onConfirmRemoval={(staff, endDate) => handleConfirmRemoval(staff, endDate)}
+        />
+      )}
     </div>
   );
 };

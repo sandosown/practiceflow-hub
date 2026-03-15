@@ -99,6 +99,15 @@ const StaffRow: React.FC<StaffRowProps> = ({ staff, contextInfo, onViewProfile, 
         >
           Manage Access
         </button>
+        {showRemove && onRemove && (
+          <button
+            onClick={() => onRemove(staff)}
+            className="text-xs font-semibold px-3 py-1.5 rounded"
+            style={outlineBtn(TEAL)}
+          >
+            Remove
+          </button>
+        )}
       </div>
     </div>
   );
