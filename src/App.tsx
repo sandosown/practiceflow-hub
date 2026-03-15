@@ -123,6 +123,9 @@ const AppRoutes = () => (
     {/* Calendar (universal — all roles) */}
     <Route path="/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
 
+    {/* People Engine */}
+    <Route path="/practice/people" element={<ProtectedRoute><PeopleHub /></ProtectedRoute>} />
+
     {/* Settings */}
     <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
 
