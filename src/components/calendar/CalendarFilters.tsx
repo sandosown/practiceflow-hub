@@ -203,8 +203,6 @@ const FilterDropdownContent: React.FC<{
   appointments?: SearchableAppointment[];
   onSelectAppointment?: (appt: SearchableAppointment) => void;
 }> = ({ draft, setDraft, currentDate, onMonthYearChange, role, onSearch, onClear, compact, appointments = [], onSelectAppointment }) => {
-  const isOwnerAdmin = role === 'OWNER' || role === 'ADMIN' || role === 'PARTNER';
-  const staff = DEMO_USERS.filter(u => u.practice_id === 'demo-practice-1');
   const [monthPickerOpen, setMonthPickerOpen] = useState(false);
   const [pickerYear, setPickerYear] = useState(currentDate.getFullYear());
 
