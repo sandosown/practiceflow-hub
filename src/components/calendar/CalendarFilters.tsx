@@ -351,11 +351,12 @@ const FilterDropdownContent: React.FC<{
       {/* Assigned To */}
       {isOwnerAdmin && (
         <div>
-          <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">Assigned To</label>
+          <label className={sectionLabel} style={sectionLabelStyle}>Assigned To</label>
           <select
             value={draft.assignedTo}
             onChange={e => setDraft(prev => ({ ...prev, assignedTo: e.target.value }))}
-            className="w-full px-2.5 py-1.5 rounded-md border border-border bg-background text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+            className="w-full text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+            style={fieldStyle}
           >
             <option value="all">All Staff</option>
             {staff.map(s => (
