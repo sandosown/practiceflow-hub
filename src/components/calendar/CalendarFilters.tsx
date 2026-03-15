@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Search, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { DEMO_USERS } from '@/data/demoUsers';
+
 
 const TEAL = '#2dd4bf';
 
@@ -72,10 +72,6 @@ function filterSummary(f: CalendarFilterState): string {
   else if (f.selectedTypes.length > 1) parts.push(`${f.selectedTypes.length} types`);
   if (f.selectedStatuses.length === 1) parts.push(f.selectedStatuses[0]);
   else if (f.selectedStatuses.length > 1) parts.push(`${f.selectedStatuses.length} statuses`);
-  if (f.assignedTo !== 'all') {
-    const name = DEMO_USERS.find(u => u.id === f.assignedTo)?.full_name;
-    if (name) parts.push(name);
-  }
   return parts.join(' · ');
 }
 
@@ -100,46 +96,6 @@ interface Props {
   onSelectAppointment?: (appt: SearchableAppointment) => void;
 }
 
-/** Convert hex to r,g,b string */
-function hexToRgb(hex: string): string {
-  const h = hex.replace('#', '');
-  const r = parseInt(h.substring(0, 2), 16);
-  const g = parseInt(h.substring(2, 4), 16);
-  const b = parseInt(h.substring(4, 6), 16);
-  return `${r},${g},${b}`;
-}
-
-/* ─── Accent Chip (LOG-105) ─── */
-const AccentChip: React.FC<{
-  label: string;
-  color: string;
-  checked: boolean;
-  onClick: () => void;
-}> = ({ label, color, checked, onClick }) => {
-  const rgb = hexToRgb(color);
-  return (
-    <button
-      onClick={onClick}
-      className="rounded-[20px] text-[11px] font-medium border transition-colors"
-      style={{
-        padding: '5px 12px',
-        ...(checked
-          ? {
-              borderColor: color,
-              color: color,
-              background: `rgba(${rgb},0.1)`,
-            }
-          : {
-              borderColor: `rgba(${rgb},0.45)`,
-              color: `rgba(${rgb},0.45)`,
-              background: 'transparent',
-            }),
-      }}
-    >
-      {label}
-    </button>
-  );
-};
 
 /* ─── Live Search Results ─── */
 const LiveSearchResults: React.FC<{
@@ -203,8 +159,6 @@ const FilterDropdownContent: React.FC<{
   appointments?: SearchableAppointment[];
   onSelectAppointment?: (appt: SearchableAppointment) => void;
 }> = ({ draft, setDraft, currentDate, onMonthYearChange, role, onSearch, onClear, compact, appointments = [], onSelectAppointment }) => {
-  const isOwnerAdmin = role === 'OWNER' || role === 'ADMIN' || role === 'PARTNER';
-  const staff = DEMO_USERS.filter(u => u.practice_id === 'demo-practice-1');
   const [monthPickerOpen, setMonthPickerOpen] = useState(false);
   const [pickerYear, setPickerYear] = useState(currentDate.getFullYear());
 
@@ -238,30 +192,6 @@ const FilterDropdownContent: React.FC<{
             onSelect={onSelectAppointment}
           />
         )}
-      </div>
-
-      {/* Date Range */}
-      <div>
-        <label className={sectionLabel} style={sectionLabelStyle}>Date Range</label>
-        <div className="flex items-center gap-1.5">
-          <input
-            type="date"
-            value={draft.dateFrom}
-            onChange={e => setDraft(prev => ({ ...prev, dateFrom: e.target.value }))}
-            className="flex-1 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
-            style={fieldStyle}
-            title="From"
-          />
-          <span className="text-xs text-muted-foreground">–</span>
-          <input
-            type="date"
-            value={draft.dateTo}
-            onChange={e => setDraft(prev => ({ ...prev, dateTo: e.target.value }))}
-            className="flex-1 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
-            style={fieldStyle}
-            title="To"
-          />
-        </div>
       </div>
 
       {/* Month / Year */}
@@ -304,67 +234,67 @@ const FilterDropdownContent: React.FC<{
         )}
       </div>
 
+      {/* Start Date */}
+      <div>
+        <label className={sectionLabel} style={sectionLabelStyle}>Start Date</label>
+        <input
+          type="date"
+          value={draft.dateFrom}
+          onChange={e => setDraft(prev => ({ ...prev, dateFrom: e.target.value }))}
+          className="w-full text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+          style={fieldStyle}
+        />
+      </div>
+
+      {/* End Date */}
+      <div>
+        <label className={sectionLabel} style={sectionLabelStyle}>End Date</label>
+        <input
+          type="date"
+          value={draft.dateTo}
+          onChange={e => setDraft(prev => ({ ...prev, dateTo: e.target.value }))}
+          className="w-full text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+          style={fieldStyle}
+        />
+      </div>
+
       {/* Appointment Type */}
       <div>
         <label className={sectionLabel} style={sectionLabelStyle}>Appointment Type</label>
-        <div className="flex flex-wrap gap-2">
-          {ALL_TYPES.map(t => {
-            const checked = draft.selectedTypes.includes(t);
-            return (
-              <AccentChip
-                key={t}
-                label={t}
-                color={TYPE_COLORS[t]}
-                checked={checked}
-                onClick={() => setDraft(prev => ({
-                  ...prev,
-                  selectedTypes: checked ? prev.selectedTypes.filter(s => s !== t) : [...prev.selectedTypes, t],
-                }))}
-              />
-            );
-          })}
-        </div>
+        <select
+          value={draft.selectedTypes.length === 1 ? draft.selectedTypes[0] : 'all'}
+          onChange={e => setDraft(prev => ({
+            ...prev,
+            selectedTypes: e.target.value === 'all' ? [] : [e.target.value],
+          }))}
+          className="w-full text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+          style={fieldStyle}
+        >
+          <option value="all">All Types</option>
+          {ALL_TYPES.map(t => (
+            <option key={t} value={t}>{t}</option>
+          ))}
+        </select>
       </div>
 
       {/* Status */}
       <div>
         <label className={sectionLabel} style={sectionLabelStyle}>Status</label>
-        <div className="flex flex-wrap gap-2">
-          {ALL_STATUSES.map(s => {
-            const checked = draft.selectedStatuses.includes(s);
-            return (
-              <AccentChip
-                key={s}
-                label={s}
-                color={STATUS_COLORS[s]}
-                checked={checked}
-                onClick={() => setDraft(prev => ({
-                  ...prev,
-                  selectedStatuses: checked ? prev.selectedStatuses.filter(x => x !== s) : [...prev.selectedStatuses, s],
-                }))}
-              />
-            );
-          })}
-        </div>
+        <select
+          value={draft.selectedStatuses.length === 1 ? draft.selectedStatuses[0] : 'all'}
+          onChange={e => setDraft(prev => ({
+            ...prev,
+            selectedStatuses: e.target.value === 'all' ? [] : [e.target.value],
+          }))}
+          className="w-full text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+          style={fieldStyle}
+        >
+          <option value="all">All Statuses</option>
+          {ALL_STATUSES.map(s => (
+            <option key={s} value={s}>{s}</option>
+          ))}
+        </select>
       </div>
-
-      {/* Assigned To */}
-      {isOwnerAdmin && (
-        <div>
-          <label className={sectionLabel} style={sectionLabelStyle}>Assigned To</label>
-          <select
-            value={draft.assignedTo}
-            onChange={e => setDraft(prev => ({ ...prev, assignedTo: e.target.value }))}
-            className="w-full text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
-            style={fieldStyle}
-          >
-            <option value="all">All Staff</option>
-            {staff.map(s => (
-              <option key={s.id} value={s.id}>{s.full_name}</option>
-            ))}
-          </select>
-        </div>
-      )}
 
       {/* Actions */}
       <div className="flex items-center gap-3 pt-1">
