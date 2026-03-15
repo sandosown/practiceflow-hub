@@ -35,7 +35,7 @@ interface StaffRowProps {
   showRemove?: boolean;
 }
 
-const StaffRow: React.FC<StaffRowProps> = ({ staff, contextInfo, onViewProfile }) => {
+const StaffRow: React.FC<StaffRowProps> = ({ staff, contextInfo, onViewProfile, onRemove, showRemove }) => {
   const navigate = useNavigate();
   const isActive = staff.status === 'active';
 
