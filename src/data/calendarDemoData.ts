@@ -358,5 +358,5 @@ export function getDemoAppointments(): DemoAppointment[] {
       meeting_format: 'in_person' as MeetingFormat, location: 'External Location', virtual_platform: null, meeting_link: null,
     },
   ];
-  return raw.map(a => ({ ...a, status: 'confirmed' as AppointmentStatus, status_updated_at: null, status_updated_by: null }));
+  return raw.map(a => ({ ...a, status: 'confirmed' as AppointmentStatus, status_updated_at: null, status_updated_by: null, appointment_group_id: null, is_linked: false }));
 }

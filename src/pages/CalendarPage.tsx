@@ -1202,6 +1202,8 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
       location: meetingFormat === 'in_person' ? (location || null) : null,
       virtual_platform: meetingFormat === 'virtual' ? (virtualPlatform || null) : null,
       meeting_link: meetingFormat === 'virtual' ? (meetingLink.trim() || null) : null,
+      appointment_group_id: null,
+      is_linked: participants.length > 0,
     });
   };
 
