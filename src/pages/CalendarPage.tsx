@@ -101,6 +101,8 @@ const CalendarPage: React.FC = () => {
   const [addOpen, setAddOpen] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
   const [selectedPanelDate, setSelectedPanelDate] = useState<Date | null>(null);
+  const [calendarSearch, setCalendarSearch] = useState('');
+  const [panelSearch, setPanelSearch] = useState('');
   const isMobile = useIsMobile();
   const panelScrollRef = useRef<HTMLDivElement>(null);
 
