@@ -676,6 +676,9 @@ const ReferralPipeline: React.FC = () => {
                   key={outcome}
                   outcome={outcome}
                   items={outcomeReferrals.filter(r => r.outcome === outcome)}
+                  stages={stages}
+                  getDisplayName={getDisplayName}
+                  onReturnToPipeline={returnToPipeline}
                 />
               ))}
             </div>
