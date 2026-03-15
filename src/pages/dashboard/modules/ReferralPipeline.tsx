@@ -360,31 +360,34 @@ const AddStageButton: React.FC<{ onAdd: (name: string) => void }> = ({ onAdd }) 
   }
 
   return (
-    <div className="flex-shrink-0 flex flex-col gap-2 self-start p-3 rounded-xl" style={{ width: 200, background: 'hsl(var(--card))', border: `1px solid rgba(${hexToRgb(ACCENT)},0.3)` }}>
-      <Input
-        placeholder="Stage name"
-        maxLength={30}
-        value={name}
-        onChange={e => setName(e.target.value)}
-        onKeyDown={e => { if (e.key === 'Enter') confirm(); if (e.key === 'Escape') { setAdding(false); setName(''); } }}
-        autoFocus
-        className="text-sm h-8"
-      />
-      <div className="flex gap-2">
-        <button
-          onClick={confirm}
-          disabled={!name.trim()}
-          className="text-xs font-semibold px-3 py-1 rounded-md"
-          style={{ color: ACCENT, border: `1px solid rgba(${hexToRgb(ACCENT)},0.5)`, opacity: name.trim() ? 1 : 0.5 }}
-        >
-          Add
-        </button>
-        <button
-          onClick={() => { setAdding(false); setName(''); }}
-          className="text-xs text-muted-foreground px-3 py-1 rounded-md hover:bg-muted"
-        >
-          Cancel
-        </button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.3)' }} onClick={() => { setAdding(false); setName(''); }}>
+      <div className="flex flex-col gap-2 p-4 rounded-xl shadow-lg" style={{ width: 240, background: 'hsl(var(--card))', border: `1px solid hsl(var(--border))` }} onClick={e => e.stopPropagation()}>
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Add Custom Stage</p>
+        <Input
+          placeholder="Stage name"
+          maxLength={30}
+          value={name}
+          onChange={e => setName(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter') confirm(); if (e.key === 'Escape') { setAdding(false); setName(''); } }}
+          autoFocus
+          className="text-sm h-8"
+        />
+        <div className="flex gap-2">
+          <button
+            onClick={confirm}
+            disabled={!name.trim()}
+            className="text-xs font-semibold px-3 py-1 rounded-md"
+            style={{ color: ACCENT, border: `1px solid ${ACCENT}`, background: 'transparent', opacity: name.trim() ? 1 : 0.5 }}
+          >
+            Add
+          </button>
+          <button
+            onClick={() => { setAdding(false); setName(''); }}
+            className="text-xs text-muted-foreground px-3 py-1 rounded-md hover:bg-muted"
+          >
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
   );
