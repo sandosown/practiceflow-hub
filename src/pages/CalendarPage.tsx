@@ -647,6 +647,7 @@ const CalendarPage: React.FC = () => {
                 currentDate={currentDate}
                 onMonthYearChange={handleMonthYearChange}
                 role={role}
+                userId={userId}
               />
             </div>
           )}
@@ -669,6 +670,7 @@ const CalendarPage: React.FC = () => {
                 currentDate={currentDate}
                 onMonthYearChange={handleMonthYearChange}
                 role={role}
+                userId={userId}
               />
             </SheetContent>
           </Sheet>
@@ -725,9 +727,10 @@ interface PanelProps {
   currentDate: Date;
   onMonthYearChange: (d: Date) => void;
   role: string;
+  userId: string;
 }
 
-const AppointmentsPanel: React.FC<PanelProps> = ({ grouped, dateContext, onSelect, filters, onFiltersChange, onFiltersClear, currentDate, onMonthYearChange, role }) => {
+const AppointmentsPanel: React.FC<PanelProps> = ({ grouped, dateContext, onSelect, filters, onFiltersChange, onFiltersClear, currentDate, onMonthYearChange, role, userId }) => {
   const dateKeys = Object.keys(grouped).sort();
 
   return (
@@ -794,7 +797,9 @@ const AppointmentsPanel: React.FC<PanelProps> = ({ grouped, dateContext, onSelec
                             </span>
                           </div>
                           {a.assigned_by && a.assigned_by !== a.assigned_to && (
-                            <p className="text-[10px] text-muted-foreground">with {getNameById(a.assigned_to)}</p>
+                            <p className="text-[10px] text-muted-foreground">
+                              {a.assigned_to === userId ? `Added by ${getNameById(a.assigned_by)}` : `with ${getNameById(a.assigned_to)}`}
+                            </p>
                           )}
                         </div>
                       </button>
