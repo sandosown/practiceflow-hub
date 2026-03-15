@@ -874,8 +874,11 @@ const AppointmentDetail: React.FC<DetailProps> = ({ appt, userId, role, onDelete
           <Users size={14} className="text-muted-foreground mt-0.5" />
           <div className="flex flex-wrap gap-1.5">
             {appt.participants.map((p, i) => (
-              <span key={i} className="px-2 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-foreground/80">
-                {p.name}{p.external ? ' (external)' : ''}
+              <span key={i} className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-foreground/80">
+                <span>{p.name}</span>
+                <span className="text-[10px] text-muted-foreground font-normal">
+                  {p.external ? 'External' : (p.role ?? '')}
+                </span>
               </span>
             ))}
           </div>
