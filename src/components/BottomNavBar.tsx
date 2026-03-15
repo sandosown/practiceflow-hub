@@ -60,6 +60,7 @@ const ALL_SECTIONS: DrawerSection[] = [
   {
     id: 'SYSTEM', title: 'SYSTEM', cols: 4,
     items: [
+      { id: 'access-permissions', label: 'Access & Permissions', icon: Lock, path: '/dashboard/owner/group-practice/access-permissions' },
       { id: 'guide', label: 'Guide Center', icon: BookOpen, path: '/dashboard/owner/group-practice/guide' },
       { id: 'settings', label: 'Settings', icon: Settings, path: '/settings' },
     ],
