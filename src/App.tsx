@@ -43,6 +43,9 @@ import AccessPermissions from "./pages/dashboard/modules/AccessPermissions";
 import Settings from "./pages/Settings";
 import CalendarPage from "./pages/CalendarPage";
 
+// Practice / People
+import PeopleHub from "./pages/practice/PeopleHub";
+
 const queryClient = new QueryClient();
 
 const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -119,6 +122,9 @@ const AppRoutes = () => (
 
     {/* Calendar (universal — all roles) */}
     <Route path="/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
+
+    {/* People Engine */}
+    <Route path="/practice/people" element={<ProtectedRoute><PeopleHub /></ProtectedRoute>} />
 
     {/* Settings */}
     <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />

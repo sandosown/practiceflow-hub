@@ -26,7 +26,7 @@ const MODULES = [
   { id: 'finance', label: 'Finance', icon: DollarSign, subtitle: 'Income, expenses & practice health.', path: '/dashboard/owner/group-practice/finance', accent: '#059669' },
   { id: 'insurance', label: 'Insurance Database', icon: CreditCard, subtitle: 'Payers & coverage', path: '/dashboard/owner/group-practice/insurance', accent: '#78716c' },
   { id: 'vendors', label: 'Vendor Database', icon: Package, subtitle: 'Vendor contacts & contracts', path: '/dashboard/owner/group-practice/vendors', accent: '#92764a' },
-  
+  { id: 'people', label: 'People', icon: Users, subtitle: 'Worker profiles & credentials', path: '/practice/people', accent: '#818cf8' },
 ];
 
 function hexToRgb(hex: string): string {
