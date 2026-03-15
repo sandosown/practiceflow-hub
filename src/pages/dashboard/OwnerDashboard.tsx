@@ -17,9 +17,6 @@ const getWorkspaces = (workspaceName: string | null) => [
   { id: 'coaching', label: 'Coaching', icon: GraduationCap, subtitle: 'Coming Soon', active: false, accent: '#f59e0b', second: '#f97316' },
   { id: 'home', label: 'Home', icon: Home, subtitle: 'Coming Soon', active: false, accent: '#4ade80', second: '#22d3ee' },
 ];
-  { id: 'coaching', label: 'Coaching', icon: GraduationCap, subtitle: 'Coming Soon', active: false, accent: '#f59e0b', second: '#f97316' },
-  { id: 'home', label: 'Home', icon: Home, subtitle: 'Coming Soon', active: false, accent: '#4ade80', second: '#22d3ee' },
-];
 
 const NEBULA_POOLS = [
   { w: 550, h: 320, top: '10%', left: '5%', color: '45,212,191', opacity: 0.09, blur: 50 },
