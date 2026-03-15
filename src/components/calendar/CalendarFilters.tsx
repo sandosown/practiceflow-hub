@@ -95,21 +95,6 @@ const FilterDropdownContent: React.FC<{
 
   return (
     <div className={`space-y-3 ${compact ? 'text-xs' : 'text-sm'}`}>
-      {/* Keyword */}
-      <div>
-        <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">Keyword</label>
-        <div className="relative">
-          <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
-          <input
-            type="text"
-            value={draft.keyword}
-            onChange={e => setDraft(prev => ({ ...prev, keyword: e.target.value }))}
-            placeholder="Search by keyword..."
-            className="w-full pl-8 pr-3 py-1.5 rounded-md border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
-          />
-        </div>
-      </div>
-
       {/* Date Range */}
       <div>
         <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">Date Range</label>
