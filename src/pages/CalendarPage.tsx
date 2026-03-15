@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Plus, ChevronLeft, ChevronRight, Clock, User, X, Edit2, CalendarIcon, Trash2, AlertTriangle, List, Search, Check, RotateCcw, MapPin, Video, Link2, Users } from 'lucide-react';
+import { Plus, ChevronLeft, ChevronRight, Clock, User, X, Edit2, CalendarIcon, Trash2, AlertTriangle, List, Search, Check, RotateCcw, MapPin, Video, Link2, Users, Copy } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -280,8 +280,57 @@ const CalendarPage: React.FC = () => {
     toast({ title: `Status updated to ${STATUS_LABELS[newStatus]}` });
   }, [userId]);
 
+  /* ── Duplicate detection state ── */
+  const [duplicateModalOpen, setDuplicateModalOpen] = useState(false);
+  const [duplicateAppt, setDuplicateAppt] = useState<DemoAppointment | null>(null);
+  const [duplicateCreatorName, setDuplicateCreatorName] = useState('');
+
   /* ── Add appointment ── */
   const handleAddAppointment = (data: Omit<DemoAppointment, 'appointment_id'>) => {
+    // Duplicate detection: check if a linked appointment with the exact same participant set already exists
+    if (data.participants.length > 0) {
+      // Build the set of all people in the new appointment (creator + participants)
+      const newParticipantIds = new Set<string>();
+      newParticipantIds.add(data.created_by);
+      data.participants.forEach(p => {
+        if (p.id) newParticipantIds.add(p.id);
+      });
+
+      // Only check if we have at least 2 people (creator + at least one participant with id)
+      if (newParticipantIds.size >= 2) {
+        // Find existing linked appointments with exact same participant set
+        const duplicates = appointments.filter(existing => {
+          if (!existing.is_linked) return false;
+          if (existing.status === 'cancelled') return false;
+
+          // Build existing participant set (creator + participants)
+          const existingIds = new Set<string>();
+          existingIds.add(existing.created_by);
+          existing.participants.forEach(p => {
+            if (p.id) existingIds.add(p.id);
+          });
+
+          // Check exact match
+          if (existingIds.size !== newParticipantIds.size) return false;
+          for (const id of newParticipantIds) {
+            if (!existingIds.has(id)) return false;
+          }
+          return true;
+        });
+
+        if (duplicates.length > 0) {
+          // Show the most recent duplicate
+          const mostRecent = duplicates.sort((a, b) =>
+            new Date(b.start_time).getTime() - new Date(a.start_time).getTime()
+          )[0];
+          setDuplicateAppt(mostRecent);
+          setDuplicateCreatorName(getNameById(mostRecent.created_by));
+          setDuplicateModalOpen(true);
+          return; // Block save
+        }
+      }
+    }
+
     const newAppt: DemoAppointment = {
       ...data,
       appointment_id: `appt-new-${Date.now()}`,
@@ -289,6 +338,36 @@ const CalendarPage: React.FC = () => {
     setAppointments(prev => [...prev, newAppt]);
     setAddOpen(false);
     toast({ title: 'Appointment created' });
+  };
+
+  /* ── Duplicate modal handlers ── */
+  const handleDuplicateGoToCalendar = () => {
+    setDuplicateModalOpen(false);
+    setAddOpen(false);
+    if (duplicateAppt) {
+      const d = new Date(duplicateAppt.start_time);
+      setCurrentDate(d);
+      setView('day');
+    }
+  };
+
+  const handleDuplicateGoToAppointments = () => {
+    setDuplicateModalOpen(false);
+    setAddOpen(false);
+    setPanelOpen(true);
+    if (duplicateAppt) {
+      const d = new Date(duplicateAppt.start_time);
+      setCurrentDate(d);
+      scrollPanelToDate(d);
+    }
+  };
+
+  const handleDuplicateEditExisting = () => {
+    setDuplicateModalOpen(false);
+    setAddOpen(false);
+    if (duplicateAppt) {
+      openDetail(duplicateAppt);
+    }
   };
 
   /* ── Appointment chip ── */
@@ -708,6 +787,47 @@ const CalendarPage: React.FC = () => {
             onSave={handleAddAppointment}
             onCancel={() => setAddOpen(false)}
           />
+        </DialogContent>
+      </Dialog>
+
+      {/* ── Duplicate detection modal ── */}
+      <Dialog open={duplicateModalOpen} onOpenChange={setDuplicateModalOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Copy size={18} style={{ color: TEAL }} />
+              Duplicate Appointment Found
+            </DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-foreground/80">
+            {duplicateCreatorName} already created this appointment and added it to your calendar.
+          </p>
+          <div className="flex flex-col gap-2 pt-2">
+            <button
+              type="button"
+              onClick={handleDuplicateGoToCalendar}
+              className="w-full px-4 py-2.5 rounded-lg text-sm font-medium transition-colors hover:opacity-80"
+              style={{ border: `1.5px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
+            >
+              Go to Calendar
+            </button>
+            <button
+              type="button"
+              onClick={handleDuplicateGoToAppointments}
+              className="w-full px-4 py-2.5 rounded-lg text-sm font-medium transition-colors hover:opacity-80"
+              style={{ border: `1.5px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
+            >
+              Go to Appointments
+            </button>
+            <button
+              type="button"
+              onClick={handleDuplicateEditExisting}
+              className="w-full px-4 py-2.5 rounded-lg text-sm font-medium transition-colors hover:opacity-80"
+              style={{ border: `1.5px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
+            >
+              Edit Existing
+            </button>
+          </div>
         </DialogContent>
       </Dialog>
       <BottomNavBar />
@@ -1202,6 +1322,8 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
       location: meetingFormat === 'in_person' ? (location || null) : null,
       virtual_platform: meetingFormat === 'virtual' ? (virtualPlatform || null) : null,
       meeting_link: meetingFormat === 'virtual' ? (meetingLink.trim() || null) : null,
+      appointment_group_id: null,
+      is_linked: participants.length > 0,
     });
   };
 

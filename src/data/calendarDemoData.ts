@@ -40,6 +40,9 @@ export interface DemoAppointment {
   location: string | null;
   virtual_platform: string | null;
   meeting_link: string | null;
+  // LOG-104 shared ownership
+  appointment_group_id: string | null;
+  is_linked: boolean;
 }
 
 function isoDate(dayOffset: number, hour: number, minute = 0): string {
@@ -355,5 +358,5 @@ export function getDemoAppointments(): DemoAppointment[] {
       meeting_format: 'in_person' as MeetingFormat, location: 'External Location', virtual_platform: null, meeting_link: null,
     },
   ];
-  return raw.map(a => ({ ...a, status: 'confirmed' as AppointmentStatus, status_updated_at: null, status_updated_by: null }));
+  return raw.map(a => ({ ...a, status: 'confirmed' as AppointmentStatus, status_updated_at: null, status_updated_by: null, appointment_group_id: null, is_linked: false }));
 }
