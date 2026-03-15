@@ -670,6 +670,45 @@ export type Database = {
         }
         Relationships: []
       }
+      permission_grants: {
+        Row: {
+          access_type: string
+          created_at: string
+          grant_id: string
+          granted_by: string
+          granted_to: string
+          hat_id: string
+          is_active: boolean
+          module: string
+          revoked_at: string | null
+          revoked_by: string | null
+        }
+        Insert: {
+          access_type?: string
+          created_at?: string
+          grant_id?: string
+          granted_by: string
+          granted_to: string
+          hat_id?: string
+          is_active?: boolean
+          module: string
+          revoked_at?: string | null
+          revoked_by?: string | null
+        }
+        Update: {
+          access_type?: string
+          created_at?: string
+          grant_id?: string
+          granted_by?: string
+          granted_to?: string
+          hat_id?: string
+          is_active?: boolean
+          module?: string
+          revoked_at?: string | null
+          revoked_by?: string | null
+        }
+        Relationships: []
+      }
       practices: {
         Row: {
           created_at: string

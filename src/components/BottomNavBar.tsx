@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Home, MessageSquare, Briefcase, Calendar, MoreHorizontal,
   LayoutDashboard, Users, CreditCard, Package, ShieldCheck, Shield,
-  Contact, Award, Mail, Rss, BookOpen, Settings, Sparkles,
+  Contact, Award, Mail, Rss, BookOpen, Settings, Sparkles, Lock,
 } from 'lucide-react';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { useSessionData } from '@/context/SessionContext';
@@ -60,6 +60,7 @@ const ALL_SECTIONS: DrawerSection[] = [
   {
     id: 'SYSTEM', title: 'SYSTEM', cols: 4,
     items: [
+      { id: 'access-permissions', label: 'Access & Permissions', icon: Lock, path: '/dashboard/owner/group-practice/access-permissions' },
       { id: 'guide', label: 'Guide Center', icon: BookOpen, path: '/dashboard/owner/group-practice/guide' },
       { id: 'settings', label: 'Settings', icon: Settings, path: '/settings' },
     ],
@@ -84,7 +85,7 @@ const ROLE_VISIBILITY: Record<EffectiveRole, Record<string, string[]>> = {
     TEAM: ['directory', 'recognition'],
     PERSONAL: ['moments'],
     COMMUNICATION: ['messages', 'feed'],
-    SYSTEM: ['guide', 'settings'],
+    SYSTEM: ['access-permissions', 'guide', 'settings'],
   },
   ADMIN: {
     PRACTICE: ['management', 'clients', 'insurance', 'vendors', 'compliance'],
