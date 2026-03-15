@@ -14,8 +14,8 @@ export const DEMO_USERS: DemoUser[] = [
   },
   {
     id: 'demo-partner',
-    full_name: 'Dr. Kevin Park',
-    email: 'kevin@practiceflow.io',
+    full_name: 'Jordan Mitchell',
+    email: 'jordan@practiceflow.io',
     role: 'PARTNER',
     clinician_subtype: null,
     intern_subtype: null,
