@@ -686,7 +686,7 @@ If ignored, disappears on next navigation.
 
 | LOG-100 | Color Variety Rule — varied colors on all grouped visual elements | LOCKED |
 
-| LOG-101 | SympoFlo Full Color Palette locked — 23 colors, pairing rules, no monotone sets | LOCKED |
+| LOG-101 | UI Color Variety System — 23 UI variety colors locked, not brand palette | LOCKED |
 
 ---
 
