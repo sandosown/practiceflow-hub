@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/hooks/use-toast';
+import CalendarFilters, { type CalendarFilterState, DEFAULT_FILTERS, isFiltersActive } from '@/components/calendar/CalendarFilters';
 
 /* ─── Appointment type colors ─── */
 const TYPE_COLORS: Record<string, string> = {
@@ -86,6 +87,45 @@ type CalendarView = 'month' | 'week' | 'day';
 /* ─── Time slots for week/day views ─── */
 const HOURS = Array.from({ length: 14 }, (_, i) => i + 7); // 7am to 8pm
 
+/* ─── Filter helper — applies all filters with AND logic ─── */
+function applyFilters(appts: DemoAppointment[], filters: CalendarFilterState): DemoAppointment[] {
+  return appts.filter(a => {
+    // Keyword — matches title
+    if (filters.keyword.trim()) {
+      const q = filters.keyword.toLowerCase();
+      if (!a.title.toLowerCase().includes(q)) return false;
+    }
+
+    // Date range
+    if (filters.dateFrom) {
+      const from = new Date(filters.dateFrom + 'T00:00:00');
+      if (new Date(a.start_time) < from) return false;
+    }
+    if (filters.dateTo) {
+      const to = new Date(filters.dateTo + 'T23:59:59');
+      if (new Date(a.start_time) > to) return false;
+    }
+
+    // Type
+    if (filters.selectedTypes.length > 0) {
+      if (!filters.selectedTypes.includes(a.appointment_type)) return false;
+    }
+
+    // Status — default to 'Confirmed' for demo data since status field not yet on model
+    if (filters.selectedStatuses.length > 0) {
+      const status = 'Confirmed'; // default — will use a.status when field exists
+      if (!filters.selectedStatuses.includes(status)) return false;
+    }
+
+    // Assigned To
+    if (filters.assignedTo !== 'all') {
+      if (a.assigned_to !== filters.assignedTo) return false;
+    }
+
+    return true;
+  });
+}
+
 /* ═══════════════════════════════════════════════ */
 const CalendarPage: React.FC = () => {
   const session = useSessionData();
@@ -101,10 +141,12 @@ const CalendarPage: React.FC = () => {
   const [addOpen, setAddOpen] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
   const [selectedPanelDate, setSelectedPanelDate] = useState<Date | null>(null);
-  const [calendarSearch, setCalendarSearch] = useState('');
-  const [panelSearch, setPanelSearch] = useState('');
   const isMobile = useIsMobile();
   const panelScrollRef = useRef<HTMLDivElement>(null);
+
+  /* ── Shared filter state (both calendar and panel use the same filters) ── */
+  const [calendarFilters, setCalendarFilters] = useState<CalendarFilterState>({ ...DEFAULT_FILTERS });
+  const [panelFilters, setPanelFilters] = useState<CalendarFilterState>({ ...DEFAULT_FILTERS });
 
   /* ── Role-scoped filtering ── */
   const roleFilteredAppointments = useMemo(() => {
@@ -118,22 +160,10 @@ const CalendarPage: React.FC = () => {
     return appointments.filter(a => a.assigned_to === userId);
   }, [appointments, userId, role]);
 
-  /* ── Search filter helper ── */
-  const filterBySearch = useCallback((appts: DemoAppointment[], query: string) => {
-    if (!query.trim()) return appts;
-    const q = query.toLowerCase();
-    return appts.filter(a =>
-      a.title.toLowerCase().includes(q) ||
-      a.appointment_type.toLowerCase().includes(q) ||
-      getNameById(a.assigned_to).toLowerCase().includes(q) ||
-      (a.assigned_by ? getNameById(a.assigned_by).toLowerCase().includes(q) : false)
-    );
-  }, []);
-
-  /* ── Calendar-visible appointments (role + calendar search) ── */
+  /* ── Calendar-visible appointments (role + calendar filters) ── */
   const visibleAppointments = useMemo(
-    () => filterBySearch(roleFilteredAppointments, calendarSearch),
-    [roleFilteredAppointments, calendarSearch, filterBySearch]
+    () => applyFilters(roleFilteredAppointments, calendarFilters),
+    [roleFilteredAppointments, calendarFilters]
   );
 
   /* ── Navigation ── */
@@ -153,6 +183,11 @@ const CalendarPage: React.FC = () => {
   };
   const goToToday = () => setCurrentDate(new Date());
 
+  /* ── Month/Year change from filter ── */
+  const handleMonthYearChange = useCallback((date: Date) => {
+    setCurrentDate(date);
+  }, []);
+
   /* ── Scroll panel to date ── */
   const scrollPanelToDate = useCallback((date: Date) => {
     setSelectedPanelDate(date);
@@ -163,11 +198,11 @@ const CalendarPage: React.FC = () => {
     }, 100);
   }, []);
 
-  /* ── Panel grouped appointments (role + panel search) ── */
+  /* ── Panel grouped appointments (role + panel filters) ── */
   const panelAppointments = useMemo(() => {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
-    const panelFiltered = filterBySearch(roleFilteredAppointments, panelSearch);
+    const panelFiltered = applyFilters(roleFilteredAppointments, panelFilters);
     const filtered = panelFiltered.filter(a => {
       const d = new Date(a.start_time);
       if (view === 'day') return isSameDay(d, currentDate);
@@ -182,7 +217,7 @@ const CalendarPage: React.FC = () => {
       grouped[key].push(a);
     });
     return grouped;
-  }, [roleFilteredAppointments, panelSearch, currentDate, view, filterBySearch]);
+  }, [roleFilteredAppointments, panelFilters, currentDate, view]);
 
   const panelDateContext = view === 'day'
     ? formatDateLong(currentDate)
@@ -506,17 +541,16 @@ const CalendarPage: React.FC = () => {
           </button>
         </div>
 
-        {/* Calendar search bar */}
-        <div className="relative mb-4">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-          <input
-            type="text"
-            value={calendarSearch}
-            onChange={e => setCalendarSearch(e.target.value)}
-            placeholder="Search calendar..."
-            className="w-full pl-9 pr-3 py-2 rounded-lg border border-border bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
-          />
-        </div>
+        {/* Smart filter bar — replaces plain search */}
+        <CalendarFilters
+          filters={calendarFilters}
+          onChange={setCalendarFilters}
+          onClear={() => setCalendarFilters({ ...DEFAULT_FILTERS })}
+          currentDate={currentDate}
+          onMonthYearChange={handleMonthYearChange}
+          role={role}
+          layout="horizontal"
+        />
 
         {/* Calendar body + Panel layout */}
         <div className="flex gap-4">
@@ -529,7 +563,7 @@ const CalendarPage: React.FC = () => {
           {/* Desktop side panel */}
           {panelOpen && !isMobile && (
             <div
-              className="w-[280px] flex-shrink-0 rounded-xl overflow-hidden animate-fade-in"
+              className="w-[320px] flex-shrink-0 rounded-xl overflow-hidden animate-fade-in"
               style={{
                 background: 'hsl(var(--card))',
                 borderLeft: '4px solid #2dd4bf',
@@ -542,8 +576,12 @@ const CalendarPage: React.FC = () => {
                 grouped={panelAppointments}
                 dateContext={panelDateContext}
                 onSelect={openDetail}
-                search={panelSearch}
-                onSearchChange={setPanelSearch}
+                filters={panelFilters}
+                onFiltersChange={setPanelFilters}
+                onFiltersClear={() => setPanelFilters({ ...DEFAULT_FILTERS })}
+                currentDate={currentDate}
+                onMonthYearChange={handleMonthYearChange}
+                role={role}
               />
             </div>
           )}
@@ -560,8 +598,12 @@ const CalendarPage: React.FC = () => {
                 grouped={panelAppointments}
                 dateContext={panelDateContext}
                 onSelect={(a) => { setPanelOpen(false); openDetail(a); }}
-                search={panelSearch}
-                onSearchChange={setPanelSearch}
+                filters={panelFilters}
+                onFiltersChange={setPanelFilters}
+                onFiltersClear={() => setPanelFilters({ ...DEFAULT_FILTERS })}
+                currentDate={currentDate}
+                onMonthYearChange={handleMonthYearChange}
+                role={role}
               />
             </SheetContent>
           </Sheet>
@@ -611,9 +653,15 @@ interface PanelProps {
   grouped: Record<string, DemoAppointment[]>;
   dateContext: string;
   onSelect: (a: DemoAppointment) => void;
+  filters: CalendarFilterState;
+  onFiltersChange: (f: CalendarFilterState) => void;
+  onFiltersClear: () => void;
+  currentDate: Date;
+  onMonthYearChange: (d: Date) => void;
+  role: string;
 }
 
-const AppointmentsPanel: React.FC<PanelProps & { search?: string; onSearchChange?: (v: string) => void }> = ({ grouped, dateContext, onSelect, search, onSearchChange }) => {
+const AppointmentsPanel: React.FC<PanelProps> = ({ grouped, dateContext, onSelect, filters, onFiltersChange, onFiltersClear, currentDate, onMonthYearChange, role }) => {
   const dateKeys = Object.keys(grouped).sort();
 
   return (
@@ -622,24 +670,21 @@ const AppointmentsPanel: React.FC<PanelProps & { search?: string; onSearchChange
         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Appointments</p>
         <p className="text-sm text-foreground/70 mt-0.5">{dateContext}</p>
       </div>
-      {/* Panel search bar */}
-      {onSearchChange && (
-        <div className="px-4 pb-2">
-          <div className="relative">
-            <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <input
-              type="text"
-              value={search ?? ''}
-              onChange={e => onSearchChange(e.target.value)}
-              placeholder="Search..."
-              className="w-full pl-8 pr-3 py-1.5 rounded-md border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
-            />
-          </div>
-        </div>
-      )}
+      {/* Panel filter bar — vertical stack */}
+      <div className="px-4 pb-3">
+        <CalendarFilters
+          filters={filters}
+          onChange={onFiltersChange}
+          onClear={onFiltersClear}
+          currentDate={currentDate}
+          onMonthYearChange={onMonthYearChange}
+          role={role}
+          layout="vertical"
+        />
+      </div>
       <ScrollArea className="flex-1 px-4 pb-4">
         {dateKeys.length === 0 ? (
-          <p className="text-sm text-muted-foreground py-8 text-center">No appointments this month.</p>
+          <p className="text-sm text-muted-foreground py-8 text-center">No appointments found.</p>
         ) : (
           dateKeys.map(dateKey => {
             const appts = grouped[dateKey];
