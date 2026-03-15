@@ -243,6 +243,23 @@ const ManagementCenter: React.FC = () => {
           <h2 className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3 text-muted-foreground" style={{ borderLeft: `4px solid ${ACCENT}` }}>
             STAFF OVERVIEW
           </h2>
+          <div
+            className="flex items-center gap-2 rounded-lg px-3 py-2.5 mb-4"
+            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)' }}
+          >
+            <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <input
+              className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground text-foreground"
+              placeholder="Search team members..."
+              value={staffSearch}
+              onChange={e => setStaffSearch(e.target.value)}
+            />
+            {staffSearch && (
+              <button onClick={() => setStaffSearch('')} className="p-0.5 rounded hover:bg-white/10">
+                <X className="h-3.5 w-3.5 text-muted-foreground" />
+              </button>
+            )}
+          </div>
           <div className="flex flex-col gap-3">
             {activeStaff.map((s) => (
               <StaffRow
