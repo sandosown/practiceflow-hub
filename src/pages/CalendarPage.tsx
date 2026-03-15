@@ -99,6 +99,10 @@ const CalendarPage: React.FC = () => {
   const [selectedAppt, setSelectedAppt] = useState<DemoAppointment | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
+  const [panelOpen, setPanelOpen] = useState(false);
+  const [selectedPanelDate, setSelectedPanelDate] = useState<Date | null>(null);
+  const isMobile = useIsMobile();
+  const panelScrollRef = useRef<HTMLDivElement>(null);
 
   /* ── Role-scoped filtering ── */
   const visibleAppointments = useMemo(() => {
