@@ -90,13 +90,6 @@ const ManagementCenter: React.FC = () => {
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [loadingInvitations, setLoadingInvitations] = useState(true);
 
-  const callerRole = session?.role;
-
-  // Filter role options based on caller role
-  const availableRoles = callerRole === 'OWNER'
-    ? ROLE_OPTIONS
-    : ROLE_OPTIONS.filter(r => r.value !== 'PARTNER' && r.value !== 'OWNER');
-
   const fetchInvitations = useCallback(async () => {
     const { data, error } = await supabase
       .from('invitations')
