@@ -117,6 +117,44 @@ const GroupPracticeDashboard: React.FC = () => {
           </div>
         </section>
 
+        {/* Team Management card — Owner only */}
+        <section className="mb-8">
+          <div
+            className="p-4 flex items-center justify-between gap-4"
+            style={{
+              background: 'hsl(var(--card))',
+              borderRadius: 10,
+              borderLeft: `4px solid ${MGMT_ACCENT}`,
+              borderTop: `1px solid rgba(124,58,237,0.5)`,
+              borderBottom: `1px solid rgba(124,58,237,0.5)`,
+              borderRight: `1px solid rgba(124,58,237,0.35)`,
+            }}
+          >
+            <h2
+              className="text-xs font-semibold uppercase tracking-widest text-muted-foreground"
+            >
+              Team Management
+            </h2>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setInviteOpen(true)}
+                className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md transition-colors hover:bg-white/5"
+                style={{ color: TEAL, border: `1px solid ${TEAL}`, background: 'transparent' }}
+              >
+                <Plus className="w-3.5 h-3.5" />
+                Invite Team Member
+              </button>
+              <button
+                onClick={() => navigate('/dashboard/owner/group-practice/access-permissions')}
+                className="text-xs font-semibold px-3 py-1.5 rounded-md transition-colors hover:bg-white/5"
+                style={{ color: TEAL, border: `1px solid ${TEAL}`, background: 'transparent' }}
+              >
+                Access &amp; Permissions
+              </button>
+            </div>
+          </div>
+        </section>
+
         {/* Module cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
           {MODULES.map(m => {
