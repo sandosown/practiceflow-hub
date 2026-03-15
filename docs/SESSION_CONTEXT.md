@@ -362,7 +362,9 @@ Interior stays clean — color lives in border only. No colored card fills. Ever
 
 ## NEXT BUILD
 
-**Resume at:** Phase 10 — Calendar & Appointments (PENDING)
+**Currently building:** Phase 10 — Calendar & Appointments
+
+Base calendar shell in progress.
 
 ---
 
