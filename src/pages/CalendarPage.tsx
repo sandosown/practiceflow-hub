@@ -542,6 +542,8 @@ const CalendarPage: React.FC = () => {
                 grouped={panelAppointments}
                 dateContext={panelDateContext}
                 onSelect={openDetail}
+                search={panelSearch}
+                onSearchChange={setPanelSearch}
               />
             </div>
           )}
