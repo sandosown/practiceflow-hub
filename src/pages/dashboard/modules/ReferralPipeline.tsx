@@ -513,6 +513,14 @@ const ReferralPipeline: React.FC = () => {
     }));
   }, [logMovement]);
 
+  const returnToPipeline = useCallback((id: string, stage: string) => {
+    setReferrals(prev => prev.map(r => {
+      if (r.id !== id) return r;
+      logMovement(r.id, r.outcome ?? 'Outcome', stage);
+      return { ...r, stage, outcome: undefined, daysInStage: 0 };
+    }));
+  }, [logMovement]);
+
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id as string);
   };
