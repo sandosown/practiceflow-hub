@@ -291,8 +291,45 @@ const DroppableColumn: React.FC<{
   );
 };
 
+/* ── Return to Pipeline Popover ── */
+const ReturnToPipelinePopover: React.FC<{
+  referralId: string;
+  stages: string[];
+  getDisplayName: (key: string) => string;
+  onReturn: (referralId: string, stage: string) => void;
+}> = ({ referralId, stages, getDisplayName, onReturn }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button className="text-[11px] font-medium hover:underline" style={{ color: ACCENT, background: 'transparent', border: 'none' }}>
+          ← Return to Pipeline
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-48 p-1" align="start" sideOffset={4}>
+        <p className="text-[10px] uppercase tracking-wider text-muted-foreground px-2 py-1 font-semibold">Move to stage</p>
+        {stages.map(s => (
+          <button
+            key={s}
+            onClick={() => { onReturn(referralId, s); setOpen(false); }}
+            className="w-full text-left text-sm px-2 py-1.5 rounded hover:bg-muted transition-colors text-foreground"
+          >
+            {getDisplayName(s)}
+          </button>
+        ))}
+      </PopoverContent>
+    </Popover>
+  );
+};
+
 /* ── Droppable Outcome Bucket ── */
-const DroppableOutcomeBucket: React.FC<{ outcome: Outcome; items: Referral[] }> = ({ outcome, items }) => {
+const DroppableOutcomeBucket: React.FC<{
+  outcome: Outcome;
+  items: Referral[];
+  stages: string[];
+  getDisplayName: (key: string) => string;
+  onReturnToPipeline: (referralId: string, stage: string) => void;
+}> = ({ outcome, items, stages, getDisplayName, onReturnToPipeline }) => {
   const { setNodeRef, isOver } = useDroppable({ id: `outcome:${outcome}` });
   const isComplete = outcome === 'Intake Complete';
 
@@ -321,9 +358,17 @@ const DroppableOutcomeBucket: React.FC<{ outcome: Outcome; items: Referral[] }> 
       ) : (
         <div className="space-y-2">
           {items.map(r => (
-            <div key={r.id} className="text-sm text-foreground">
-              {r.firstName} {r.lastName}
-              <span className="text-xs text-muted-foreground ml-2">{r.dateSubmitted}</span>
+            <div key={r.id} className="flex items-center justify-between gap-2">
+              <div className="text-sm text-foreground">
+                {r.firstName} {r.lastName}
+                <span className="text-xs text-muted-foreground ml-2">{r.dateSubmitted}</span>
+              </div>
+              <ReturnToPipelinePopover
+                referralId={r.id}
+                stages={stages}
+                getDisplayName={getDisplayName}
+                onReturn={onReturnToPipeline}
+              />
             </div>
           ))}
         </div>
@@ -465,6 +510,14 @@ const ReferralPipeline: React.FC = () => {
       if (r.id !== id) return r;
       logMovement(r.id, r.stage, outcome);
       return { ...r, outcome };
+    }));
+  }, [logMovement]);
+
+  const returnToPipeline = useCallback((id: string, stage: string) => {
+    setReferrals(prev => prev.map(r => {
+      if (r.id !== id) return r;
+      logMovement(r.id, r.outcome ?? 'Outcome', stage);
+      return { ...r, stage, outcome: undefined, daysInStage: 0 };
     }));
   }, [logMovement]);
 
@@ -623,6 +676,9 @@ const ReferralPipeline: React.FC = () => {
                   key={outcome}
                   outcome={outcome}
                   items={outcomeReferrals.filter(r => r.outcome === outcome)}
+                  stages={stages}
+                  getDisplayName={getDisplayName}
+                  onReturnToPipeline={returnToPipeline}
                 />
               ))}
             </div>
