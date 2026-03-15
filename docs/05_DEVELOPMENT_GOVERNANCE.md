@@ -375,6 +375,22 @@ A system that shows dark mode on desktop and light mode on mobile is broken. The
 
 ---
 
+## LOG-110 — Mobile Calendar Header Layout — LOCKED
+
+**Rule:**
+
+- On mobile, the Month/Week/Day view toggle moves below the page header and sits directly above the calendar grid — not in the top header bar
+- The top header bar on mobile contains: page title left, and action buttons right with visible text labels or clear iconography
+- Icon-only buttons in mobile headers are not permitted unless the icon is universally understood (e.g. + for add)
+- The Appointments list button must have a visible label on mobile — not icon only
+- This creates maximum real estate in the top bar for labeling and context
+
+**Rationale:**
+
+Mobile users need labeled controls. Icon-only buttons create confusion. Moving the view toggle closer to the calendar grid is both more logical spatially and frees the header for proper labels.
+
+---
+
 End of 05_DEVELOPMENT_GOVERNANCE.md
 
 ---
