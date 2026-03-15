@@ -1041,15 +1041,13 @@ interface AddFormProps {
 const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtype, onSave, onCancel }) => {
   const types = getTypesForRole(role, internSubtype);
 
-  // Assign To visibility per LOG-102
-  const canAssign = role === 'OWNER' || role === 'ADMIN' || role === 'PARTNER' || role === 'SUPERVISOR';
 
   const [title, setTitle] = useState('');
   const [type, setType] = useState(types[0]);
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [startTime, setStartTime] = useState('09:00');
   const [endTime, setEndTime] = useState('10:00');
-  const [assignTo, setAssignTo] = useState(userId);
+  
   const [notes, setNotes] = useState('');
 
   // LOG-102 context fields
@@ -1101,17 +1099,6 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
     return u.role.charAt(0) + u.role.slice(1).toLowerCase();
   };
 
-  // Assign To options based on role
-  const assignToOptions = useMemo(() => {
-    if (role === 'OWNER' || role === 'ADMIN' || role === 'PARTNER') {
-      return activeStaff;
-    }
-    if (role === 'SUPERVISOR') {
-      const superviseeIds = ['demo-clinician', 'demo-intern-clinical'];
-      return activeStaff.filter(u => u.id === userId || superviseeIds.includes(u.id));
-    }
-    return [];
-  }, [role, userId, activeStaff]);
 
   // Participants options based on role — includes role label
   const participantOptions = useMemo((): { id: string; name: string; role: string }[] => {
@@ -1188,6 +1175,10 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
     const startISO = new Date(`${date}T${startTime}:00`).toISOString();
     const endISO = new Date(`${date}T${endTime}:00`).toISOString();
 
+    // Derive assigned_to from first internal participant in "With" field, fallback to creator
+    const firstInternalParticipant = participants.find(p => !p.external && p.id);
+    const assignedTo = firstInternalParticipant?.id ?? userId;
+
     onSave({
       hat_id: 'w1',
       engine_source: 'operations',
@@ -1196,8 +1187,8 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
       start_time: startISO,
       end_time: endISO,
       created_by: userId,
-      assigned_to: assignTo,
-      assigned_by: assignTo !== userId ? userId : null,
+      assigned_to: assignedTo,
+      assigned_by: assignedTo !== userId ? userId : null,
       client_id: null,
       supervision_session_id: null,
       notes: notes.trim() || null,
@@ -1587,22 +1578,6 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
         </div>
       </div>
 
-      {/* 8. Assign To (role-dependent) */}
-      {canAssign && (
-        <div className="space-y-1.5">
-          <Label>Assign To</Label>
-          <Select value={assignTo} onValueChange={setAssignTo}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {assignToOptions.map(u => (
-                <SelectItem key={u.id} value={u.id}>{u.full_name}{u.id === userId ? ' (You)' : ''}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      )}
 
       {/* 9. Notes */}
       <div className="space-y-1.5">
