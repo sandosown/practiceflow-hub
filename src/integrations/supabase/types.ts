@@ -628,6 +628,39 @@ export type Database = {
         }
         Relationships: []
       }
+      hat_locations: {
+        Row: {
+          address: string | null
+          created_at: string
+          created_by: string | null
+          hat_id: string
+          is_active: boolean
+          location_id: string
+          name: string
+          type: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          created_by?: string | null
+          hat_id?: string
+          is_active?: boolean
+          location_id?: string
+          name: string
+          type?: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          created_by?: string | null
+          hat_id?: string
+          is_active?: boolean
+          location_id?: string
+          name?: string
+          type?: string
+        }
+        Relationships: []
+      }
       invitations: {
         Row: {
           accepted_at: string | null
