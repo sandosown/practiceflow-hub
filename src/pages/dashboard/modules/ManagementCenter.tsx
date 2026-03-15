@@ -88,9 +88,17 @@ const ManagementCenter: React.FC = () => {
   const [staffList, setStaffList] = useState<StaffEntry[]>(INITIAL_STAFF);
   const [showFormerStaff, setShowFormerStaff] = useState(false);
   const [viewingStaff, setViewingStaff] = useState<StaffEntry | null>(null);
+  const [removeTarget, setRemoveTarget] = useState<StaffEntry | null>(null);
 
   const currentRole = sessionData.role;
   const currentId = sessionData.user_id;
+
+  const canRemoveStaff = (target: StaffEntry): boolean => {
+    if (target.id === currentId) return false;
+    if (currentRole === 'OWNER') return target.role !== 'OWNER';
+    if (currentRole === 'ADMIN') return ['CLINICIAN', 'INTERN CLINICAL', 'INTERN BUSINESS', 'STAFF'].includes(target.role);
+    return false;
+  };
 
   const activeStaff = useMemo(() => staffList.filter(s => s.status === 'active'), [staffList]);
   const inactiveStaff = useMemo(() => staffList.filter(s => s.status === 'inactive'), [staffList]);
