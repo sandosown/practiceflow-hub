@@ -160,8 +160,6 @@ const DatePickerField: React.FC<{
   };
 
   const calendarPopoverStyle: React.CSSProperties = {
-    background: 'rgba(6,14,30,0.97)',
-    border: '1px solid rgba(45,212,191,0.15)',
     borderRadius: 12,
     boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
     padding: 12,
@@ -187,23 +185,17 @@ const DatePickerField: React.FC<{
             )}
           </button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0 border-0 bg-transparent" align="start" sideOffset={4}>
+        <PopoverContent className="w-auto p-0 border border-border bg-popover rounded-xl" align="start" sideOffset={4}>
           <div style={calendarPopoverStyle}>
             {/* Header */}
             <div className="flex items-center justify-between mb-2">
-              <button onClick={prevMonth} className="p-1 rounded transition-colors" style={{ color: 'rgba(255,255,255,0.5)' }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#2dd4bf')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.5)')}
-              >
+              <button onClick={prevMonth} className="p-1 rounded transition-colors text-muted-foreground hover:text-primary">
                 <ChevronLeft size={14} />
               </button>
-              <span style={{ color: 'white', fontSize: 13 }}>
+              <span className="text-foreground text-[13px]">
                 {MONTHS[viewMonth]} {viewYear}
               </span>
-              <button onClick={nextMonth} className="p-1 rounded transition-colors" style={{ color: 'rgba(255,255,255,0.5)' }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#2dd4bf')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.5)')}
-              >
+              <button onClick={nextMonth} className="p-1 rounded transition-colors text-muted-foreground hover:text-primary">
                 <ChevronRight size={14} />
               </button>
             </div>
@@ -211,7 +203,7 @@ const DatePickerField: React.FC<{
             {/* Day names */}
             <div className="grid grid-cols-7 mb-1">
               {DAY_NAMES.map(d => (
-                <span key={d} className="text-center" style={{ fontSize: 10, textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)' }}>
+                <span key={d} className="text-center text-[10px] uppercase text-muted-foreground">
                   {d}
                 </span>
               ))}
@@ -230,27 +222,13 @@ const DatePickerField: React.FC<{
                   <button
                     key={day}
                     onClick={() => selectDate(day)}
-                    className="flex items-center justify-center transition-colors"
-                    style={{
-                      width: 32, height: 32, fontSize: 13, borderRadius: 6,
-                      ...(isSelected
-                        ? { background: '#2dd4bf', color: '#060e1e', fontWeight: 600 }
+                    className={`flex items-center justify-center transition-colors w-8 h-8 text-[13px] rounded-md ${
+                      isSelected
+                        ? 'bg-primary text-primary-foreground font-semibold'
                         : isToday
-                          ? { border: '1px solid rgba(45,212,191,0.4)', color: 'rgba(255,255,255,0.7)' }
-                          : { color: 'rgba(255,255,255,0.7)' }),
-                    }}
-                    onMouseEnter={e => {
-                      if (!isSelected) {
-                        e.currentTarget.style.background = 'rgba(45,212,191,0.1)';
-                        e.currentTarget.style.color = 'white';
-                      }
-                    }}
-                    onMouseLeave={e => {
-                      if (!isSelected) {
-                        e.currentTarget.style.background = 'transparent';
-                        e.currentTarget.style.color = 'rgba(255,255,255,0.7)';
-                      }
-                    }}
+                          ? 'border border-primary/40 text-foreground/70'
+                          : 'text-foreground/70 hover:bg-accent/10 hover:text-foreground'
+                    }`}
                   >
                     {day}
                   </button>
@@ -409,12 +387,12 @@ const FilterDropdownContent: React.FC<{
             ...prev,
             selectedTypes: e.target.value === 'all' ? [] : [e.target.value],
           }))}
-          className="w-full text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+          className="w-full text-xs text-foreground bg-card focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
           style={fieldStyle}
         >
-          <option value="all">All Types</option>
+          <option value="all" className="bg-card text-foreground">All Types</option>
           {ALL_TYPES.map(t => (
-            <option key={t} value={t}>{t}</option>
+            <option key={t} value={t} className="bg-card text-foreground">{t}</option>
           ))}
         </select>
       </div>
@@ -428,12 +406,12 @@ const FilterDropdownContent: React.FC<{
             ...prev,
             selectedStatuses: e.target.value === 'all' ? [] : [e.target.value],
           }))}
-          className="w-full text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
+          className="w-full text-xs text-foreground bg-card focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
           style={fieldStyle}
         >
-          <option value="all">All Statuses</option>
+          <option value="all" className="bg-card text-foreground">All Statuses</option>
           {ALL_STATUSES.map(s => (
-            <option key={s} value={s}>{s}</option>
+            <option key={s} value={s} className="bg-card text-foreground">{s}</option>
           ))}
         </select>
       </div>
