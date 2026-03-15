@@ -14,6 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      appointments: {
+        Row: {
+          appointment_id: string
+          appointment_type: string
+          assigned_by: string | null
+          assigned_to: string
+          client_id: string | null
+          created_at: string
+          created_by: string
+          end_time: string
+          engine_source: string
+          hat_id: string
+          needs_reschedule: boolean
+          notes: string | null
+          reschedule_requested_by: string | null
+          start_time: string
+          supervision_session_id: string | null
+          title: string
+        }
+        Insert: {
+          appointment_id?: string
+          appointment_type: string
+          assigned_by?: string | null
+          assigned_to: string
+          client_id?: string | null
+          created_at?: string
+          created_by: string
+          end_time: string
+          engine_source?: string
+          hat_id?: string
+          needs_reschedule?: boolean
+          notes?: string | null
+          reschedule_requested_by?: string | null
+          start_time: string
+          supervision_session_id?: string | null
+          title: string
+        }
+        Update: {
+          appointment_id?: string
+          appointment_type?: string
+          assigned_by?: string | null
+          assigned_to?: string
+          client_id?: string | null
+          created_at?: string
+          created_by?: string
+          end_time?: string
+          engine_source?: string
+          hat_id?: string
+          needs_reschedule?: boolean
+          notes?: string | null
+          reschedule_requested_by?: string | null
+          start_time?: string
+          supervision_session_id?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
       employee_licenses: {
         Row: {
           created_at: string
