@@ -72,10 +72,6 @@ function filterSummary(f: CalendarFilterState): string {
   else if (f.selectedTypes.length > 1) parts.push(`${f.selectedTypes.length} types`);
   if (f.selectedStatuses.length === 1) parts.push(f.selectedStatuses[0]);
   else if (f.selectedStatuses.length > 1) parts.push(`${f.selectedStatuses.length} statuses`);
-  if (f.assignedTo !== 'all') {
-    const name = DEMO_USERS.find(u => u.id === f.assignedTo)?.full_name;
-    if (name) parts.push(name);
-  }
   return parts.join(' · ');
 }
 
