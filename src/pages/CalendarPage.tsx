@@ -629,36 +629,40 @@ const CalendarPage: React.FC = () => {
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-xl font-bold text-foreground">Calendar</h1>
           <div className="flex items-center gap-2">
-            {/* View toggle */}
-            <div className="flex rounded-lg overflow-hidden border border-border">
-              {(['month', 'week', 'day'] as CalendarView[]).map(v => (
-                <button
-                  key={v}
-                  onClick={() => setView(v)}
-                  className="px-3 py-1.5 text-xs font-medium capitalize transition-colors"
-                  style={view === v ? { background: TEAL, color: '#0f172a' } : {}}
-                >
-                  {v}
-                </button>
-              ))}
-            </div>
-            {/* Appointments panel toggle */}
-            <button
-              onClick={() => setPanelOpen(p => !p)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors hover:opacity-80"
-              style={{ border: `1.5px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
-            >
-              <List size={16} />
-              <span className="hidden sm:inline">{panelOpen ? 'Hide' : 'Appointments'}</span>
-            </button>
+            {/* View toggle — desktop only */}
+            {!isMobile && (
+              <div className="flex rounded-lg overflow-hidden border border-border">
+                {(['month', 'week', 'day'] as CalendarView[]).map(v => (
+                  <button
+                    key={v}
+                    onClick={() => setView(v)}
+                    className="px-3 py-1.5 text-xs font-medium capitalize transition-colors"
+                    style={view === v ? { background: TEAL, color: '#0f172a' } : {}}
+                  >
+                    {v}
+                  </button>
+                ))}
+              </div>
+            )}
+            {/* Appointments panel toggle — desktop only */}
+            {!isMobile && (
+              <button
+                onClick={() => setPanelOpen(p => !p)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors hover:opacity-80"
+                style={{ border: `1.5px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
+              >
+                <List size={16} />
+                <span>{panelOpen ? 'Hide' : 'Appointments'}</span>
+              </button>
+            )}
             {/* Add button */}
             <button
               onClick={() => setAddOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors hover:opacity-80"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors hover:opacity-80 min-h-[44px]"
               style={{ border: `1.5px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
             >
               <Plus size={16} />
-              <span className="hidden sm:inline">Add Appointment</span>
+              <span>{isMobile ? 'Add' : 'Add Appointment'}</span>
             </button>
           </div>
         </div>
@@ -696,6 +700,34 @@ const CalendarPage: React.FC = () => {
             if (found) openDetail(found);
           }}
         />
+
+        {/* Mobile-only: View toggle + Appointments button below filters */}
+        {isMobile && (
+          <div className="flex flex-col gap-2 mb-4">
+            {/* View toggle — full width */}
+            <div className="flex rounded-lg overflow-hidden border border-border w-full">
+              {(['month', 'week', 'day'] as CalendarView[]).map(v => (
+                <button
+                  key={v}
+                  onClick={() => setView(v)}
+                  className="flex-1 min-h-[44px] text-xs font-medium capitalize transition-colors text-foreground"
+                  style={view === v ? { background: TEAL, color: '#0f172a' } : {}}
+                >
+                  {v}
+                </button>
+              ))}
+            </div>
+            {/* Appointments button — full width, teal outline */}
+            <button
+              onClick={() => setPanelOpen(p => !p)}
+              className="flex items-center justify-center gap-1.5 w-full min-h-[44px] rounded-lg text-xs font-medium transition-colors hover:opacity-80"
+              style={{ border: '1.5px solid #2dd4bf', color: '#2dd4bf', background: 'transparent', borderRadius: 8, padding: 8, fontSize: 12 }}
+            >
+              <List size={14} />
+              Appointments
+            </button>
+          </div>
+        )}
 
         {/* Calendar body + Panel layout */}
         <div className="flex gap-4">
