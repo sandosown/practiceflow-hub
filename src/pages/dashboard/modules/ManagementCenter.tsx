@@ -101,8 +101,19 @@ const ManagementCenter: React.FC = () => {
     return false;
   };
 
-  const activeStaff = useMemo(() => staffList.filter(s => s.status === 'active'), [staffList]);
-  const inactiveStaff = useMemo(() => staffList.filter(s => s.status === 'inactive'), [staffList]);
+  const filterStaff = (list: StaffEntry[]) => {
+    if (!staffSearch.trim()) return list;
+    const q = staffSearch.toLowerCase();
+    return list.filter(s =>
+      s.name.toLowerCase().includes(q) ||
+      s.role.toLowerCase().includes(q) ||
+      (s.clinicianSubtype?.toLowerCase().includes(q)) ||
+      (s.internSubtype?.toLowerCase().includes(q))
+    );
+  };
+
+  const activeStaff = useMemo(() => filterStaff(staffList.filter(s => s.status === 'active')), [staffList, staffSearch]);
+  const inactiveStaff = useMemo(() => filterStaff(staffList.filter(s => s.status === 'inactive')), [staffList, staffSearch]);
   const isOwner = currentRole === 'OWNER';
 
   const fetchInvitations = useCallback(async () => {
