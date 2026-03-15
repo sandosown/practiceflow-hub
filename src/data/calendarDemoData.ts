@@ -40,6 +40,9 @@ export interface DemoAppointment {
   location: string | null;
   virtual_platform: string | null;
   meeting_link: string | null;
+  // LOG-104 shared ownership
+  appointment_group_id: string | null;
+  is_linked: boolean;
 }
 
 function isoDate(dayOffset: number, hour: number, minute = 0): string {
