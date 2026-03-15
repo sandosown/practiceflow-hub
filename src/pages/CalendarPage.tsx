@@ -725,6 +725,7 @@ interface PanelProps {
   currentDate: Date;
   onMonthYearChange: (d: Date) => void;
   role: string;
+  userId: string;
 }
 
 const AppointmentsPanel: React.FC<PanelProps> = ({ grouped, dateContext, onSelect, filters, onFiltersChange, onFiltersClear, currentDate, onMonthYearChange, role }) => {
