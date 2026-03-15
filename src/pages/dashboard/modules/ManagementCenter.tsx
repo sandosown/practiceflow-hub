@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopNavBar from '@/components/TopNavBar';
 import BottomNavBar from '@/components/BottomNavBar';
-import { ArrowLeft, Plus } from 'lucide-react';
+import { ArrowLeft, Plus, Search, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cardStyle } from '@/lib/cardStyle';
 import { supabase } from '@/integrations/supabase/client';
@@ -87,6 +87,7 @@ const ManagementCenter: React.FC = () => {
   const [loadingInvitations, setLoadingInvitations] = useState(true);
   const [staffList, setStaffList] = useState<StaffEntry[]>(INITIAL_STAFF);
   const [showFormerStaff, setShowFormerStaff] = useState(false);
+  const [staffSearch, setStaffSearch] = useState('');
   const [viewingStaff, setViewingStaff] = useState<StaffEntry | null>(null);
   const [removeTarget, setRemoveTarget] = useState<StaffEntry | null>(null);
 
@@ -100,8 +101,19 @@ const ManagementCenter: React.FC = () => {
     return false;
   };
 
-  const activeStaff = useMemo(() => staffList.filter(s => s.status === 'active'), [staffList]);
-  const inactiveStaff = useMemo(() => staffList.filter(s => s.status === 'inactive'), [staffList]);
+  const filterStaff = (list: StaffEntry[]) => {
+    if (!staffSearch.trim()) return list;
+    const q = staffSearch.toLowerCase();
+    return list.filter(s =>
+      s.name.toLowerCase().includes(q) ||
+      s.role.toLowerCase().includes(q) ||
+      (s.clinicianSubtype?.toLowerCase().includes(q)) ||
+      (s.internSubtype?.toLowerCase().includes(q))
+    );
+  };
+
+  const activeStaff = useMemo(() => filterStaff(staffList.filter(s => s.status === 'active')), [staffList, staffSearch]);
+  const inactiveStaff = useMemo(() => filterStaff(staffList.filter(s => s.status === 'inactive')), [staffList, staffSearch]);
   const isOwner = currentRole === 'OWNER';
 
   const fetchInvitations = useCallback(async () => {
@@ -231,6 +243,23 @@ const ManagementCenter: React.FC = () => {
           <h2 className="text-xs font-semibold uppercase tracking-widest mb-4 pl-3 text-muted-foreground" style={{ borderLeft: `4px solid ${ACCENT}` }}>
             STAFF OVERVIEW
           </h2>
+          <div
+            className="flex items-center gap-2 rounded-lg px-3 py-2.5 mb-4"
+            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)' }}
+          >
+            <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <input
+              className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground text-foreground"
+              placeholder="Search team members..."
+              value={staffSearch}
+              onChange={e => setStaffSearch(e.target.value)}
+            />
+            {staffSearch && (
+              <button onClick={() => setStaffSearch('')} className="p-0.5 rounded hover:bg-white/10">
+                <X className="h-3.5 w-3.5 text-muted-foreground" />
+              </button>
+            )}
+          </div>
           <div className="flex flex-col gap-3">
             {activeStaff.map((s) => (
               <StaffRow
