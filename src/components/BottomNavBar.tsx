@@ -68,7 +68,7 @@ const ALL_SECTIONS: DrawerSection[] = [
 ];
 
 // Effective role key that distinguishes intern subtypes
-type EffectiveRole = 'OWNER' | 'ADMIN' | 'SUPERVISOR' | 'CLINICIAN' | 'INTERN_CLINICAL' | 'INTERN_BUSINESS' | 'STAFF';
+type EffectiveRole = 'OWNER' | 'PARTNER' | 'ADMIN' | 'SUPERVISOR' | 'CLINICIAN' | 'INTERN_CLINICAL' | 'INTERN_BUSINESS' | 'STAFF';
 
 function getEffectiveRole(role: AppRole, internSubtype: InternSubtype): EffectiveRole {
   if (role === 'INTERN') {
