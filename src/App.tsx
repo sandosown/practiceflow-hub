@@ -12,6 +12,7 @@ import Register from "./pages/Register";
 import PasswordReset from "./pages/PasswordReset";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
+import AcceptInvitation from "./pages/AcceptInvitation";
 
 // Dashboard shells
 import OwnerDashboard from "./pages/dashboard/OwnerDashboard";
