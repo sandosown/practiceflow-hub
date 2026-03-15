@@ -1047,7 +1047,7 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [startTime, setStartTime] = useState('09:00');
   const [endTime, setEndTime] = useState('10:00');
-  const [assignTo, setAssignTo] = useState(userId);
+  
   const [notes, setNotes] = useState('');
 
   // LOG-102 context fields
