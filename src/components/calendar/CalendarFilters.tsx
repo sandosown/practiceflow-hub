@@ -22,7 +22,7 @@ const STATUS_COLORS: Record<string, string> = {
   'Completed': '#059669',
   'Cancelled': '#78716c',
   'Rescheduled': '#d97706',
-  'No Show': '#92764a',
+  'No Show': '#c026d3',
 };
 
 const ALL_TYPES = Object.keys(TYPE_COLORS);
