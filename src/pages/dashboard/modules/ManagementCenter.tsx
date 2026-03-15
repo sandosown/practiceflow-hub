@@ -291,6 +291,13 @@ const ManagementCenter: React.FC = () => {
           open={!!removeTarget}
           onOpenChange={(open) => { if (!open) setRemoveTarget(null); }}
           staff={{ name: removeTarget.name, firstName: removeTarget.firstName, role: removeTarget.role, id: removeTarget.id }}
+          checkBlocks={(staff) => {
+            const blocks: { label: string; detail: string }[] = [];
+            const entry = staffList.find(s => s.name === staff.name);
+            if (entry?.activeClients && entry.activeClients > 0) blocks.push({ label: 'Active client assignments', detail: `${entry.activeClients} active client(s)` });
+            if (entry?.superviseeCount && entry.superviseeCount > 0) blocks.push({ label: 'Open supervision assignments', detail: `${entry.superviseeCount} supervisee(s)` });
+            return blocks;
+          }}
           onConfirmRemoval={(staff, endDate) => handleConfirmRemoval(staff, endDate)}
         />
       )}
