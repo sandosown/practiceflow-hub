@@ -354,6 +354,33 @@ It is position 4 in the standard 5-item bottom nav.
 - Assigned appointments appear on the recipient's calendar with a label indicating who created them
 - No silent appointment creation — recipient always sees the source
 
+### Calendar Universal Component Architecture (LOG-096)
+
+**LOG-096 — LOCKED**
+
+The Calendar is built as a single universal component that is reused across all hats and all engines where the Operations Engine is active.
+
+**Architecture rules:**
+- One calendar component — not a separate calendar per hat
+- Appointment types are passed as configuration per hat — not hardcoded
+- The base universal types (Personal, Meeting, Session, Other) are always present
+- Each hat domain layer adds its own types via a `hat_appointment_types` configuration
+- The calendar shell, layout, search, side panel, role-scoped visibility, and all UX behavior are identical across all hats
+- Only the appointment type list changes per hat context
+
+**Hat appointment type configuration pattern:**
+```
+BASE_TYPES = [Personal, Meeting, Session, Other]
+
+GP_TYPES = BASE_TYPES + [Client Session, Supervision Session, Staff Meeting, Intake]
+COACHING_TYPES = BASE_TYPES + [Coaching Session, Discovery Call]
+HOME_TYPES = BASE_TYPES
+```
+
+- Hat-specific types are additive only — no hat may remove or override the base types
+- Type configuration is resolved at runtime based on active hat context
+- Color coding per type is defined once in the calendar component — not per hat
+
 ---
 
 ## Event Lifecycle (Operations Engine)
