@@ -451,6 +451,15 @@ const CalendarPage: React.FC = () => {
                 </button>
               ))}
             </div>
+            {/* Appointments panel toggle */}
+            <button
+              onClick={() => setPanelOpen(p => !p)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors hover:opacity-80"
+              style={{ border: `1.5px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
+            >
+              <List size={16} />
+              <span className="hidden sm:inline">{panelOpen ? 'Hide' : 'Appointments'}</span>
+            </button>
             {/* Add button */}
             <button
               onClick={() => setAddOpen(true)}
@@ -479,12 +488,50 @@ const CalendarPage: React.FC = () => {
           </button>
         </div>
 
-        {/* Calendar body */}
-        <div className="bg-card rounded-xl border border-border/60 overflow-hidden">
-          {view === 'month' && <MonthView />}
-          {view === 'week' && <WeekView />}
-          {view === 'day' && <DayView />}
+        {/* Calendar body + Panel layout */}
+        <div className="flex gap-4">
+          <div className={`bg-card rounded-xl border border-border/60 overflow-hidden transition-all duration-300 ${panelOpen && !isMobile ? 'flex-1 min-w-0' : 'w-full'}`}>
+            {view === 'month' && <MonthView />}
+            {view === 'week' && <WeekView />}
+            {view === 'day' && <DayView />}
+          </div>
+
+          {/* Desktop side panel */}
+          {panelOpen && !isMobile && (
+            <div
+              className="w-[280px] flex-shrink-0 rounded-xl overflow-hidden animate-fade-in"
+              style={{
+                background: 'hsl(var(--card))',
+                borderLeft: '4px solid #2dd4bf',
+                borderTop: '1px solid rgba(45,212,191,0.50)',
+                borderBottom: '1px solid rgba(45,212,191,0.50)',
+                borderRight: '1px solid rgba(45,212,191,0.35)',
+              }}
+            >
+              <AppointmentsPanel
+                grouped={panelAppointments}
+                dateContext={panelDateContext}
+                onSelect={openDetail}
+              />
+            </div>
+          )}
         </div>
+
+        {/* Mobile sheet panel */}
+        {isMobile && (
+          <Sheet open={panelOpen} onOpenChange={setPanelOpen}>
+            <SheetContent side="bottom" className="h-[70vh] p-0 rounded-t-xl">
+              <SheetHeader className="px-4 pt-4 pb-2">
+                <SheetTitle className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Appointments</SheetTitle>
+              </SheetHeader>
+              <AppointmentsPanel
+                grouped={panelAppointments}
+                dateContext={panelDateContext}
+                onSelect={(a) => { setPanelOpen(false); openDetail(a); }}
+              />
+            </SheetContent>
+          </Sheet>
+        )}
       </div>
 
       {/* ── Detail dialog ── */}
