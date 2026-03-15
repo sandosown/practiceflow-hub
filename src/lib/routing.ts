@@ -10,7 +10,7 @@ export function getDashboardRoute(session: SessionContext): string {
     case 'OWNER':
       return '/dashboard/owner';
     case 'PARTNER':
-      return '/dashboard/partner';
+      return '/dashboard/partner/group-practice';
     case 'ADMIN':
       return '/dashboard/admin';
     case 'SUPERVISOR':

@@ -79,7 +79,7 @@ const AppRoutes = () => (
 
     {/* Dashboards */}
     <Route path="/dashboard/owner" element={<ProtectedRoute><OwnerDashboard /></ProtectedRoute>} />
-    <Route path="/dashboard/partner" element={<ProtectedRoute><PartnerHub /></ProtectedRoute>} />
+    <Route path="/dashboard/partner" element={<ProtectedRoute><Navigate to="/dashboard/partner/group-practice" replace /></ProtectedRoute>} />
     <Route path="/dashboard/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
     <Route path="/dashboard/supervisor" element={<ProtectedRoute><SupervisorDashboard /></ProtectedRoute>} />
     <Route path="/dashboard/clinician" element={<ProtectedRoute><ClinicianDashboard /></ProtectedRoute>} />
