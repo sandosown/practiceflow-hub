@@ -541,7 +541,7 @@ const CalendarPage: React.FC = () => {
           </button>
         </div>
 
-        {/* Smart filter bar — replaces plain search */}
+        {/* Search bar with filter dropdown */}
         <CalendarFilters
           filters={calendarFilters}
           onChange={setCalendarFilters}
@@ -549,7 +549,6 @@ const CalendarPage: React.FC = () => {
           currentDate={currentDate}
           onMonthYearChange={handleMonthYearChange}
           role={role}
-          layout="horizontal"
         />
 
         {/* Calendar body + Panel layout */}
