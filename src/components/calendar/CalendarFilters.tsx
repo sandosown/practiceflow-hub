@@ -146,7 +146,7 @@ const LiveSearchResults: React.FC<{
   );
 };
 
-/* ─── Filter Dropdown Content ─── */
+/* ─── Filter Dropdown Content (no keyword — it lives in the top bar) ─── */
 const FilterDropdownContent: React.FC<{
   draft: CalendarFilterState;
   setDraft: React.Dispatch<React.SetStateAction<CalendarFilterState>>;
@@ -156,9 +156,7 @@ const FilterDropdownContent: React.FC<{
   onSearch: () => void;
   onClear: () => void;
   compact?: boolean;
-  appointments?: SearchableAppointment[];
-  onSelectAppointment?: (appt: SearchableAppointment) => void;
-}> = ({ draft, setDraft, currentDate, onMonthYearChange, role, onSearch, onClear, compact, appointments = [], onSelectAppointment }) => {
+}> = ({ draft, setDraft, currentDate, onMonthYearChange, role, onSearch, onClear, compact }) => {
   const [monthPickerOpen, setMonthPickerOpen] = useState(false);
   const [pickerYear, setPickerYear] = useState(currentDate.getFullYear());
 
@@ -174,26 +172,6 @@ const FilterDropdownContent: React.FC<{
 
   return (
     <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
-      {/* Keyword */}
-      <div>
-        <label className={sectionLabel} style={sectionLabelStyle}>Keyword</label>
-        <input
-          type="text"
-          value={draft.keyword}
-          onChange={e => setDraft(prev => ({ ...prev, keyword: e.target.value }))}
-          placeholder="Search..."
-          className="w-full text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-[#2dd4bf]/50"
-          style={fieldStyle}
-        />
-        {appointments.length > 0 && onSelectAppointment && (
-          <LiveSearchResults
-            keyword={draft.keyword}
-            appointments={appointments}
-            onSelect={onSelectAppointment}
-          />
-        )}
-      </div>
-
       {/* Month / Year */}
       <div>
         <label className={sectionLabel} style={sectionLabelStyle}>Month / Year</label>
