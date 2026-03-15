@@ -560,6 +560,8 @@ const CalendarPage: React.FC = () => {
                 grouped={panelAppointments}
                 dateContext={panelDateContext}
                 onSelect={(a) => { setPanelOpen(false); openDetail(a); }}
+                search={panelSearch}
+                onSearchChange={setPanelSearch}
               />
             </SheetContent>
           </Sheet>
