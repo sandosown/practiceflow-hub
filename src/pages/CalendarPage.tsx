@@ -674,6 +674,7 @@ const CalendarPage: React.FC = () => {
               role={role}
               onDelete={handleDelete}
               onReschedule={handleRequestReschedule}
+              onStatusUpdate={handleStatusUpdate}
               onClose={() => setDetailOpen(false)}
             />
           )}
