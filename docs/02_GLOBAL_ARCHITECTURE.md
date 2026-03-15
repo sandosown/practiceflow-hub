@@ -590,6 +590,23 @@ Add to appointments table:
 - Hat-scoped — appointment copies only exist within the hat they were created in
 - No cross-hat appointment sharing ever
 
+### Chip & Filter Selection Doctrine (LOG-105)
+
+**LOG-105 — Chip & Filter Selection Doctrine — LOCKED**
+
+Applies to: all chip selectors, filter panels, multi-select surfaces, and toggle pill groups across all workspaces and engines.
+
+**Rule:**
+
+- Unselected state: accent color at 45% opacity, border at 45% opacity, background transparent. Never gray, never muted, never monochrome.
+- Selected state: accent color at 100% opacity, border at 100% opacity, background at 10% opacity of accent color.
+- Gray or muted unselected chips are permanently banned — they read as disabled/unavailable to users and violate the calm command center doctrine.
+- This applies to: appointment type chips, status chips, population chips, presenting issue chips, clinical disorder chips, modality chips, and any future chip/pill selector in any module.
+
+**Rationale:**
+
+Gray unselected state is a deeply ingrained UI convention meaning disabled or unavailable. SympoFlo chips must always read as active and selectable. Color at reduced opacity communicates "available, choose one" without visual noise.
+
 ---
 
 ## Event Lifecycle (Operations Engine)
