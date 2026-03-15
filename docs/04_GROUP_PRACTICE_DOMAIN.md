@@ -693,6 +693,26 @@ Business Intern does not route to Training Engine.
 
 ---
 
+## LOG-106 — Appointment Participant Model — LOCKED
+
+Rule:
+
+- Appointments use "With" (participants) only — never "Assigned To"
+
+- "Assigned To" is permanently removed from appointment creation forms, filter panels, and any appointment-related UI surface
+
+- Participant selection is handled via the "With" field — search staff or add someone
+
+- This applies to the Add Appointment modal, Edit Appointment modal, and the Calendar filter/search panel
+
+- "Assigned To" is a task and workflow concept — it does not belong in Calendar or appointment surfaces
+
+Rationale:
+
+Appointments are meetings between people. "Assigned To" implies task ownership which is the wrong mental model for scheduling. Participants are who you are meeting with, not who owns the appointment.
+
+---
+
 End of 04_GROUP_PRACTICE_DOMAIN.md
 
 ---
