@@ -789,6 +789,47 @@ const CalendarPage: React.FC = () => {
           />
         </DialogContent>
       </Dialog>
+
+      {/* ── Duplicate detection modal ── */}
+      <Dialog open={duplicateModalOpen} onOpenChange={setDuplicateModalOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Copy size={18} style={{ color: TEAL }} />
+              Duplicate Appointment Found
+            </DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-foreground/80">
+            {duplicateCreatorName} already created this appointment and added it to your calendar.
+          </p>
+          <div className="flex flex-col gap-2 pt-2">
+            <button
+              type="button"
+              onClick={handleDuplicateGoToCalendar}
+              className="w-full px-4 py-2.5 rounded-lg text-sm font-medium transition-colors hover:opacity-80"
+              style={{ border: `1.5px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
+            >
+              Go to Calendar
+            </button>
+            <button
+              type="button"
+              onClick={handleDuplicateGoToAppointments}
+              className="w-full px-4 py-2.5 rounded-lg text-sm font-medium transition-colors hover:opacity-80"
+              style={{ border: `1.5px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
+            >
+              Go to Appointments
+            </button>
+            <button
+              type="button"
+              onClick={handleDuplicateEditExisting}
+              className="w-full px-4 py-2.5 rounded-lg text-sm font-medium transition-colors hover:opacity-80"
+              style={{ border: `1.5px solid ${TEAL}`, color: TEAL, background: 'transparent' }}
+            >
+              Edit Existing
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
       <BottomNavBar />
     </div>
   );
