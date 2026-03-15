@@ -88,6 +88,7 @@ const ManagementCenter: React.FC = () => {
   const [staffList, setStaffList] = useState<StaffEntry[]>(INITIAL_STAFF);
   const [showFormerStaff, setShowFormerStaff] = useState(false);
   const [staffSearch, setStaffSearch] = useState('');
+  const [browseAll, setBrowseAll] = useState(false);
   const [viewingStaff, setViewingStaff] = useState<StaffEntry | null>(null);
   const [removeTarget, setRemoveTarget] = useState<StaffEntry | null>(null);
 
