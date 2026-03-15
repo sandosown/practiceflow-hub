@@ -3,7 +3,8 @@ import { Plus, ChevronLeft, ChevronRight, Clock, User, X, Edit2, CalendarIcon, T
 import { useSessionData } from '@/context/SessionContext';
 import { DEMO_USERS } from '@/data/demoUsers';
 import { getDemoAppointments, type DemoAppointment } from '@/data/calendarDemoData';
-import AppLayout from '@/components/AppLayout';
+import TopNavBar from '@/components/TopNavBar';
+import BottomNavBar from '@/components/BottomNavBar';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
