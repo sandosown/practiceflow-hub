@@ -1314,7 +1314,6 @@ const AddAppointmentForm: React.FC<AddFormProps> = ({ userId, role, internSubtyp
           )}
         </div>
       </div>
-      </div>
 
       {/* 4. Meeting Format */}
       <div className="space-y-1.5">
