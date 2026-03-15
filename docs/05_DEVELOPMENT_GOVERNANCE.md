@@ -339,6 +339,25 @@ See `SF-BRAND.md` in `/docs` for:
 
 ---
 
+## LOG-108 — Mobile-First Build Doctrine — LOCKED
+
+**Rule:**
+
+- Every component, page, modal, panel, and UI surface must be built responsive from the start — mobile and desktop simultaneously
+- No prompt is considered complete unless it explicitly includes mobile responsiveness requirements
+- Claude must include mobile responsiveness instructions in every Lovable prompt going forward — this is not optional and does not need to be requested
+- Breakpoints: mobile 375px minimum, tablet 768px, desktop 1024px+
+- Text must never be cut off on mobile — use text wrapping, truncation with ellipsis, or responsive font sizing
+- Panels, sidebars, and modals must reflow correctly on mobile — no horizontal overflow, no clipped content
+- Navigation, headers, and banners must be fully visible on mobile at all times
+- Touch targets minimum 44px height on mobile
+
+**Rationale:**
+
+SympoFlo serves entrepreneurs who run their businesses from their phones as much as their desktops. Mobile is not an afterthought — it is an equal surface. Building desktop-first and patching mobile later creates compounding debt.
+
+---
+
 End of 05_DEVELOPMENT_GOVERNANCE.md
 
 ---
