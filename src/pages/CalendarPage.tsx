@@ -776,17 +776,33 @@ const CalendarPage: React.FC = () => {
 
       {/* ── Add dialog ── */}
       <Dialog open={addOpen} onOpenChange={setAddOpen}>
-        <DialogContent className="max-w-md max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Add Appointment</DialogTitle>
-          </DialogHeader>
-          <AddAppointmentForm
-            userId={userId}
-            role={role}
-            internSubtype={internSubtype}
-            onSave={handleAddAppointment}
-            onCancel={() => setAddOpen(false)}
-          />
+        <DialogContent
+          className="max-h-[85vh] overflow-y-auto p-0 border-0 bg-transparent shadow-none"
+          style={{ maxWidth: 560 }}
+        >
+          <div
+            className="rounded-xl p-6"
+            style={{
+              background: 'rgba(6, 14, 30, 0.97)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(45, 212, 191, 0.12)',
+            }}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between mb-5">
+              <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 18, color: 'white', fontWeight: 400 }}>
+                Add Appointment
+              </h2>
+            </div>
+            <AddAppointmentForm
+              userId={userId}
+              role={role}
+              internSubtype={internSubtype}
+              onSave={handleAddAppointment}
+              onCancel={() => setAddOpen(false)}
+            />
+          </div>
         </DialogContent>
       </Dialog>
 
