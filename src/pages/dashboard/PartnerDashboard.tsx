@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopNavBar from '@/components/TopNavBar';
-import { ArrowLeft, ClipboardList, MessageSquare, LayoutDashboard, Users, Briefcase, FileText, DollarSign, CreditCard, Package, Sparkles, SlidersHorizontal } from 'lucide-react';
+import { ClipboardList, MessageSquare, LayoutDashboard, Users, Briefcase, FileText, DollarSign, CreditCard, Package, Sparkles, SlidersHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cardStyle, cardHoverStyle, iconSquareStyle } from '@/lib/cardStyle';
 import BottomNavBar from '@/components/BottomNavBar';
@@ -152,11 +152,6 @@ const PartnerDashboard: React.FC = () => {
 
       <div className="max-w-5xl mx-auto px-6 py-6 pb-20">
 
-        <div className="flex items-center gap-3 mb-8">
-          <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/partner')} className="text-muted-foreground">
-            <ArrowLeft className="w-4 h-4" />
-          </Button>
-        </div>
 
         {/* Contextual greeting */}
         <div style={{
